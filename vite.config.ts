@@ -18,6 +18,23 @@ export default defineConfig({
       short_name: 'poker',
       description: 'poker game',
       theme_color: '#ffffff',
+      icons: [
+        {
+          src: "icon.png",
+          sizes: "64x64 32x32 24x24 16x16",
+          type: "image/png"
+        },
+        {
+          src: "icon.png",
+          type: "image/png",
+          sizes: "192x192"
+        },
+        {
+          src: "icon.png",
+          type: "image/png",
+          sizes: "512x512"
+        }
+      ]
     },
 
     workbox: {
@@ -27,7 +44,7 @@ export default defineConfig({
     },
 
     devOptions: {
-      enabled: false,
+      enabled: true,
       navigateFallback: 'index.html',
       suppressWarnings: true,
       type: 'module',
