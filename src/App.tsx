@@ -11,10 +11,7 @@ function App() {
     <>
       <div>
         <a href="https://vite.dev" target="_blank">
-          <img src={appLogo} className="logo" alt="liz-poker-game logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
+          <img src="./public/icon.png" className="logo" alt="liz-poker-game logo" />
         </a>
       </div>
       <h1>liz-poker-game</h1>
