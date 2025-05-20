@@ -49,3 +49,10 @@ export const loginAnonymously = async () => {
     console.error("Error logging in anonymously:", error);
   }
 };
+
+export const subscribeToAuthChanges = (callback: (user: any) => void) => {
+  const unsubscribe = auth.onAuthStateChanged((user) => {
+    callback(user);
+  });
+  return unsubscribe;
+};
