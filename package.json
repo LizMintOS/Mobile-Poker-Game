@@ -9,7 +9,8 @@
     "lint": "eslint .",
     "preview": "vite preview",
     "emu": "firebase emulators:start",
-    "deploy": "npm run build && firebase login --n && firebase deploy"
+    "deploy": "npm run build && firebase login --n && firebase deploy",
+    "seeOffline": "npm run build && npm run preview"
   },
   "dependencies": {
     "@tanstack-query-firebase/react": "^2.0.0",
