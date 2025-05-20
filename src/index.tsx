@@ -2,6 +2,8 @@ import { StrictMode } from "react";
 import "./index.css";
 import App from "./App.tsx";
 import ReactDOM from "react-dom/client";
+import reportWebVitals from "./services/reportWebVitals.ts";
+import * as serviceWorkerRegistration from "./services/serviceWorkerRegistration.ts";
 
 const root = ReactDOM.createRoot(
   document.getElementById("root") as HTMLElement
@@ -20,3 +22,6 @@ if ("serviceWorker" in navigator) {
       : "/dev-sw.js?dev-sw"
   );
 }
+
+serviceWorkerRegistration.register();
+reportWebVitals();
