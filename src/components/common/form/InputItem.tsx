@@ -1,22 +1,35 @@
+import { FieldError, UseFormRegisterReturn } from "react-hook-form";
+
 interface InputItemProps {
   label: string;
-  value: string;
-  type: string;
-  onChange?: (value: any) => void;
+  register: UseFormRegisterReturn;
+  type?: string;
+  placeholder?: string;
+  error?: FieldError;
 }
 
-// Turns given props into an Input component with a label, placeholder, value, and onChange handler.
-export const InputItem = ({ label, value, type, onChange }: InputItemProps) => {
+export const InputItem = ({
+  label,
+  register,
+  type = "text",
+  placeholder,
+  error,
+}: InputItemProps) => {
   return (
-    <div>
+    <div className="flex flex-col w-full border border-gray-300 rounded-xl gap-1">
+      <label className="text-gray-700 font-medium">
+        {label.charAt(0).toUpperCase() + label.slice(1)}
+      </label>
       <input
+        {...register}
         type={type}
         name={label}
-        placeholder={label.charAt(0).toUpperCase() + label.slice(1)}
-        value={value}
-        onChange={onChange}
-        className="w-full p-2 my-2 border border-gray-300 rounded-xl font-medium"
+        placeholder={placeholder ?? label.charAt(0).toUpperCase() + label.slice(1)}
+        className={`px-4 py-2 rounded-xl border ${
+          error ? "border-red-500" : "border-gray-300"
+        } focus:outline-none focus:ring-2 focus:ring-blue-400`}
       />
+      {error && <span className="text-sm text-red-500">{error.message}</span>}
     </div>
   );
 };
