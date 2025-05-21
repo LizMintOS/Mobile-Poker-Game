@@ -8,12 +8,12 @@ import { auth } from "../../services/firebase";
 
 export const registerUser = async (email: string, password: string) => {
   try {
-    const userCredential = await createUserWithEmailAndPassword(
+    await createUserWithEmailAndPassword(
       auth,
       email,
       password
     );
-    return userCredential;
+
   } catch (error) {
     console.error("Error registering user:", error);
     throw error;
@@ -22,12 +22,11 @@ export const registerUser = async (email: string, password: string) => {
 
 export const loginUser = async (email: string, password: string) => {
   try {
-    const userCredential = await signInWithEmailAndPassword(
+    await signInWithEmailAndPassword(
       auth,
       email,
       password
     );
-    return userCredential;
   } catch (error) {
     console.error("Error logging in user:", error);
   }
@@ -43,8 +42,7 @@ export const logoutUser = async () => {
 
 export const loginAnonymously = async () => {
   try {
-    const userCredential = await signInAnonymously(auth);
-    return userCredential;
+    await signInAnonymously(auth);
   } catch (error) {
     console.error("Error logging in anonymously:", error);
   }
