@@ -8,12 +8,7 @@ import { auth } from "../../services/firebase";
 
 export const registerUser = async (email: string, password: string) => {
   try {
-    await createUserWithEmailAndPassword(
-      auth,
-      email,
-      password
-    );
-
+    await createUserWithEmailAndPassword(auth, email, password);
   } catch (error) {
     console.error("Error registering user:", error);
     throw error;
@@ -22,11 +17,7 @@ export const registerUser = async (email: string, password: string) => {
 
 export const loginUser = async (email: string, password: string) => {
   try {
-    await signInWithEmailAndPassword(
-      auth,
-      email,
-      password
-    );
+    await signInWithEmailAndPassword(auth, email, password);
   } catch (error) {
     console.error("Error logging in user:", error);
   }

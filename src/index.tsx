@@ -3,6 +3,7 @@ import "./index.css";
 import App from "./App.tsx";
 import ReactDOM from "react-dom/client";
 import { ServiceWorkerManager } from "./services/serviceWorkerManager.tsx";
+import { AuthProvider } from "./contexts/AuthProvider.tsx";
 
 const root = ReactDOM.createRoot(
   document.getElementById("root") as HTMLElement
@@ -10,7 +11,9 @@ const root = ReactDOM.createRoot(
 
 root.render(
   <StrictMode>
-    <ServiceWorkerManager />
-    <App />
+    <AuthProvider>
+      <ServiceWorkerManager />
+      <App />
+    </AuthProvider>
   </StrictMode>
 );
