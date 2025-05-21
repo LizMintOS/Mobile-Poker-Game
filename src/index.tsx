@@ -14,11 +14,3 @@ root.render(
     <App />
   </StrictMode>
 );
-
-if (process.env.NODE_ENV === 'production' && "serviceWorker" in navigator) {
-  navigator.serviceWorker.register(
-    import.meta.env.MODE === "production"
-      ? "/service-worker.ts"
-      : "/dev-sw.js?dev-sw"
-  );
-}

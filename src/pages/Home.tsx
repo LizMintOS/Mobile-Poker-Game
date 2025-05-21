@@ -5,9 +5,7 @@ const HomePage = () => {
   return (
     <>
       <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src="/icon.png" className="logo" />
-        </a>
+        <img src="/icon.png" className="logo" />
       </div>
       <h1>poker-game</h1>
       <div className="card">
