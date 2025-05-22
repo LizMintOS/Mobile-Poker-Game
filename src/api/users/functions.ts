@@ -5,6 +5,8 @@ import {
   signInAnonymously,
 } from "firebase/auth";
 import { auth } from "../../services/firebase";
+import { mapFirestoreErrorToAuthError } from "../errors/functions";
+
 
 export const useAuthActions = () => {
   const registerUser = async (email: string, password: string) => {

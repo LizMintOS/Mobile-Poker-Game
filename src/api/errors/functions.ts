@@ -6,6 +6,7 @@ export const mapFirestoreErrorToAuthError = (
   error: FirestoreError | AuthError | any,
   returnFullError: boolean = false
 ): string | LocalError => {
+  if (!error) return null;
   const message = (() => {
     switch (error.code) {
       case "not-found":
