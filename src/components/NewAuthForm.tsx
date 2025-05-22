@@ -1,9 +1,10 @@
-import { SubmitErrorHandler, SubmitHandler, useForm } from "react-hook-form";
+import { SubmitHandler, useForm } from "react-hook-form";
 import { useAuthActions } from "../api/users/functions";
 import { useState } from "react";
 import { LoadingWrapper } from "./common/LoadingWrapper";
 import { useNavigation } from "../contexts/NavProvider";
 import { useError } from "../contexts/ErrorProvider";
+import { GoArrowRight } from "react-icons/go";
 
 type FormValues = {
   email: string;
@@ -56,7 +57,7 @@ export const AuthForm = () => {
   return (
     <form
       onSubmit={handleSubmit(onSubmit)}
-      className="space-y-6 w-full mx-auto p-6"
+      className="space-y-6 w-full mx-auto p-6 min-w-sm"
     >
       <h2 className="text-3xl font-bold text-center">
         {isLogin ? "Sign in to play!" : "Create Account"}
@@ -108,35 +109,40 @@ export const AuthForm = () => {
       </div>
 
       <LoadingWrapper loading={isSubmitting || isLoading}>
-        <div className="flex flex-col items-center gap-6">
-          <div className="flex flex-row w-full justify-between">
+        <div className="flex flex-col items-center gap-6 w-full">
+          <div className="flex flex-row w-full justify-between h-14 ">
             <div className="flex mr-2 w-full">
               <button
                 type="submit"
-                className="rounded-xl py-2 px-4 text-white text-lg hover:bg-green-500 hover:border-b-8 transition-border duration-100 font-bold bg-green-600 cursor-pointer border-x-2 border-b-4 border-green-700 w-full"
+                className="rounded-xl py-2 px-4 text-white text-lg bg-green-500 border-b-8 transition-border duration-100 font-bold bg-green-600 cursor-pointer border-x-2 hover:border-b-4 border-green-700 w-full"
                 disabled={!isValid || isSubmitting || isLoading || !!error}
               >
-                <div>{isLogin ? "Log in" : "Register"}</div>
+                <div className="flex items-center justify-center">
+                  {isLogin ? "Log in" : "Register"}
+                  <div className="flex items-center justify-center ml-2 self-end transition-all duration-300 group">
+                    <GoArrowRight className="wiggle" size={26} />
+                  </div>
+                </div>
               </button>
             </div>
             <div className="flex flex-col items-center">
               <button
                 onClick={handleAnonymousSignIn}
-                className="group relative flex items-center justify-center text-black text-sm rounded-xl p-2 cursor-pointer bg-gray-400 hover:bg-gray-200 transition-all duration-300 border-x-2 border-b-4 border-gray-600 overflow-hidden"
+                className="group relative flex items-center justify-center text-gray-100 italic text-sm rounded-xl p-3 cursor-pointer bg-gray-400 transition-border duration-100 border-x-2 hover:border-b-4 border-b-8 border-gray-600 overflow-hidden"
               >
-                <div className="flex items-center py-1">
-                  <span className="ml-1 p-1 flex items-center justify-center rounded-3xl inset-shadow-sm inset-shadow-gray-500">
+                <div className="flex items-center">
+                  <span className="mx-2 p-1 flex items-center justify-center rounded-3xl inset-shadow-sm inset-shadow-gray-500">
                     👤
                   </span>
-                  <span className="ml-1 overflow-hidden whitespace-nowrap transition-all duration-300 max-w-0 group-hover:max-w-xs">
-                    Anonymous
+                  <span className="overflow-hidden text-base font-semibold whitespace-nowrap transition-all duration-300 max-w-0 group-hover:max-w-xs">
+                    Sneak in...
                   </span>
                 </div>
               </button>
             </div>
           </div>
           <div className="flex items-center justify-center mr-6">
-            <div className="mr-2 wiggle">👉</div>
+            <div className="mr-2">👉</div>
             <div
               className="flex flex-row"
               onClick={() => handleInputChange(null)}
