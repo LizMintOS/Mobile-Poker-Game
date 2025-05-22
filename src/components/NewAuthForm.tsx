@@ -35,6 +35,7 @@ export const AuthForm = () => {
   };
 
   const handleAnonymousSignIn = async () => {
+    clearErrors();
     await loginAnonymouslyUser();
   };
 
@@ -127,6 +128,7 @@ export const AuthForm = () => {
             </div>
             <div className="flex flex-col items-center">
               <button
+                type="button"
                 onClick={handleAnonymousSignIn}
                 className="group relative flex items-center justify-center text-gray-100 italic text-sm rounded-xl p-3 cursor-pointer bg-gray-400 transition-border duration-100 border-x-2 hover:border-b-4 border-b-8 border-gray-600 overflow-hidden"
               >

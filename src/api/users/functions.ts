@@ -27,7 +27,8 @@ export const useAuthActions = () => {
 
   const registerUser = handleApiErrors(
     async (email: string, password: string) => {
-      await createUserWithEmailAndPassword(auth, email, password);
+      const user = await createUserWithEmailAndPassword(auth, email, password);
+      if (user) console.log("User registered successfully:", user);
     }
   );
 
@@ -35,21 +36,13 @@ export const useAuthActions = () => {
     await signInWithEmailAndPassword(auth, email, password);
   });
 
-  const logoutUser = async () => {
-    try {
-      await signOut(auth);
-    } catch (error: any) {
-      console.error("Error logging out user:", error);
-    }
-  };
+  const logoutUser = handleApiErrors(async () => {
+    await signOut(auth);
+  });
 
-  const loginAnonymouslyUser = async () => {
-    try {
-      await signInAnonymously(auth);
-    } catch (error: any) {
-      console.error("Error logging in anonymously:", error);
-    }
-  };
+  const loginAnonymouslyUser = handleApiErrors(async () => {
+    await signInAnonymously(auth);
+  });
 
   return {
     registerUser,
