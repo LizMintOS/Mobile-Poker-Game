@@ -109,7 +109,7 @@ export const AuthForm = () => {
 
       <button
         type="submit"
-        className="rounded-xl py-2 px-4 text-white text-base font-semibold bg-green-600 cursor-pointer transition-all duration-100 border-x-2 border-b-4 border-green-700 w-full"
+        className="rounded-xl py-2 px-4 text-white text-lg hover:bg-green-500 hover:border-b-6 font-bold bg-green-600 cursor-pointer border-x-2 border-b-4 border-green-700 w-full"
         disabled={!isValid || isSubmitting || isLoading || !!error}
       >
         <LoadingWrapper loading={isSubmitting || isLoading}>
@@ -121,21 +121,19 @@ export const AuthForm = () => {
           onClick={handleAnonymousSignIn}
           className="group relative flex items-center justify-center text-black text-sm rounded-xl p-2 cursor-pointer bg-gray-400 hover:bg-inherit transition-all duration-500 border-x-2 border-b-4 border-gray-600 overflow-hidden"
         >
-          <span className="ml-1 flex items-center justify-center">
-          👤
-          </span>
+          <span className="ml-1 flex items-center justify-center">👤</span>
           <span className="ml-1 overflow-hidden whitespace-nowrap transition-all duration-1000 max-w-0 group-hover:max-w-xs">
             Sign in Anonymously
           </span>
         </button>
       </div>
-      <div className="flex flex-col items-center">
-        <p
-          className="text-md w-fit self-center font-bold text-green-500 cursor-pointer"
-          onClick={() => handleInputChange(null)}
-        >
-          {isLogin ? "👉 Register" : "👉 Login"}
-        </p>
+      <div className="flex items-center justify-center mr-6">
+        <div className="mr-2">👉</div>
+        <div className="flex flex-row" onClick={() => handleInputChange(null)}>
+          <p className="text-md w-fit self-center font-bold text-green-500 cursor-pointer underline underline-offset-6">
+            {isLogin ? " Register" : " Login"}
+          </p>
+        </div>
       </div>
     </form>
   );
