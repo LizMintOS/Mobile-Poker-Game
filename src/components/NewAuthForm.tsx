@@ -1,6 +1,8 @@
 import { SubmitErrorHandler, SubmitHandler, useForm } from "react-hook-form";
 import { useAuthActions } from "../api/users/functions";
 import { useState } from "react";
+import { LoadingWrapper } from "./common/LoadingWrapper";
+import { useNavigation } from "../contexts/NavProvider";
 
 type FormValues = {
   email: string;
@@ -10,7 +12,9 @@ type FormValues = {
 
 export const AuthForm = () => {
   const { loginUser, registerUser, loginAnonymouslyUser } = useAuthActions();
+  const { goForward } = useNavigation();
   const [isLogin, setIsLogin] = useState(true);
+  const [firebaseError, setFirebaseError] = useState<string | null>(null);
   const {
     register,
     handleSubmit,
@@ -21,22 +25,19 @@ export const AuthForm = () => {
 
   const onSubmit: SubmitHandler<FormValues> = async (data) => {
     console.log(data);
+    if (!data.email || !data.password) return;
     try {
       isLogin
         ? await loginUser(data.email, data.password)
         : await registerUser(data.email, data.password);
     } catch (error: any) {
-      if (error.code === "auth/invalid-credential") {
-        setError("email", {
-          type: "manual",
-          message: "Invalid email format",
-        });
-      }
+      setFirebaseError(error.message);
     }
   };
 
   const onError: SubmitErrorHandler<FormValues> = (errors) => {
     console.log(errors);
+    setFirebaseError(errors.error?.message || null);
   };
 
   const handleAnonymousSignIn = async () => {
@@ -66,9 +67,9 @@ export const AuthForm = () => {
             errors.email ? "border-red-500" : "border-gray-300"
           } focus:outline-none focus:ring-2 focus:ring-blue-400`}
         />
-        {/* {errors.email && ( */}
-        <span className="text-sm text-red-500">{errors.email?.message}</span>
-        {/* )} */}
+        {errors.email && (
+          <span className="text-sm text-red-500">{errors.email?.message}</span>
+        )}
         <label className="text-gray-700 font-medium self-start ml-2">
           Password
         </label>
@@ -83,9 +84,14 @@ export const AuthForm = () => {
             errors.password ? "border-red-500" : "border-gray-300"
           } focus:outline-none focus:ring-2 focus:ring-blue-400`}
         />
-        {/* {errors.password && ( */}
-        <span className="text-sm text-red-500">{errors.password?.message}</span>
-        {/* )} */}
+        {errors.password && (
+          <span className="text-sm text-red-500">
+            {errors.password?.message}
+          </span>
+        )}
+        {firebaseError && (
+          <span className="text-sm text-red-500">{firebaseError}</span>
+        )}
       </div>
 
       <button
@@ -93,7 +99,9 @@ export const AuthForm = () => {
         className="rounded-xl py-2 px-4 text-white text-base font-semibold bg-green-600 cursor-pointer transition-all duration-100 hover:bg-green-500 hover:shadow-md hover:shadow-green-200 w-full"
         disabled={!isValid || isSubmitting || isLoading}
       >
-        Submit
+        <LoadingWrapper loading={isSubmitting || isLoading}>
+          <div>{isLogin ? "Log in" : "Register"}</div>
+        </LoadingWrapper>
       </button>
       <div className="flex flex-col items-center">
         <p
