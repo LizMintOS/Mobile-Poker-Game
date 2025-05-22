@@ -121,10 +121,14 @@ export const AuthForm = () => {
           onClick={handleAnonymousSignIn}
           className="group relative flex items-center justify-center text-black text-sm rounded-xl p-2 cursor-pointer bg-gray-400 hover:bg-inherit transition-all duration-500 border-x-2 border-b-4 border-gray-600 overflow-hidden"
         >
-          <span className="ml-1 flex items-center justify-center">👤</span>
-          <span className="ml-1 overflow-hidden whitespace-nowrap transition-all duration-1000 max-w-0 group-hover:max-w-xs">
-            Sign in Anonymously
-          </span>
+          <LoadingWrapper loading={isSubmitting || isLoading}>
+            <div className="flex items-center">
+              <span className="ml-1 flex items-center justify-center">👤</span>
+              <span className="ml-1 overflow-hidden whitespace-nowrap transition-all duration-1000 max-w-0 group-hover:max-w-xs">
+                Sign in Anonymously
+              </span>
+            </div>
+          </LoadingWrapper>
         </button>
       </div>
       <div className="flex items-center justify-center mr-6">
