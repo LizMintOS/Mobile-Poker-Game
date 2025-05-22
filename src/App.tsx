@@ -3,6 +3,7 @@ import "./App.css";
 import HomePage from "./pages/Home";
 import AuthPage from "./pages/Auth";
 import { NavigationProvider } from "./contexts/NavProvider";
+import ProtectedLayout from "./layouts/ProtectedLayout";
 
 function App() {
   return (
@@ -10,8 +11,9 @@ function App() {
       <NavigationProvider>
         <Routes>
           <Route index path="/auth" element={<AuthPage />} />
-          <Route path="/">
-            <Route path=":userId/home" element={<HomePage />} />
+
+          <Route element={<ProtectedLayout />}>
+            <Route index path="/" element={<HomePage />} />
           </Route>
         </Routes>
       </NavigationProvider>
