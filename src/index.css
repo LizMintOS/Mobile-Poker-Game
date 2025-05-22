@@ -28,9 +28,23 @@ h1 {
   line-height: 1.1;
 }
 
+.wiggle {
+  animation: wiggle 1s ease-in-out infinite;
+}
+
 @media (prefers-color-scheme: light) {
   :root {
     color: #213547;
     background-color: #ffffff;
+  }
+}
+
+@keyframes wiggle {
+  0%,
+  100% {
+    transform: translateX(-3px);
+  }
+  50% {
+    transform: translateX(3px);
   }
 }

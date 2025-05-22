@@ -132,7 +132,7 @@ export const AuthForm = () => {
         </button>
       </div>
       <div className="flex items-center justify-center mr-6">
-        <div className="mr-2">👉</div>
+        <div className="mr-2 wiggle">👉</div>
         <div className="flex flex-row" onClick={() => handleInputChange(null)}>
           <p className="text-md w-fit self-center font-bold text-green-500 cursor-pointer underline underline-offset-6">
             {isLogin ? " Register" : " Login"}
