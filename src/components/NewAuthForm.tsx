@@ -14,7 +14,7 @@ type FormValues = {
 export const AuthForm = () => {
   const { loginUser, registerUser, loginAnonymouslyUser } = useAuthActions();
   const { goForward } = useNavigation();
-  const { error } = useError();
+  const { error, clearError } = useError();
   const [isLogin, setIsLogin] = useState(true);
   const {
     register,
@@ -33,59 +33,77 @@ export const AuthForm = () => {
       : await registerUser(data.email, data.password);
   };
 
-  const onError: SubmitErrorHandler<FormValues> = (errors) => {
-    console.log(errors);
-  };
-
   const handleAnonymousSignIn = async () => {
     await loginAnonymouslyUser();
   };
 
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement> | null) => {
+    if (e != null) {
+      e.preventDefault();
+      const { name } = e.target;
+      if (name === "email") {
+        clearErrors("email");
+      } else if (name === "password") {
+        clearErrors("password");
+      }
+    } else {
+      setIsLogin(!isLogin);
+      clearErrors();
+    }
+    clearError();
+  };
+
   return (
     <form
-      onSubmit={handleSubmit(onSubmit, onError)}
+      onSubmit={handleSubmit(onSubmit)}
       className="space-y-6 w-full mx-auto p-6"
     >
       <h2 className="text-2xl font-bold text-center">
         {isLogin ? "Login" : "Register"}
       </h2>
       <div className="flex flex-col w-full rounded-xl gap-1 mb-3">
-        <label className="text-gray-700 font-medium self-start ml-2">
-          Email
-        </label>
-        <input
-          {...register("email", {
-            required: "Email is required",
-            onChange: () => clearErrors(),
-          })}
-          type="text"
-          placeholder="Enter your email"
-          className={`px-4 py-2 mb-4 rounded-xl border w-full ${
-            errors.email ? "border-red-500" : "border-gray-300"
-          } focus:outline-none focus:ring-2 focus:ring-blue-400`}
-        />
-        {errors.email && (
-          <span className="text-sm text-red-500">{errors.email?.message}</span>
-        )}
-        <label className="text-gray-700 font-medium self-start ml-2">
-          Password
-        </label>
-        <input
-          {...register("password", {
-            required: "Password is required",
-            onChange: () => clearErrors(),
-          })}
-          type="password"
-          placeholder="Enter your password"
-          className={`px-4 py-2 rounded-xl border ${
-            errors.password ? "border-red-500" : "border-gray-300"
-          } focus:outline-none focus:ring-2 focus:ring-blue-400`}
-        />
-        {errors.password && (
-          <span className="text-sm text-red-500">
-            {errors.password?.message}
-          </span>
-        )}
+        <div className="flex flex-col w-full mb-4">
+          <label className="text-gray-700 font-medium self-start ml-2 mb-2">
+            Email
+          </label>
+          <input
+            {...register("email", {
+              required: "Email is required",
+              onChange: (e) => handleInputChange(e),
+            })}
+            type="text"
+            placeholder="Enter your email"
+            className={`px-4 py-2 rounded-xl border w-full ${
+              errors.email ? "border-red-500" : "border-gray-300"
+            } focus:outline-none focus:ring-2 focus:ring-blue-400`}
+          />
+          {errors.email && (
+            <span className="text-sm text-red-500 mt-2">
+              {errors.email?.message}
+            </span>
+          )}
+        </div>
+        <div className="flex flex-col w-full mb-4">
+          <label className="text-gray-700 font-medium self-start ml-2 mb-2">
+            Password
+          </label>
+          <input
+            {...register("password", {
+              required: "Password is required",
+              onChange: (e) => handleInputChange(e),
+            })}
+            type="password"
+            placeholder="Enter your password"
+            className={`px-4 py-2 rounded-xl border ${
+              errors.password ? "border-red-500" : "border-gray-300"
+            } focus:outline-none focus:ring-2 focus:ring-blue-400`}
+          />
+          {errors.password && (
+            <span className="text-sm text-red-500 mt-2">
+              {errors.password?.message}
+            </span>
+          )}
+        </div>
         {error && <span className="text-sm text-red-500 mt-2">{error}</span>}
       </div>
 
@@ -101,7 +119,7 @@ export const AuthForm = () => {
       <div className="flex flex-col items-center">
         <p
           className="text-sm w-fit self-center text-green-500 cursor-pointer underline"
-          onClick={() => setIsLogin(!isLogin)}
+          onClick={() => handleInputChange(null)}
         >
           {isLogin ? "Click to Register" : "Click to Login"}
         </p>
