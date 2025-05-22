@@ -11,13 +11,18 @@ import { useError } from "../../contexts/ErrorProvider";
 export const useAuthActions = () => {
   const { setError, clearError } = useError();
 
-  const handleError = (error?: any) => {
-    if (!error) {
+  const handleApiErrors = <T extends (...args: any[]) => any>(
+    fn: T
+  ): ((...args: Parameters<T>) => Promise<void>) => {
+    return async (...args: Parameters<T>) => {
       clearError();
-      return;
-    }
-    const mappedError = mapErrorToConstantErrorMessage(error);
-    setError(mappedError);
+      try {
+        return await fn(...args);
+      } catch (error: any) {
+        const mappedError = mapErrorToConstantErrorMessage(error);
+        setError(mappedError);
+      }
+    };
   };
 
   const registerUser = async (email: string, password: string) => {
