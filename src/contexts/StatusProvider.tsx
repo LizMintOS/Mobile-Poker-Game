@@ -1,20 +1,40 @@
-import { createContext, useContext, useState } from "react";
+import { createContext, ReactNode, useContext, useState } from "react";
 
 type StatusType = "idle" | "loading" | "success" | "error";
 
 interface StatusContextProps {
   status: StatusType;
   message?: string;
-  setStatus: (status: StatusType, message?: string) => void;
+  error?: any;
+  setStatus: (status: StatusType, message?: string, error?: string) => void;
   clearStatus: () => void;
 }
 
-const StatusContext = createContext<StatusContextProps | undefined>(undefined);
+const StatusContext = createContext<StatusContextProps>({
+  status: "idle",
+  setStatus: () => {},
+  clearStatus: () => {},
+});
 
-export const useStatus = () => {
-  const context = useContext(StatusContext);
-  if (!context) {
-    throw new Error("useStatus must be used within a StatusProvider");
-  }
-  return context;
+export const StatusProvider = ({ children }: { children: ReactNode }) => {
+  const [status, setStatusValue] = useState<StatusType>("idle");
+  const [message, setMessage] = useState<string | undefined>(undefined);
+
+  const setStatus = (newStatus: StatusType, newMessage?: string) => {
+    setStatusValue(newStatus);
+    setMessage(newMessage);
+  };
+
+  const clearStatus = () => {
+    setStatusValue("idle");
+    setMessage(undefined);
+  };
+
+  return (
+    <StatusContext.Provider value={{ status, message, setStatus, clearStatus }}>
+      {children}
+    </StatusContext.Provider>
+  );
 };
+
+export const useStatus = () => useContext(StatusContext);

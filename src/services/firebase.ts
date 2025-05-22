@@ -26,10 +26,7 @@ export const db = initializeFirestore(app, {
 });
 export const auth = getAuth(app);
 
-if (
-  process.env.MODE === "production" &&
-  process.env.REACT_USE_EMULATORS === "true"
-) {
-  connectFirestoreEmulator(db, "127.0.0.1", 8080);
-  connectAuthEmulator(auth, "http://localhost:9099");
-}
+// if (process.env.REACT_USE_EMULATORS === "true") {
+//   connectFirestoreEmulator(db, "127.0.0.1", 8080);
+//   connectAuthEmulator(auth, "http://localhost:9099");
+// }
