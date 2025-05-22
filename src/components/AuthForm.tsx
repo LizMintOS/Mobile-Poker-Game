@@ -1,10 +1,11 @@
 import { SubmitHandler, useForm } from "react-hook-form";
-import { useAuthActions } from "../api/users/functions";
-import { useState } from "react";
+import { useAuthActions } from "../api/auth/functions";
+import { useEffect, useState } from "react";
 import { LoadingWrapper } from "./common/LoadingWrapper";
 import { useNavigation } from "../contexts/NavProvider";
 import { useError } from "../contexts/ErrorProvider";
 import { GoArrowRight } from "react-icons/go";
+import { useAuth } from "../contexts/AuthProvider"
 
 type FormValues = {
   email: string;
@@ -14,6 +15,7 @@ type FormValues = {
 
 export const AuthForm = () => {
   const { loginUser, registerUser, loginAnonymouslyUser } = useAuthActions();
+  const { currentUser } = useAuth();
   const { goForward } = useNavigation();
   const { error, clearError } = useError();
   const [isLogin, setIsLogin] = useState(true);

@@ -10,7 +10,7 @@ function App() {
       <NavigationProvider>
         <Routes>
           <Route index path="/auth" element={<AuthPage />} />
-          <Route path="/" element={<HomePage />}>
+          <Route path="/">
             <Route path=":userId/home" element={<HomePage />} />
           </Route>
         </Routes>

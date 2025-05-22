@@ -1,5 +1,5 @@
 import { createContext, useContext, useState, useEffect } from "react";
-import { subscribeToAuthChanges } from "../api/users/functions";
+import { subscribeToAuthChanges } from "../api/auth/functions";
 import { User } from "firebase/auth";
 
 interface AuthContextType {

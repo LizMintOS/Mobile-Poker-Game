@@ -1,5 +1,5 @@
 // import { AuthForm, AuthStatusWatcher } from "../components/AuthForm";
-import { AuthForm } from "../components/NewAuthForm";
+import { AuthForm } from "../components/AuthForm";
 
 const AuthPage = () => {
   return (
