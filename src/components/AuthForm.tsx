@@ -4,7 +4,6 @@ import { useAuthActions } from "../api/users/functions";
 import { useEffect, useState } from "react";
 import { useAuth } from "../contexts/AuthProvider";
 import { useNavigation } from "../contexts/NavProvider";
-import { useStatus } from "../contexts/StatusProvider";
 
 type AuthFormProps = {
   email: string;
@@ -12,7 +11,7 @@ type AuthFormProps = {
 };
 
 export const AuthForm = () => {
-  const { clearStatus, setStatus } = useStatus();
+  // const { clearStatus, setStatus } = useStatus();
   const { loginUser, registerUser, loginAnonymouslyUser } = useAuthActions();
   const {
     register,
@@ -41,7 +40,7 @@ export const AuthForm = () => {
     } else if (error.code === "auth/email-already-in-use") {
       setError("email", { message: "Email already in use" });
     } else {
-      setStatus("error", "An error occurred", error);
+      // setStatus("error", "An error occurred", error);
       console.error(error);
     }
   };
@@ -52,7 +51,7 @@ export const AuthForm = () => {
 
   const handleInputChange = () => {
     clearErrors();
-    clearStatus();
+    // clearStatus();
   };
 
   return (
@@ -104,21 +103,21 @@ export const AuthForm = () => {
   );
 };
 
-export const AuthStatusWatcher = () => {
-  const { status, clearStatus } = useStatus();
-  const { goForward } = useNavigation();
-  const { currentUser } = useAuth();
+// export const AuthStatusWatcher = () => {
+//   const { status, clearStatus } = useStatus();
+//   const { goForward } = useNavigation();
+//   const { currentUser } = useAuth();
 
-  useEffect(() => {
-    if (status === "success" && currentUser) {
-      const timeout = setTimeout(() => {
-        goForward("/dashboard");
-        clearStatus();
-      }, 1500);
+//   useEffect(() => {
+//     if (status === "success" && currentUser) {
+//       const timeout = setTimeout(() => {
+//         goForward("/dashboard");
+//         clearStatus();
+//       }, 1500);
 
-      return () => clearTimeout(timeout);
-    }
-  }, [status, goForward, clearStatus, currentUser]);
+//       return () => clearTimeout(timeout);
+//     }
+//   }, [status, goForward, clearStatus, currentUser]);
 
-  return null;
-};
+//   return null;
+// };

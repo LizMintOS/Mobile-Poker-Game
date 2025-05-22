@@ -4,7 +4,6 @@ import App from "./App.tsx";
 import ReactDOM from "react-dom/client";
 import { ServiceWorkerManager } from "./services/serviceWorkerManager.tsx";
 import { AuthProvider } from "./contexts/AuthProvider.tsx";
-import { StatusProvider } from "./contexts/StatusProvider.tsx";
 // import { NavigationProvider } from "./contexts/NavProvider.tsx";
 
 const root = ReactDOM.createRoot(
@@ -13,13 +12,11 @@ const root = ReactDOM.createRoot(
 
 root.render(
   <StrictMode>
-    <StatusProvider>
       <AuthProvider>
         {/* <NavigationProvider> */}
           <ServiceWorkerManager />
           <App />
         {/* </NavigationProvider> */}
       </AuthProvider>
-    </StatusProvider>
   </StrictMode>
 );
