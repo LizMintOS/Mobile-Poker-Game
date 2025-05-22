@@ -58,8 +58,8 @@ export const AuthForm = () => {
       onSubmit={handleSubmit(onSubmit)}
       className="space-y-6 w-full mx-auto p-6"
     >
-      <h2 className="text-2xl font-bold text-center">
-        {isLogin ? "Login" : "Register"}
+      <h2 className="text-3xl font-bold text-center">
+        {isLogin ? "Sign in to play!" : "Create Account"}
       </h2>
       <div className="flex flex-col w-full rounded-xl gap-1 mb-3">
         <div className="flex flex-col w-full mb-4">
@@ -107,38 +107,47 @@ export const AuthForm = () => {
         {error && <span className="text-sm text-red-500 mt-2">{error}</span>}
       </div>
 
-      <button
-        type="submit"
-        className="rounded-xl py-2 px-4 text-white text-lg hover:bg-green-500 hover:border-b-6 font-bold bg-green-600 cursor-pointer border-x-2 border-b-4 border-green-700 w-full"
-        disabled={!isValid || isSubmitting || isLoading || !!error}
-      >
-        <LoadingWrapper loading={isSubmitting || isLoading}>
-          <div>{isLogin ? "Log in" : "Register"}</div>
-        </LoadingWrapper>
-      </button>
-      <div className="flex flex-col items-center">
-        <button
-          onClick={handleAnonymousSignIn}
-          className="group relative flex items-center justify-center text-black text-sm rounded-xl p-2 cursor-pointer bg-gray-400 hover:bg-inherit transition-all duration-500 border-x-2 border-b-4 border-gray-600 overflow-hidden"
-        >
-          <LoadingWrapper loading={isSubmitting || isLoading}>
-            <div className="flex items-center">
-              <span className="ml-1 flex items-center justify-center">👤</span>
-              <span className="ml-1 overflow-hidden whitespace-nowrap transition-all duration-1000 max-w-0 group-hover:max-w-xs">
-                Sign in Anonymously
-              </span>
+      <LoadingWrapper loading={isSubmitting || isLoading}>
+        <div className="flex flex-col items-center gap-6">
+          <div className="flex flex-row w-full justify-between">
+            <div className="flex mr-2 w-full">
+              <button
+                type="submit"
+                className="rounded-xl py-2 px-4 text-white text-lg hover:bg-green-500 hover:border-b-8 transition-border duration-100 font-bold bg-green-600 cursor-pointer border-x-2 border-b-4 border-green-700 w-full"
+                disabled={!isValid || isSubmitting || isLoading || !!error}
+              >
+                <div>{isLogin ? "Log in" : "Register"}</div>
+              </button>
             </div>
-          </LoadingWrapper>
-        </button>
-      </div>
-      <div className="flex items-center justify-center mr-6">
-        <div className="mr-2 wiggle">👉</div>
-        <div className="flex flex-row" onClick={() => handleInputChange(null)}>
-          <p className="text-md w-fit self-center font-bold text-green-500 cursor-pointer underline underline-offset-6">
-            {isLogin ? " Register" : " Login"}
-          </p>
+            <div className="flex flex-col items-center">
+              <button
+                onClick={handleAnonymousSignIn}
+                className="group relative flex items-center justify-center text-black text-sm rounded-xl p-2 cursor-pointer bg-gray-400 hover:bg-gray-200 transition-all duration-300 border-x-2 border-b-4 border-gray-600 overflow-hidden"
+              >
+                <div className="flex items-center py-1">
+                  <span className="ml-1 p-1 flex items-center justify-center rounded-3xl inset-shadow-sm inset-shadow-gray-500">
+                    👤
+                  </span>
+                  <span className="ml-1 overflow-hidden whitespace-nowrap transition-all duration-300 max-w-0 group-hover:max-w-xs">
+                    Anonymous
+                  </span>
+                </div>
+              </button>
+            </div>
+          </div>
+          <div className="flex items-center justify-center mr-6">
+            <div className="mr-2 wiggle">👉</div>
+            <div
+              className="flex flex-row"
+              onClick={() => handleInputChange(null)}
+            >
+              <p className="text-md w-fit self-center font-bold text-green-500 cursor-pointer underline underline-offset-6">
+                {isLogin ? " Register" : " Login"}
+              </p>
+            </div>
+          </div>
         </div>
-      </div>
+      </LoadingWrapper>
     </form>
   );
 };
