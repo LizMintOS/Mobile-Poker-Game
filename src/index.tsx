@@ -4,7 +4,7 @@ import App from "./App.tsx";
 import ReactDOM from "react-dom/client";
 import { ServiceWorkerManager } from "./services/serviceWorkerManager.tsx";
 import { AuthProvider } from "./contexts/AuthProvider.tsx";
-// import { NavigationProvider } from "./contexts/NavProvider.tsx";
+import { ErrorProvider } from "./contexts/ErrorProvider.tsx";
 
 const root = ReactDOM.createRoot(
   document.getElementById("root") as HTMLElement
@@ -12,11 +12,11 @@ const root = ReactDOM.createRoot(
 
 root.render(
   <StrictMode>
-      <AuthProvider>
-        {/* <NavigationProvider> */}
-          <ServiceWorkerManager />
-          <App />
-        {/* </NavigationProvider> */}
-      </AuthProvider>
+    <AuthProvider>
+      <ErrorProvider>
+        <ServiceWorkerManager />
+        <App />
+      </ErrorProvider>
+    </AuthProvider>
   </StrictMode>
 );

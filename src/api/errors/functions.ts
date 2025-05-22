@@ -2,11 +2,10 @@ import { FirestoreError } from "firebase/firestore";
 import { AuthError } from "firebase/auth";
 import { Errors, LocalError } from "./types";
 
-export const mapFirestoreErrorToAuthError = (
+export const mapErrorToConstantErrorMessage = (
   error: FirestoreError | AuthError | any,
   returnFullError: boolean = false
 ): string | LocalError => {
-  if (!error) return null;
   const message = (() => {
     switch (error.code) {
       case "not-found":

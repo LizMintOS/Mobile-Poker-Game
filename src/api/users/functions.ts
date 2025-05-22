@@ -5,10 +5,21 @@ import {
   signInAnonymously,
 } from "firebase/auth";
 import { auth } from "../../services/firebase";
-import { mapFirestoreErrorToAuthError } from "../errors/functions";
-
+import { mapErrorToConstantErrorMessage } from "../errors/functions";
+import { useError } from "../../contexts/ErrorProvider";
 
 export const useAuthActions = () => {
+  const { setError, clearError } = useError();
+
+  const handleError = (error?: any) => {
+    if (!error) {
+      clearError();
+      return;
+    }
+    const mappedError = mapErrorToConstantErrorMessage(error);
+    setError(mappedError);
+  };
+
   const registerUser = async (email: string, password: string) => {
     try {
       await createUserWithEmailAndPassword(auth, email, password);

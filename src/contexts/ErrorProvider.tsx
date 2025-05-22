@@ -2,7 +2,7 @@ import { useState, useContext, createContext } from "react";
 
 interface ErrorContextType {
   error: string | null;
-  setError: (error: string | null) => void;
+  setError: (error: any) => void;
   clearError: () => void;
 }
 
