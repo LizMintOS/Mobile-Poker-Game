@@ -9,9 +9,10 @@ const ProtectedRoute = () => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    console.log(currentUser)
     const timer = setTimeout(() => {
       if (!currentUser) {
-        return <Navigate to="/auth" replace />;
+        return <Navigate to="/" replace />;
       } else {
         setLoading(false);
       }
@@ -30,6 +31,7 @@ const ProtectedRoute = () => {
         justifyContent: "center",
         alignItems: "center",
         height: "100vh",
+        width: "100vw",
       }}
       size={80}
     >

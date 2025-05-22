@@ -10,11 +10,13 @@ function App() {
     <BrowserRouter>
       <NavigationProvider>
         <Routes>
-          <Route index path="/auth" element={<AuthPage />} />
-
-          <Route element={<ProtectedLayout />}>
-            <Route index path="/" element={<HomePage />} />
+          <Route path="/:userId/:username">
+            <Route element={<ProtectedLayout />}>
+              <Route index path="home" element={<HomePage />} />
+            </Route>
           </Route>
+
+          <Route index element={<AuthPage />} />
         </Routes>
       </NavigationProvider>
     </BrowserRouter>

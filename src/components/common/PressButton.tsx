@@ -1,7 +1,7 @@
 import { ReactNode } from "react";
 
 interface PressButtonProps {
-  type: "button" | "submit";
+  type?: "button" | "submit";
   disabled?: boolean;
   onClick?: () => void;
   style?: string;
@@ -20,7 +20,7 @@ const PressButton = ({
       type={type}
       disabled={disabled}
       onClick={onClick}
-      className={`rounded-xl py-2 px-4 text-white text-lg border-b-8 transition-border duration-100 font-bold cursor-pointer border-x-2 hover:border-b-4 overflow-hidden ${style}`}
+      className={`rounded-xl py-2 px-4 text-white text-lg border-b-8 transition-border duration-100 w-full font-bold cursor-pointer border-x-2 hover:border-b-4 overflow-hidden ${style}`}
     >
       {children}
     </button>

@@ -5,9 +5,8 @@ import { LoadingWrapper } from "./common/LoadingWrapper";
 import { useNavigation } from "../contexts/NavProvider";
 import { useError } from "../contexts/ErrorProvider";
 import { GoArrowRight } from "react-icons/go";
-import { useAuth } from "../contexts/AuthProvider"
+import { useAuth } from "../contexts/AuthProvider";
 import PressButton from "./common/PressButton";
-
 
 type FormValues = {
   email: string;
@@ -70,7 +69,10 @@ export const AuthForm = () => {
       </h2>
       <div className="flex flex-col w-full rounded-xl gap-1 mb-3">
         <div className="flex flex-col w-full mb-4">
-          <label className="text-gray-700 font-medium self-start ml-2 mb-2">
+          <label
+            htmlFor="email"
+            className="text-gray-700 font-medium self-start ml-2 mb-2"
+          >
             Email
           </label>
           <input
@@ -79,6 +81,7 @@ export const AuthForm = () => {
               onChange: (e) => handleInputChange(e),
             })}
             type="text"
+            id="email"
             placeholder="Enter your email"
             className={`px-4 py-2 rounded-xl border w-full ${
               errors.email ? "border-red-500" : "border-gray-300"
@@ -91,7 +94,10 @@ export const AuthForm = () => {
           )}
         </div>
         <div className="flex flex-col w-full mb-4">
-          <label className="text-gray-700 font-medium self-start ml-2 mb-2">
+          <label
+            htmlFor="password"
+            className="text-gray-700 font-medium self-start ml-2 mb-2"
+          >
             Password
           </label>
           <input
@@ -99,6 +105,7 @@ export const AuthForm = () => {
               required: "Password is required",
               onChange: (e) => handleInputChange(e),
             })}
+            id="password"
             type="password"
             placeholder="Enter your password"
             className={`px-4 py-2 rounded-xl border ${
@@ -118,9 +125,9 @@ export const AuthForm = () => {
         <div className="flex flex-col items-center gap-6 w-full">
           <div className="flex flex-row w-full justify-between h-14 ">
             <div className="flex mr-2 w-full">
-              <button
+              <PressButton
                 type="submit"
-                className="rounded-xl py-2 px-4 text-white text-lg bg-green-500 border-b-8 transition-border duration-100 font-bold bg-green-600 cursor-pointer border-x-2 hover:border-b-4 border-green-700 w-full"
+                style="bg-green-500 bg-green-600 border-green-700"
                 disabled={!isValid || isSubmitting || isLoading || !!error}
               >
                 <div className="flex items-center justify-center">
@@ -129,13 +136,12 @@ export const AuthForm = () => {
                     <GoArrowRight className="wiggle" size={26} />
                   </div>
                 </div>
-              </button>
+              </PressButton>
             </div>
             <div className="flex flex-col items-center">
-              <button
-                type="button"
+              <PressButton
                 onClick={handleAnonymousSignIn}
-                className="group relative flex items-center justify-center text-gray-100 italic text-sm rounded-xl p-3 cursor-pointer bg-gray-400 transition-border duration-100 border-x-2 hover:border-b-4 border-b-8 border-gray-600 overflow-hidden"
+                style="group relative flex italic bg-gray-400 border-gray-600"
               >
                 <div className="flex items-center">
                   <span className="mx-2 p-1 flex items-center justify-center rounded-3xl inset-shadow-sm inset-shadow-gray-500">
@@ -145,7 +151,7 @@ export const AuthForm = () => {
                     Sneak in...
                   </span>
                 </div>
-              </button>
+              </PressButton>
             </div>
           </div>
           <div className="flex items-center justify-center mr-6">
