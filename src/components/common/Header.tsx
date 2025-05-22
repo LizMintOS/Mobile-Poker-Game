@@ -1,4 +1,3 @@
-import { useAuth } from "../../contexts/AuthProvider";
 import { useAuthActions } from "../../api/auth/functions";
 import { useParams } from "react-router";
 

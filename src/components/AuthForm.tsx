@@ -6,6 +6,8 @@ import { useNavigation } from "../contexts/NavProvider";
 import { useError } from "../contexts/ErrorProvider";
 import { GoArrowRight } from "react-icons/go";
 import { useAuth } from "../contexts/AuthProvider"
+import PressButton from "./common/PressButton";
+
 
 type FormValues = {
   email: string;
