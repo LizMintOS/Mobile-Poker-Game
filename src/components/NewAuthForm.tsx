@@ -109,27 +109,34 @@ export const AuthForm = () => {
 
       <button
         type="submit"
-        className="rounded-xl py-2 px-4 text-white text-base font-semibold bg-green-600 cursor-pointer transition-all duration-100 hover:bg-green-500 hover:shadow-md hover:shadow-green-200 w-full"
-        disabled={!isValid || isSubmitting || isLoading}
+        className="rounded-xl py-2 px-4 text-white text-base font-semibold bg-green-600 cursor-pointer transition-all duration-100 border-x-2 border-b-4 border-green-700 w-full"
+        disabled={!isValid || isSubmitting || isLoading || !!error}
       >
         <LoadingWrapper loading={isSubmitting || isLoading}>
           <div>{isLogin ? "Log in" : "Register"}</div>
         </LoadingWrapper>
       </button>
       <div className="flex flex-col items-center">
+        <button
+          onClick={handleAnonymousSignIn}
+          className="group relative flex items-center justify-center text-black text-sm rounded-xl p-2 cursor-pointer bg-gray-400 hover:bg-inherit transition-all duration-500 border-x-2 border-b-4 border-gray-600 overflow-hidden"
+        >
+          <span className="ml-1 flex items-center justify-center">
+          👤
+          </span>
+          <span className="ml-1 overflow-hidden whitespace-nowrap transition-all duration-1000 max-w-0 group-hover:max-w-xs">
+            Sign in Anonymously
+          </span>
+        </button>
+      </div>
+      <div className="flex flex-col items-center">
         <p
-          className="text-sm w-fit self-center text-green-500 cursor-pointer underline"
+          className="text-md w-fit self-center font-bold text-green-500 cursor-pointer"
           onClick={() => handleInputChange(null)}
         >
-          {isLogin ? "Click to Register" : "Click to Login"}
+          {isLogin ? "👉 Register" : "👉 Login"}
         </p>
       </div>
-      <button
-        onClick={handleAnonymousSignIn}
-        className="bg-gray-700 text-white text-sm rounded-xl p-2 hover:bg-gray-600 transition-all duration-100 cursor-pointer hover:shadow-md hover:shadow-black-200"
-      >
-        Sign in Anonymously
-      </button>
     </form>
   );
 };
