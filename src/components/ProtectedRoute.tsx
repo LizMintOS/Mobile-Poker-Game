@@ -34,7 +34,6 @@ const ProtectedRoute = () => {
       size={80}
     >
       <>
-        <Header />
         <Outlet />
       </>
     </LoadingWrapper>
