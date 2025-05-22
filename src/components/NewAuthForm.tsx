@@ -36,6 +36,7 @@ export const AuthForm = () => {
 
   const handleAnonymousSignIn = async () => {
     clearErrors();
+    clearError();
     await loginAnonymouslyUser();
   };
 
