@@ -25,21 +25,15 @@ export const useAuthActions = () => {
     };
   };
 
-  const registerUser = async (email: string, password: string) => {
-    try {
+  const registerUser = handleApiErrors(
+    async (email: string, password: string) => {
       await createUserWithEmailAndPassword(auth, email, password);
-    } catch (error: any) {
-      console.error("Error registering user:", error);
     }
-  };
+  );
 
-  const loginUser = async (email: string, password: string) => {
-    try {
-      await signInWithEmailAndPassword(auth, email, password);
-    } catch (error: any) {
-      console.error("Error logging in user:", error);
-    }
-  };
+  const loginUser = handleApiErrors(async (email: string, password: string) => {
+    await signInWithEmailAndPassword(auth, email, password);
+  });
 
   const logoutUser = async () => {
     try {

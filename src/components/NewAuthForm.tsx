@@ -3,6 +3,7 @@ import { useAuthActions } from "../api/users/functions";
 import { useState } from "react";
 import { LoadingWrapper } from "./common/LoadingWrapper";
 import { useNavigation } from "../contexts/NavProvider";
+import { useError } from "../contexts/ErrorProvider";
 
 type FormValues = {
   email: string;
@@ -13,31 +14,27 @@ type FormValues = {
 export const AuthForm = () => {
   const { loginUser, registerUser, loginAnonymouslyUser } = useAuthActions();
   const { goForward } = useNavigation();
+  const { error } = useError();
   const [isLogin, setIsLogin] = useState(true);
-  const [firebaseError, setFirebaseError] = useState<string | null>(null);
   const {
     register,
     handleSubmit,
-    setError,
     formState: { errors, isValid, isSubmitting, isLoading },
     clearErrors,
   } = useForm<FormValues>();
 
   const onSubmit: SubmitHandler<FormValues> = async (data) => {
     console.log(data);
+
     if (!data.email || !data.password) return;
-    try {
-      isLogin
-        ? await loginUser(data.email, data.password)
-        : await registerUser(data.email, data.password);
-    } catch (error: any) {
-      setFirebaseError(error.message);
-    }
+
+    isLogin
+      ? await loginUser(data.email, data.password)
+      : await registerUser(data.email, data.password);
   };
 
   const onError: SubmitErrorHandler<FormValues> = (errors) => {
     console.log(errors);
-    setFirebaseError(errors.error?.message || null);
   };
 
   const handleAnonymousSignIn = async () => {
@@ -52,7 +49,7 @@ export const AuthForm = () => {
       <h2 className="text-2xl font-bold text-center">
         {isLogin ? "Login" : "Register"}
       </h2>
-      <div className="flex flex-col w-full rounded-xl gap-1">
+      <div className="flex flex-col w-full rounded-xl gap-1 mb-3">
         <label className="text-gray-700 font-medium self-start ml-2">
           Email
         </label>
@@ -89,9 +86,7 @@ export const AuthForm = () => {
             {errors.password?.message}
           </span>
         )}
-        {firebaseError && (
-          <span className="text-sm text-red-500">{firebaseError}</span>
-        )}
+        {error && <span className="text-sm text-red-500 mt-2">{error}</span>}
       </div>
 
       <button
