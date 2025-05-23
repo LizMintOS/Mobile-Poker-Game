@@ -27,7 +27,7 @@ export const useAuthActions = () => {
   };
 
   const registerUser = handleApiErrors(
-    async (email: string, password: string) => {
+    async (email: string, password: string, onSuccess: (user: any) => void) => {
       await createUserWithEmailAndPassword(auth, email, password).then(
         async () => {
           const user = auth.currentUser;
@@ -35,6 +35,7 @@ export const useAuthActions = () => {
             displayName: email.substring(0, email.indexOf("@")),
           }).then(() => {
             console.log("User profile created successfully", user?.displayName);
+            if (onSuccess) onSuccess(user);
           });
         }
       );

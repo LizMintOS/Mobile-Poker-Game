@@ -9,11 +9,12 @@ const ProtectedRoute = () => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    console.log(currentUser)
+    console.log("Checking authentication...");
     const timer = setTimeout(() => {
       if (!currentUser) {
         return <Navigate to="/" replace />;
       } else {
+        console.log("Authenticated. Proceeding to protected route.");
         setLoading(false);
       }
     }, 600);

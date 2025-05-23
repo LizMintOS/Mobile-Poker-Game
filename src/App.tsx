@@ -5,7 +5,7 @@ import AuthPage from "./pages/Auth";
 import { NavigationProvider } from "./contexts/NavProvider";
 import ProtectedLayout from "./layouts/ProtectedLayout";
 
-function App() {
+const App = () => {
   return (
     <BrowserRouter>
       <NavigationProvider>

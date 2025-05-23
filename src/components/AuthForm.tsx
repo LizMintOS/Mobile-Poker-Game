@@ -27,6 +27,13 @@ export const AuthForm = () => {
     clearErrors,
   } = useForm<FormValues>();
 
+  const onSuccess = (user: any) => {
+    if (user) {
+      console.log("Form onSuccess: ", user.displayName);
+      goForward(`/${user.uid}/${user.displayName}/home`);
+    }
+  };
+
   const onSubmit: SubmitHandler<FormValues> = async (data) => {
     console.log(data);
 
@@ -34,7 +41,7 @@ export const AuthForm = () => {
 
     isLogin
       ? await loginUser(data.email, data.password)
-      : await registerUser(data.email, data.password);
+      : await registerUser(data.email, data.password, onSuccess);
   };
 
   const handleAnonymousSignIn = async () => {
