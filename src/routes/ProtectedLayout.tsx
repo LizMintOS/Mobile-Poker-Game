@@ -5,9 +5,9 @@ const ProtectedLayout = () => {
   return (
     <>
       <Header />
-      {/* <main className="p-6"> */}
+      <main className="p-6">
         <Outlet />
-      {/* </main> */}
+      </main>
     </>
   );
 };

@@ -16,7 +16,6 @@ type FormValues = {
 
 export const AuthForm = () => {
   const { loginUser, registerUser, loginAnonymouslyUser } = useAuthActions();
-  const { goForward } = useNavigation();
   const { error, clearError } = useError();
   const [isLogin, setIsLogin] = useState(true);
   const {
@@ -26,13 +25,6 @@ export const AuthForm = () => {
     clearErrors,
   } = useForm<FormValues>();
 
-  const onSuccess = (user: any) => {
-    if (user) {
-      console.log("Form onSuccess: ", user.displayName);
-      goForward(`/${user.uid}/${user.displayName}/home`);
-    }
-  };
-
   const onSubmit: SubmitHandler<FormValues> = async (data) => {
     console.log(data);
 
@@ -40,12 +32,11 @@ export const AuthForm = () => {
 
     isLogin
       ? await loginUser(data.email, data.password)
-      : await registerUser(data.email, data.password, onSuccess);
+      : await registerUser(data.email, data.password);
   };
 
   const handleAnonymousSignIn = async () => {
     clearErrors();
-    clearError();
     await loginAnonymouslyUser();
   };
 
