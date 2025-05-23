@@ -20,9 +20,6 @@ const ProtectedRoute = () => {
     return () => clearTimeout(timer);
   }, [currentUser]);
 
-  if (!currentUser) {
-  }
-
   return (
     <LoadingWrapper
       loading={loading}

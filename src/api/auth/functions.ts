@@ -28,12 +28,16 @@ export const useAuthActions = () => {
 
   const registerUser = handleApiErrors(
     async (email: string, password: string) => {
-      await createUserWithEmailAndPassword(auth, email, password);
-      const user = auth.currentUser;
-      updateProfile(user!, {
-        displayName: email.substring(0, email.indexOf("@")),
-      });
-      if (user) console.log("User registered successfully:", user);
+      await createUserWithEmailAndPassword(auth, email, password).then(
+        async () => {
+          const user = auth.currentUser;
+          await updateProfile(user!, {
+            displayName: email.substring(0, email.indexOf("@")),
+          }).then(() => {
+            console.log("User profile created successfully", user?.displayName);
+          });
+        }
+      );
     }
   );
 
@@ -46,8 +50,13 @@ export const useAuthActions = () => {
   });
 
   const loginAnonymouslyUser = handleApiErrors(async () => {
-    const user = await signInAnonymously(auth);
-    if (user) console.log("User snuck in successfully:", user);
+    await signInAnonymously(auth).then(async () => {
+      const user = auth.currentUser;
+      await updateProfile(user!, {
+        displayName: "Guest",
+      });
+      if (user) console.log("User snuck in successfully:", user.displayName);
+    });
   });
 
   return {
