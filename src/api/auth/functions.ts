@@ -6,30 +6,10 @@ import {
   updateProfile,
 } from "firebase/auth";
 import { auth } from "../../services/firebase";
-import { mapErrorToConstantErrorMessage } from "../errors/functions";
-import { useError } from "../../contexts/ErrorProvider";
-import { useState } from "react";
+import { useHandleApiFunction } from "../hooks/useHandleApiFunction";
 
 export const useAuthActions = () => {
-  const { setError, clearError } = useError();
-  const [loading, setLoading] = useState(false);
-
-  const handleApiErrors = <T extends (...args: any[]) => any>(
-    fn: T
-  ): ((...args: Parameters<T>) => Promise<void>) => {
-    return async (...args: Parameters<T>) => {
-      setLoading(true);
-      clearError();
-      try {
-        return await fn(...args);
-      } catch (error: any) {
-        const mappedError = mapErrorToConstantErrorMessage(error);
-        setError(mappedError);
-      } finally {
-        setLoading(false);
-      }
-    };
-  };
+  const { handleApiErrors, loading } = useHandleApiFunction();
 
   const registerUser = handleApiErrors(
     async (email: string, password: string) => {
