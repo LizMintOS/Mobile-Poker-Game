@@ -37,8 +37,9 @@ export const useAuthActions = () => {
       const user = auth.currentUser;
       await updateProfile(user!, {
         displayName: "Guest",
+      }).then(() => {
+        console.log("User updated successfully:", user?.displayName);
       });
-      if (user) console.log("User snuck in successfully:", user.displayName);
     });
   });
 

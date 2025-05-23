@@ -1,7 +1,7 @@
 import { Outlet, useParams } from "react-router";
 import { useAuth } from "../contexts/AuthProvider";
 import { LoadingWrapper } from "../components/common/LoadingWrapper";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { useNavigation } from "../contexts/NavProvider";
 import { useLoading } from "../contexts/LoadingProvider";
 
@@ -28,7 +28,7 @@ const ProtectedHome = () => {
           }/home`
         );
       }
-    }, 600);
+    }, 800);
     return () => clearTimeout(timer);
   }, [currentUser]);
 

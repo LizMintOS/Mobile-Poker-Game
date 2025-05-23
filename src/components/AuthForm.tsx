@@ -5,7 +5,6 @@ import { LoadingWrapper } from "./common/LoadingWrapper";
 import { useError } from "../contexts/ErrorProvider";
 import { GoArrowRight } from "react-icons/go";
 import PressButton from "./common/PressButton";
-import { useLoading } from "../contexts/LoadingProvider";
 
 type FormValues = {
   email: string;
@@ -15,9 +14,9 @@ type FormValues = {
 
 export const AuthForm = () => {
   const { loginUser, registerUser, loginAnonymouslyUser } = useAuthActions();
-  const { setLoading, loading } = useLoading();
   const { error, clearError } = useError();
   const [isLogin, setIsLogin] = useState(true);
+  const [isAnon, setIsAnon] = useState(false);
   const {
     register,
     handleSubmit,
@@ -27,17 +26,15 @@ export const AuthForm = () => {
 
   const onSubmit: SubmitHandler<FormValues> = async (data) => {
     clearErrors();
-    setLoading(true);
     console.log(data);
 
-    if (!data.email && !data.password) await loginAnonymouslyUser();
+    if (!(data.email && data.password) && isAnon) await loginAnonymouslyUser();
+    
     else {
       isLogin
-        ? await loginUser(data.email, data.password)
-        : await registerUser(data.email, data.password);
+        ? await loginUser(data!.email, data!.password)
+        : await registerUser(data!.email, data!.password);
     }
-
-    setLoading(false);
   };
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement> | null) => {
@@ -50,7 +47,7 @@ export const AuthForm = () => {
         clearErrors("password");
       }
     } else {
-      setIsLogin(!isLogin);
+      if (!isAnon) setIsLogin(!isLogin);
       clearErrors();
     }
     clearError();
@@ -74,8 +71,9 @@ export const AuthForm = () => {
           </label>
           <input
             {...register("email", {
-              required: "Email is required",
+              validate: { isAnonymous: () => isAnon || "Email is required" },
               onChange: (e) => handleInputChange(e),
+              disabled: isSubmitting,
             })}
             type="text"
             id="email"
@@ -99,8 +97,9 @@ export const AuthForm = () => {
           </label>
           <input
             {...register("password", {
-              required: "Password is required",
+              validate: { isAnonymous: () => isAnon || "Password is required" },
               onChange: (e) => handleInputChange(e),
+              disabled: isSubmitting,
             })}
             id="password"
             type="password"
@@ -118,7 +117,7 @@ export const AuthForm = () => {
         {error && <span className="text-sm text-red-500 mt-2">{error}</span>}
       </div>
 
-      <LoadingWrapper loading={isSubmitting || isLoading || loading}>
+      <LoadingWrapper loading={isSubmitting || isLoading}>
         <div className="flex flex-col items-center gap-6 w-full">
           <div className="flex flex-row w-full justify-between h-14">
             <div className="flex mr-2 w-full">
@@ -138,8 +137,12 @@ export const AuthForm = () => {
             <div className="flex flex-col items-center">
               <PressButton
                 type="submit"
+                onClick={() => {
+                  setIsAnon(true);
+                  handleInputChange(null);
+                }}
                 style="group relative flex italic bg-gray-400 border-gray-600"
-                disabled={isSubmitting || isLoading || !!error || loading}
+                disabled={isSubmitting || isLoading || !!error}
               >
                 <div className="flex items-center">
                   <span className="mx-2 p-1 flex items-center justify-center rounded-3xl inset-shadow-sm inset-shadow-gray-500">
