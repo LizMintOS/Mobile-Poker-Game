@@ -3,14 +3,16 @@ import { useAuth } from "../contexts/AuthProvider";
 import { LoadingWrapper } from "../components/common/LoadingWrapper";
 import { useEffect, useState } from "react";
 import { useNavigation } from "../contexts/NavProvider";
+import { useLoading } from "../contexts/LoadingProvider";
 
 const ProtectedHome = () => {
   const { currentUser } = useAuth();
   const { userId, username } = useParams();
   const { goForward } = useNavigation();
-  const [loading, setLoading] = useState(true);
+  const { setLoading, loading } = useLoading();
 
   useEffect(() => {
+    setLoading(true);
     console.log("Checking authentication...");
     const timer = setTimeout(() => {
       if (!currentUser) {

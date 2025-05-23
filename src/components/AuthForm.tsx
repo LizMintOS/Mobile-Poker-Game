@@ -1,12 +1,11 @@
 import { SubmitHandler, useForm } from "react-hook-form";
 import { useAuthActions } from "../api/auth/functions";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { LoadingWrapper } from "./common/LoadingWrapper";
-import { useNavigation } from "../contexts/NavProvider";
 import { useError } from "../contexts/ErrorProvider";
 import { GoArrowRight } from "react-icons/go";
-import { useAuth } from "../contexts/AuthProvider";
 import PressButton from "./common/PressButton";
+import { useLoading } from "../contexts/LoadingProvider";
 
 type FormValues = {
   email: string;
@@ -16,6 +15,7 @@ type FormValues = {
 
 export const AuthForm = () => {
   const { loginUser, registerUser, loginAnonymouslyUser } = useAuthActions();
+  const { setLoading, loading } = useLoading();
   const { error, clearError } = useError();
   const [isLogin, setIsLogin] = useState(true);
   const {
@@ -26,18 +26,18 @@ export const AuthForm = () => {
   } = useForm<FormValues>();
 
   const onSubmit: SubmitHandler<FormValues> = async (data) => {
+    clearErrors();
+    setLoading(true);
     console.log(data);
 
-    if (!data.email || !data.password) return;
+    if (!data.email && !data.password) await loginAnonymouslyUser();
+    else {
+      isLogin
+        ? await loginUser(data.email, data.password)
+        : await registerUser(data.email, data.password);
+    }
 
-    isLogin
-      ? await loginUser(data.email, data.password)
-      : await registerUser(data.email, data.password);
-  };
-
-  const handleAnonymousSignIn = async () => {
-    clearErrors();
-    await loginAnonymouslyUser();
+    setLoading(false);
   };
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement> | null) => {
@@ -118,9 +118,9 @@ export const AuthForm = () => {
         {error && <span className="text-sm text-red-500 mt-2">{error}</span>}
       </div>
 
-      <LoadingWrapper loading={isSubmitting || isLoading}>
+      <LoadingWrapper loading={isSubmitting || isLoading || loading}>
         <div className="flex flex-col items-center gap-6 w-full">
-          <div className="flex flex-row w-full justify-between h-14 ">
+          <div className="flex flex-row w-full justify-between h-14">
             <div className="flex mr-2 w-full">
               <PressButton
                 type="submit"
@@ -137,8 +137,9 @@ export const AuthForm = () => {
             </div>
             <div className="flex flex-col items-center">
               <PressButton
-                onClick={handleAnonymousSignIn}
+                type="submit"
                 style="group relative flex italic bg-gray-400 border-gray-600"
+                disabled={isSubmitting || isLoading || !!error || loading}
               >
                 <div className="flex items-center">
                   <span className="mx-2 p-1 flex items-center justify-center rounded-3xl inset-shadow-sm inset-shadow-gray-500">

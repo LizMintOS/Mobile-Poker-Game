@@ -5,6 +5,7 @@ import ReactDOM from "react-dom/client";
 import { ServiceWorkerManager } from "./services/serviceWorkerManager.tsx";
 import { AuthProvider } from "./contexts/AuthProvider.tsx";
 import { ErrorProvider } from "./contexts/ErrorProvider.tsx";
+import { LoadingProvider } from "./contexts/LoadingProvider.tsx";
 
 const root = ReactDOM.createRoot(
   document.getElementById("root") as HTMLElement
@@ -13,10 +14,12 @@ const root = ReactDOM.createRoot(
 root.render(
   <StrictMode>
     <AuthProvider>
-      <ErrorProvider>
-        <ServiceWorkerManager />
-        <App />
-      </ErrorProvider>
+      <LoadingProvider>
+        <ErrorProvider>
+          <ServiceWorkerManager />
+          <App />
+        </ErrorProvider>
+      </LoadingProvider>
     </AuthProvider>
   </StrictMode>
 );

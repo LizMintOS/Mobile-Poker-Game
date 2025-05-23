@@ -9,7 +9,7 @@ import { auth } from "../../services/firebase";
 import { useHandleApiFunction } from "../hooks/useHandleApiFunction";
 
 export const useAuthActions = () => {
-  const { handleApiErrors, loading } = useHandleApiFunction();
+  const { handleApiErrors } = useHandleApiFunction();
 
   const registerUser = handleApiErrors(
     async (email: string, password: string) => {
@@ -47,7 +47,6 @@ export const useAuthActions = () => {
     loginUser,
     logoutUser,
     loginAnonymouslyUser,
-    loading,
   };
 };
 
