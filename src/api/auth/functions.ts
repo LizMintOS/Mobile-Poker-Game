@@ -3,6 +3,7 @@ import {
   signInWithEmailAndPassword,
   signOut,
   signInAnonymously,
+  updateProfile,
 } from "firebase/auth";
 import { auth } from "../../services/firebase";
 import { mapErrorToConstantErrorMessage } from "../errors/functions";
@@ -27,7 +28,11 @@ export const useAuthActions = () => {
 
   const registerUser = handleApiErrors(
     async (email: string, password: string) => {
-      const user = await createUserWithEmailAndPassword(auth, email, password);
+      await createUserWithEmailAndPassword(auth, email, password);
+      const user = auth.currentUser;
+      updateProfile(user!, {
+        displayName: email.substring(0, email.indexOf("@")),
+      });
       if (user) console.log("User registered successfully:", user);
     }
   );
@@ -41,7 +46,8 @@ export const useAuthActions = () => {
   });
 
   const loginAnonymouslyUser = handleApiErrors(async () => {
-    await signInAnonymously(auth);
+    const user = await signInAnonymously(auth);
+    if (user) console.log("User snuck in successfully:", user);
   });
 
   return {
