@@ -1,4 +1,4 @@
-import { Navigate, Outlet, useParams } from "react-router";
+import { Outlet, useParams } from "react-router";
 import { useAuth } from "../contexts/AuthProvider";
 import { LoadingWrapper } from "../components/common/LoadingWrapper";
 import { useEffect, useState } from "react";

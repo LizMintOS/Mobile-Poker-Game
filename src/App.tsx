@@ -11,8 +11,8 @@ const App = () => {
     <BrowserRouter>
       <NavigationProvider>
         <Routes>
-          <Route path="auth" element={<AuthPage />} />
           <Route path="/" element={<ProtectedHome />}>
+            <Route path="auth" element={<AuthPage />} />
             <Route path=":userId/:username">
               <Route element={<ProtectedLayout />}>
                 <Route index path="home" element={<HomePage />} />
