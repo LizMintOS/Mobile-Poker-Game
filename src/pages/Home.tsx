@@ -1,8 +1,6 @@
 import { useState } from "react";
-import { useParams } from "react-router";
 
 const HomePage = () => {
-  const { userId } = useParams();
   const [count, setCount] = useState(0);
   return (
     <>

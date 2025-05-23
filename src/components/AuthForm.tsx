@@ -16,7 +16,6 @@ type FormValues = {
 
 export const AuthForm = () => {
   const { loginUser, registerUser, loginAnonymouslyUser } = useAuthActions();
-  const { currentUser } = useAuth();
   const { goForward } = useNavigation();
   const { error, clearError } = useError();
   const [isLogin, setIsLogin] = useState(true);

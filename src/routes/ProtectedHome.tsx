@@ -1,21 +1,30 @@
-import { Navigate, Outlet } from "react-router";
+import { Navigate, Outlet, useParams } from "react-router";
 import { useAuth } from "../contexts/AuthProvider";
 import { LoadingWrapper } from "../components/common/LoadingWrapper";
 import { useEffect, useState } from "react";
-import Header from "../components/common/Header";
+import { useNavigation } from "../contexts/NavProvider";
 
-const ProtectedRoute = () => {
+const ProtectedHome = () => {
   const { currentUser } = useAuth();
+  const { userId, username } = useParams();
+  const { goForward } = useNavigation();
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     console.log("Checking authentication...");
     const timer = setTimeout(() => {
       if (!currentUser) {
-        return <Navigate to="/" replace />;
-      } else {
-        console.log("Authenticated. Proceeding to protected route.");
+        console.log("Not authenticated. Redirecting to auth page.");
         setLoading(false);
+        goForward("/auth");
+      } else {
+        console.log("Authenticated. Proceeding to protected layout route.");
+        setLoading(false);
+        goForward(
+          `/${userId ?? currentUser.uid}/${
+            username ?? currentUser.displayName
+          }/home`
+        );
       }
     }, 600);
     return () => clearTimeout(timer);
@@ -33,12 +42,9 @@ const ProtectedRoute = () => {
       }}
       size={80}
     >
-      <>
-        <Header />
-        <Outlet />
-      </>
+      <Outlet />
     </LoadingWrapper>
   );
 };
 
-export default ProtectedRoute;
+export default ProtectedHome;

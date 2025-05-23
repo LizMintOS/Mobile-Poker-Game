@@ -34,7 +34,7 @@ export const useAuthActions = () => {
           await updateProfile(user!, {
             displayName: email.substring(0, email.indexOf("@")),
           }).then(() => {
-            console.log("User profile created successfully", user?.displayName);
+            console.log("User profile created successfully. Name:", user?.displayName);
             if (onSuccess) onSuccess(user);
           });
         }
