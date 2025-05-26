@@ -1,11 +1,11 @@
 import { SubmitHandler, useForm } from "react-hook-form";
-import { useAuthActions } from "../api/auth/functions";
 import { useState } from "react";
 import { LoadingWrapper } from "./common/LoadingWrapper";
 import { useError } from "../contexts/ErrorProvider";
 import { GoArrowRight } from "react-icons/go";
 import PressButton from "./common/PressButton";
 import InputItem from "./common/InputItem";
+import useAuthForm from "../api/hooks/useAuthForm";
 
 type FormValues = {
   email: string;
@@ -14,10 +14,17 @@ type FormValues = {
 };
 
 export const AuthForm = () => {
-  const { loginUser, registerUser, loginAnonymouslyUser } = useAuthActions();
   const { error, clearError } = useError();
   const [isLogin, setIsLogin] = useState(true);
   const [isAnon, setIsAnon] = useState(false);
+  const { handleSubmitForm } = useAuthForm({
+    isLogin: isLogin,
+    isAnon: isAnon,
+    clearError: useError().clearError,
+    clearErrors: useForm<FormValues>().clearErrors,
+    setIsAnon: setIsAnon,
+  });
+
   const {
     register,
     handleSubmit,
@@ -27,17 +34,9 @@ export const AuthForm = () => {
 
   const onSubmit: SubmitHandler<FormValues> = async (data) => {
     clearErrors();
-    console.log("Submitting form:", data);
+    clearError();
 
-    if (!(data.email && data.password) && isAnon) await loginAnonymouslyUser();
-    else {
-      clearError();
-      clearErrors();
-      if (isAnon) setIsAnon(false);
-      isLogin
-        ? await loginUser(data!.email, data!.password)
-        : await registerUser(data!.email, data!.password);
-    }
+    await handleSubmitForm(data);
   };
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement> | null) => {
@@ -119,10 +118,9 @@ export const AuthForm = () => {
                 type="submit"
                 onClick={() => {
                   setIsAnon(true);
-                  handleInputChange(null);
                 }}
                 style="group relative flex italic bg-gray-400 border-gray-600"
-                disabled={isSubmitting || isLoading || !!error}
+                disabled={isSubmitting || isLoading}
               >
                 <div className="flex items-center">
                   <span className="mx-2 p-1 flex items-center justify-center rounded-3xl inset-shadow-sm inset-shadow-gray-500">
