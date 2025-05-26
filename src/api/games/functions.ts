@@ -50,6 +50,7 @@ export const useGameActions = (user: User | null) => {
   );
 
   return {
-    createGame, getGames
+    createGame,
+    getGames,
   };
 };

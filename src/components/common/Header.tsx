@@ -4,8 +4,9 @@ import PressButton from "./PressButton";
 
 const Header = () => {
   const { logoutUser } = useAuthActions();
-  const { username, userId } = useParams();
-  const style = "decoration-none text-white text-lg font-semibold py-8 px-12 rounded-xl transition-bg duration-100 hover:bg-green-400";
+  const { username } = useParams();
+  const style =
+    "decoration-none text-white text-lg font-semibold py-8 px-12 rounded-xl transition-bg duration-100 hover:bg-green-400";
 
   const handleLogout = async () => {
     await logoutUser();
@@ -13,20 +14,26 @@ const Header = () => {
 
   return (
     <header>
-      <nav className="navbar">
-        <div className="left-content">
-          <h3 className="username">{username}</h3>
+      <nav className="w-full align-center flex flex-row justify-between">
+        <div className="flex align-center items-center">
+          <h2 className="text-lg font-bold w-fit m-0">{username}</h2>
         </div>
-        <div className="flex-inline w-fit align-center justify-between gap-2 m-0">
+        <div className="flex w-fit align-center items-center justify-between gap-4 m-0">
           <Link to="/create" className={style}>
             Create Game
           </Link>
-          <Link to={`/${userId}/${username}/home`} className={style}>
+          <Link to={`/user/${username}`} className={style}>
             Games
           </Link>
-          <PressButton type="button" onClick={handleLogout} style="bg-red-400">
-            Logout
-          </PressButton>
+          <div className="w-fit items-center flex h-full mx-4">
+            <PressButton
+              type="button"
+              onClick={handleLogout}
+              style="bg-red-400 border-red-600"
+            >
+              Logout
+            </PressButton>
+          </div>
         </div>
       </nav>
     </header>
