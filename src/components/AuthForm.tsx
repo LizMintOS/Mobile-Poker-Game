@@ -5,6 +5,7 @@ import { LoadingWrapper } from "./common/LoadingWrapper";
 import { useError } from "../contexts/ErrorProvider";
 import { GoArrowRight } from "react-icons/go";
 import PressButton from "./common/PressButton";
+import InputItem from "./common/InputItem";
 
 type FormValues = {
   email: string;
@@ -64,59 +65,35 @@ export const AuthForm = () => {
         {isLogin ? "Sign in to play!" : "Create Account"}
       </h2>
       <div className="flex flex-col w-full rounded-xl gap-1 mb-3">
-        <div className="flex flex-col w-full mb-4">
-          <label
-            htmlFor="email"
-            className="text-gray-700 font-medium self-start ml-2 mb-2"
-          >
-            Email
-          </label>
-          <input
-            {...register("email", {
+        <InputItem
+          label="Email"
+          type="text"
+          htmlFor="email"
+          register={{
+            ...register("email", {
               required: !isAnon ? "Email is required" : false,
-              onChange: (e) => handleInputChange(e),
               disabled: isLoading,
-            })}
-            type="text"
-            id="email"
-            placeholder="Enter your email"
-            className={`px-4 py-2 rounded-xl border w-full ${
-              errors.email ? "border-red-500" : "border-gray-300"
-            } focus:outline-none focus:ring-2 focus:ring-blue-400`}
-          />
-          {errors.email && (
-            <span className="text-sm text-red-500 mt-2">
-              {errors.email?.message}
-            </span>
-          )}
-        </div>
-        <div className="flex flex-col w-full mb-4">
-          <label
-            htmlFor="password"
-            className="text-gray-700 font-medium self-start ml-2 mb-2"
-          >
-            Password
-          </label>
-          <input
-            {...register("password", {
+            }),
+          }}
+          error={errors.email?.message ?? null}
+          placeholder="Enter your email"
+          onChange={(e) => handleInputChange(e)}
+        />
+        <InputItem
+          label="Password"
+          type="password"
+          htmlFor="password"
+          register={{
+            ...register("password", {
               required: !isAnon ? "Password is required" : false,
-              onChange: (e) => handleInputChange(e),
               disabled: isLoading,
-            })}
-            onChange={(e) => handleInputChange(e)}
-            id="password"
-            type="password"
-            placeholder="Enter your password"
-            className={`px-4 py-2 rounded-xl border ${
-              errors.password ? "border-red-500" : "border-gray-300"
-            } focus:outline-none focus:ring-2 focus:ring-blue-400`}
-          />
-          {errors.password && (
-            <span className="text-sm text-red-500 mt-2">
-              {errors.password?.message}
-            </span>
-          )}
-        </div>
+            }),
+          }}
+          error={errors.password?.message ?? null}
+          placeholder="Enter your password"
+          onChange={(e) => handleInputChange(e)}
+        />
+
         {error && <span className="text-sm text-red-500 mt-2">{error}</span>}
       </div>
 
