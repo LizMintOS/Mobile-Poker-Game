@@ -1,4 +1,4 @@
-import { useState } from "react";
+import ErrorMessage from "./ErrorMessage";
 
 interface InputItemProps {
   label: string;
@@ -39,7 +39,7 @@ const InputItem = ({
         error ? "border-red-500" : "border-gray-300"
       } focus:outline-none focus:ring-2 focus:ring-blue-400`}
     />
-    {error && <span className="text-sm text-red-500 mt-2">{error}</span>}
+    {error && <ErrorMessage message={error} />}
   </div>
 );
 

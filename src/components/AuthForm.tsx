@@ -6,6 +6,7 @@ import { GoArrowRight } from "react-icons/go";
 import PressButton from "./common/PressButton";
 import InputItem from "./common/InputItem";
 import useAuthForm from "../api/hooks/useAuthForm";
+import ErrorMessage from "./common/ErrorMessage";
 
 type FormValues = {
   email: string;
@@ -93,7 +94,7 @@ export const AuthForm = () => {
           onChange={(e) => handleInputChange(e)}
         />
 
-        {error && <span className="text-sm text-red-500 mt-2">{error}</span>}
+        {error && <ErrorMessage message={error} />}
       </div>
 
       <LoadingWrapper loading={isSubmitting || isLoading}>
