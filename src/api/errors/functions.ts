@@ -10,6 +10,8 @@ export const mapErrorToConstantErrorMessage = (
     switch (error.code) {
       case "not-found":
         return Errors.RESOURCE_NOT_FOUND;
+      case "auth/missing-email":
+        return Errors.MISSING_EMAIL;
       case "auth/email-already-in-use":
         return Errors.EMAIL_EXISTS;
       case "auth/user-not-found":

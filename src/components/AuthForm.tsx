@@ -20,18 +20,22 @@ export const AuthForm = () => {
   const {
     register,
     handleSubmit,
-    formState: { errors, isValid, isSubmitting, isLoading },
+    formState: { errors, isSubmitting, isLoading },
     clearErrors,
   } = useForm<FormValues>();
 
   const onSubmit: SubmitHandler<FormValues> = async (data) => {
     clearErrors();
+    console.log("Submitting form:", data);
 
     if (!(data.email && data.password) && isAnon) await loginAnonymouslyUser();
     else {
+      clearError();
+      clearErrors();
+      if (isAnon) setIsAnon(false);
       isLogin
-        ? await loginUser(data.email, data.password)
-        : await registerUser(data.email, data.password);
+        ? await loginUser(data!.email, data!.password)
+        : await registerUser(data!.email, data!.password);
     }
   };
 
@@ -69,9 +73,9 @@ export const AuthForm = () => {
           </label>
           <input
             {...register("email", {
-              validate: { isAnonymous: () => isAnon || "Email is required" },
+              required: !isAnon ? "Email is required" : false,
               onChange: (e) => handleInputChange(e),
-              disabled: isSubmitting,
+              disabled: isLoading,
             })}
             type="text"
             id="email"
@@ -95,10 +99,11 @@ export const AuthForm = () => {
           </label>
           <input
             {...register("password", {
-              validate: { isAnonymous: () => isAnon || "Password is required" },
+              required: !isAnon ? "Password is required" : false,
               onChange: (e) => handleInputChange(e),
-              disabled: isSubmitting,
+              disabled: isLoading,
             })}
+            onChange={(e) => handleInputChange(e)}
             id="password"
             type="password"
             placeholder="Enter your password"
@@ -122,7 +127,7 @@ export const AuthForm = () => {
               <PressButton
                 type="submit"
                 style="bg-green-500 bg-green-600 border-green-700"
-                disabled={!isValid || isSubmitting || isLoading || !!error}
+                disabled={isSubmitting || isLoading || !!error}
               >
                 <div className="flex items-center justify-center">
                   {isLogin ? "Log in" : "Register"}

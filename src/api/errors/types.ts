@@ -4,6 +4,7 @@ export const FirebaseErrors = {
   USER_NOT_FOUND: "User not found.",
   EMAIL_EXISTS: "Email already in use.",
   INVALID_EMAIL: "Invalid email address.",
+  MISSING_EMAIL: "Email is required.",
   INVALID_PASSWORD: "Invalid password provided.",
 } as const;
 
