@@ -6,7 +6,7 @@ const Header = () => {
   const { logoutUser } = useAuthActions();
   const { username } = useParams();
   const style =
-    "decoration-none text-white text-lg font-semibold py-8 px-12 rounded-xl transition-bg duration-100 hover:bg-green-400";
+    "decoration-none text-green-600 text-lg font-semibold py-8 px-12 rounded-xl transition-bg duration-100 hover:bg-green-400";
 
   const handleLogout = async () => {
     await logoutUser();
@@ -14,9 +14,9 @@ const Header = () => {
 
   return (
     <header>
-      <nav className="w-full align-center flex flex-row justify-between">
-        <div className="flex align-center items-center">
-          <h2 className="text-lg font-bold w-fit m-0">{username}</h2>
+      <nav className="w-full align-center flex flex-row justify-between shadow-sm bg-green-50">
+        <div className="flex align-center items-center mx-4">
+          <h2 className="text-3xl font-bold w-fit text-green-600">{username}</h2>
         </div>
         <div className="flex w-fit align-center items-center justify-between gap-4 m-0">
           <Link to="/create" className={style}>
