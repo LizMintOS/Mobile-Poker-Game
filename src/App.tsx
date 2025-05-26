@@ -13,9 +13,9 @@ const App = () => {
         <Routes>
           <Route path="/" element={<ProtectedHome />}>
             <Route path="auth" element={<AuthPage />} />
-            <Route path=":userId/:username">
+            <Route path="user/:username">
               <Route element={<ProtectedLayout />}>
-                <Route index path="home" element={<HomePage />} />
+                <Route index element={<HomePage />} />
               </Route>
             </Route>
           </Route>

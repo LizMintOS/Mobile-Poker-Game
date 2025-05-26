@@ -26,14 +26,12 @@ export const AuthForm = () => {
 
   const onSubmit: SubmitHandler<FormValues> = async (data) => {
     clearErrors();
-    console.log(data);
 
     if (!(data.email && data.password) && isAnon) await loginAnonymouslyUser();
-    
     else {
       isLogin
-        ? await loginUser(data!.email, data!.password)
-        : await registerUser(data!.email, data!.password);
+        ? await loginUser(data.email, data.password)
+        : await registerUser(data.email, data.password);
     }
   };
 

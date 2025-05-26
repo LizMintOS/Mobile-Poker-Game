@@ -1,5 +1,5 @@
 import { useAuthActions } from "../../api/auth/functions";
-import { useParams } from "react-router";
+import { Link, useParams } from "react-router";
 import PressButton from "./PressButton";
 
 const Header = () => {
@@ -18,12 +18,12 @@ const Header = () => {
           <h3 className="username">{username}</h3>
         </div>
         <div className="flex-inline w-fit align-center justify-between gap-2 m-0">
-          <a href="/create" className={style}>
+          <Link to="/create" className={style}>
             Create Game
-          </a>
-          <a href={`/${userId}/${username}/home`} className={style}>
+          </Link>
+          <Link to={`/${userId}/${username}/home`} className={style}>
             Games
-          </a>
+          </Link>
           <PressButton type="button" onClick={handleLogout} style="bg-red-400">
             Logout
           </PressButton>

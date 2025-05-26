@@ -1,4 +1,4 @@
-import { Outlet, useParams } from "react-router";
+import { Outlet, useLocation } from "react-router";
 import { useAuth } from "../contexts/AuthProvider";
 import { LoadingWrapper } from "../components/common/LoadingWrapper";
 import { useEffect } from "react";
@@ -7,9 +7,9 @@ import { useLoading } from "../contexts/LoadingProvider";
 
 const ProtectedHome = () => {
   const { currentUser } = useAuth();
-  const { userId, username } = useParams();
   const { goForward } = useNavigation();
   const { setLoading, loading } = useLoading();
+  const location = useLocation();
 
   useEffect(() => {
     setLoading(true);
@@ -21,16 +21,14 @@ const ProtectedHome = () => {
         goForward("/auth");
       } else {
         console.log("Authenticated. Proceeding to protected layout route.");
+        if (location.pathname === "/" || location.pathname === "/auth") {
+          goForward(`/user/${currentUser.displayName ?? "Guest"}`);
+        }
         setLoading(false);
-        goForward(
-          `/${userId ?? currentUser.uid}/${
-            username ?? currentUser.displayName
-          }/home`
-        );
       }
     }, 800);
     return () => clearTimeout(timer);
-  }, [currentUser]);
+  }, [currentUser, location.pathname]);
 
   return (
     <LoadingWrapper
@@ -40,7 +38,6 @@ const ProtectedHome = () => {
         justifyContent: "center",
         alignItems: "center",
         height: "100vh",
-        width: "100vw",
       }}
       size={80}
     >
