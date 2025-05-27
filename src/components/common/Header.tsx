@@ -1,5 +1,4 @@
 import { Link } from "react-router";
-import useLogout from "../../api/hooks/useLogout";
 import LogoutButton from "./buttons/LogoutButton";
 
 interface HeaderProps {
@@ -7,8 +6,6 @@ interface HeaderProps {
 }
 
 const Header = ({ username }: HeaderProps) => {
-  const { handleLogout } = useLogout();
-
   return (
     <header>
       <nav className="w-full align-center flex flex-row justify-between shadow-sm bg-green-50">
@@ -27,7 +24,7 @@ const Header = ({ username }: HeaderProps) => {
             </Link>
           </div>
           <div className="w-fit items-center flex h-full m-6">
-            <LogoutButton onLogout={handleLogout} />
+            <LogoutButton />
           </div>
         </div>
       </nav>

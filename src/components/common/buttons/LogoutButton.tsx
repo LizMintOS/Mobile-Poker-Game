@@ -1,14 +1,13 @@
 import PressButton from "../PressButton";
+import useLogout from "../../../api/hooks/useLogout";
 
-interface LogoutButtonProps {
-  onLogout: () => void;
-}
 
-const LogoutButton = ({ onLogout }: LogoutButtonProps) => {
+const LogoutButton = () => {
+  const { handleLogout } = useLogout();
   return (
     <PressButton
       type="button"
-      onClick={onLogout}
+      onClick={handleLogout}
       style="bg-red-400 border-red-600"
     >
       Logout
