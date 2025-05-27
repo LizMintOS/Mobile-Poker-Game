@@ -5,6 +5,7 @@ import AuthPage from "./pages/Auth";
 import { NavigationProvider } from "./contexts/NavProvider";
 import ProtectedLayout from "./routes/ProtectedLayout";
 import ProtectedHome from "./routes/ProtectedHome";
+import CreateGamePage from "./pages/CreateGame";
 
 const App = () => {
   return (
@@ -16,6 +17,7 @@ const App = () => {
             <Route path="user/:username">
               <Route element={<ProtectedLayout />}>
                 <Route index element={<HomePage />} />
+                <Route path="create" element={<CreateGamePage />} />
               </Route>
             </Route>
           </Route>

@@ -1,4 +1,4 @@
-import PressButton from "../PressButton";
+import PressButton from "./PressButton";
 import useLogout from "../../../api/hooks/useLogout";
 
 

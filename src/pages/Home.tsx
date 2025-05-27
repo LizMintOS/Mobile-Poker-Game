@@ -1,19 +1,22 @@
-import { useState } from "react";
+import PressButton from "../components/common/buttons/PressButton";
+import { useNavigation } from "../contexts/NavProvider";
 
 const HomePage = () => {
-  const [count, setCount] = useState(0);
+  const { goForward } = useNavigation();
+
   return (
-    <>
-      <div>
-        <img src="/icon.png" className="logo" />
+    <div className="flex flex-col items-center justify-center h-screen bg-gray-100">
+      <div className="flex flex-col items-center space-y-4 h-fit">
+        <PressButton
+          type="button"
+          onClick={() => goForward("create")}
+          style="bg-green-600 border-green-700"
+        >
+          Create a Game
+        </PressButton>
+        <p>hello</p>
       </div>
-      <h1>poker-game</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-      </div>
-    </>
+    </div>
   );
 };
 

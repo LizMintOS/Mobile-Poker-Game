@@ -3,7 +3,7 @@ import { useState } from "react";
 import { LoadingWrapper } from "./common/LoadingWrapper";
 import { useError } from "../contexts/ErrorProvider";
 import { GoArrowRight } from "react-icons/go";
-import PressButton from "./common/PressButton";
+import PressButton from "./common/buttons/PressButton";
 import InputItem from "./common/InputItem";
 import useAuthForm from "../api/hooks/useAuthForm";
 import ErrorMessage from "./common/ErrorMessage";
