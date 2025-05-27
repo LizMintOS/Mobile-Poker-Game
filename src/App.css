@@ -1,5 +1,10 @@
 @import "tailwindcss";
 
+#root {
+  margin: 0 auto;
+  text-align: center;
+}
+
 .logo {
   height: 6em;
   padding: 1.5em;

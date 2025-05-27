@@ -1,20 +1,19 @@
-import { useAuthActions } from "../../api/auth/functions";
-import { Link, useParams } from "react-router";
-import PressButton from "./PressButton";
+import { Link } from "react-router";
+import useLogout from "../../api/hooks/useLogout";
+import LogoutButton from "./buttons/LogoutButton";
 
-const Header = () => {
-  const { logoutUser } = useAuthActions();
-  const { username } = useParams();
+interface HeaderProps {
+  username: string;
+}
 
-  const handleLogout = async () => {
-    await logoutUser();
-  };
+const Header = ({ username }: HeaderProps) => {
+  const { handleLogout } = useLogout();
 
   return (
     <header>
       <nav className="w-full align-center flex flex-row justify-between shadow-sm bg-green-50">
         <div className="flex align-center items-center">
-          <h2 className="text-3xl font-bold w-fit text-green-600">
+          <h2 className="text-3xl font-bold w-fit text-green-600 ml-6">
             {username}
           </h2>
         </div>
@@ -22,19 +21,13 @@ const Header = () => {
           <div className="hover:border-2 hover:border-green-600 w-full h-full p-2 rounded-2xl cursor-pointer">
             <Link
               to={`/user/${username}`}
-              className=" text-green-600 text-lg font-semibold rounded-xl"
+              className="text-green-600 text-lg font-semibold rounded-xl"
             >
               Games
             </Link>
           </div>
           <div className="w-fit items-center flex h-full m-6">
-            <PressButton
-              type="button"
-              onClick={handleLogout}
-              style="bg-red-400 border-red-600"
-            >
-              Logout
-            </PressButton>
+            <LogoutButton onLogout={handleLogout} />
           </div>
         </div>
       </nav>
