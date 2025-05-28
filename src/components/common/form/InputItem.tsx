@@ -1,12 +1,5 @@
 import ErrorMessage from "../ErrorMessage";
-
-interface InputItemProps {
-  label: string;
-  type: string;
-  register?: any;
-  error?: string | null;
-  onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
-}
+import { InputConfig } from "../../types";
 
 const InputItem = ({
   label,
@@ -14,7 +7,7 @@ const InputItem = ({
   register,
   error,
   onChange,
-}: InputItemProps) => (
+}: InputConfig) => (
   <div className="flex flex-col w-full mt-6">
     <label
       htmlFor={label.toLowerCase()}
