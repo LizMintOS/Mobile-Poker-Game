@@ -8,7 +8,7 @@ const AuthorizedLayout = () => {
 
   return (
     <div className="flex flex-col h-screen w-screen">
-      <Header username={username ?? ""} />
+      {username && <Header username={username} />}
       <Outlet />
     </div>
   );
