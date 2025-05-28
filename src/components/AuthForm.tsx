@@ -10,6 +10,7 @@ import ErrorMessage from "./common/ErrorMessage";
 import { ROUTES } from "../routes/routes";
 import { useNavigate } from "react-router";
 import Title from "./common/Title";
+import InputList from "./common/form/InputList";
 
 type FormValues = {
   email: string;
@@ -35,6 +36,33 @@ export const AuthForm = () => {
     clearErrors,
   } = useForm<FormValues>();
 
+  const inputConfigs = [
+    {
+      label: "Email",
+      type: "text",
+      register: {
+        ...register("email", {
+          required: !isAnon ? "Email is required" : false,
+        }),
+      },
+      error: errors.email?.message ?? null,
+      onChange: (e: React.ChangeEvent<HTMLInputElement>) =>
+        handleInputChange(e),
+    },
+    {
+      label: "Password",
+      type: "password",
+      register: {
+        ...register("password", {
+          required: !isAnon ? "Password is required" : false,
+        }),
+      },
+      error: errors.password?.message ?? null,
+      onChange: (e: React.ChangeEvent<HTMLInputElement>) =>
+        handleInputChange(e),
+    },
+  ];
+
   const onSubmit: SubmitHandler<FormValues> = async (data) => {
     clearError();
     clearErrors();
@@ -46,7 +74,7 @@ export const AuthForm = () => {
   };
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement> | null) => {
-    if (e != null) {
+    if (e) {
       e.preventDefault();
       const { name } = e.target;
       if (name === "email") {
@@ -67,39 +95,8 @@ export const AuthForm = () => {
       className="space-y-6 w-full mx-auto p-6 min-w-sm"
     >
       <Title title={isLogin ? "Sign in to play!" : "Create Account"} />
-
-      <div className="flex flex-col w-full rounded-xl gap-1 mb-3">
-        <InputItem
-          label="Email"
-          type="text"
-          htmlFor="email"
-          register={{
-            ...register("email", {
-              required: !isAnon ? "Email is required" : false,
-              disabled: isLoading,
-            }),
-          }}
-          error={errors.email?.message ?? null}
-          placeholder="Enter your email"
-          onChange={(e) => handleInputChange(e)}
-        />
-        <InputItem
-          label="Password"
-          type="password"
-          htmlFor="password"
-          register={{
-            ...register("password", {
-              required: !isAnon ? "Password is required" : false,
-              disabled: isLoading,
-            }),
-          }}
-          error={errors.password?.message ?? null}
-          placeholder="Enter your password"
-          onChange={(e) => handleInputChange(e)}
-        />
-
-      </div>
-        {error && <ErrorMessage message={error} />}
+      <InputList inputs={inputConfigs} />
+      {error && <ErrorMessage message={error} />}
 
       <LoadingWrapper loading={isSubmitting || isLoading}>
         <div className="flex flex-col items-center gap-6 w-full">
