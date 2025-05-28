@@ -9,15 +9,14 @@ import {
   getDocs,
   query,
 } from "firebase/firestore";
-import { Game, CreateGameInput } from "./types";
+import { Game } from "./types";
 import { User } from "firebase/auth";
 
 export const useGameActions = (user: User | null) => {
   const { handleApiErrors } = useHandleApiFunction();
 
-  const createGame = handleApiErrors(async (gameData: CreateGameInput) => {
+  const createGame = handleApiErrors(async () => {
     const gameRef = await addDoc(collection(db, "games"), {
-      name: gameData.name,
       creatorId: user!.uid,
       hasStarted: false,
     });
