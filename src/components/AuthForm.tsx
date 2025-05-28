@@ -25,8 +25,6 @@ export const AuthForm = () => {
   const { handleSubmitForm } = useAuthForm({
     isLogin: isLogin,
     isAnon: isAnon,
-    clearError: useError().clearError,
-    clearErrors: useForm<FormValues>().clearErrors,
     setIsAnon: setIsAnon,
   });
 
@@ -38,10 +36,13 @@ export const AuthForm = () => {
   } = useForm<FormValues>();
 
   const onSubmit: SubmitHandler<FormValues> = async (data) => {
-    clearErrors();
     clearError();
-
-    await handleSubmitForm(data).then(() => navigate(ROUTES.HOME));
+    clearErrors();
+    await handleSubmitForm(data).then(() => {
+      if (!error) {
+        navigate(ROUTES.HOME);
+      }
+    });
   };
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement> | null) => {

@@ -3,8 +3,6 @@ import { useAuthActions } from "../auth/functions";
 interface UseAuthFormProps {
   isLogin: boolean;
   isAnon: boolean;
-  clearError: () => void;
-  clearErrors: () => void;
   setIsAnon: (value: boolean) => void;
 }
 
@@ -16,14 +14,10 @@ interface AuthFormData {
 const useAuthForm = ({
   isLogin,
   isAnon,
-  clearError,
-  clearErrors,
   setIsAnon,
 }: UseAuthFormProps) => {
   const { loginAnonymouslyUser, registerUser, loginUser } = useAuthActions();
   const handleSubmitForm = async (data: AuthFormData): Promise<void> => {
-    clearErrors();
-    clearError();
 
     if (!isAnon && data.email && data.password) {
       isLogin
