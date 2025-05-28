@@ -1,19 +1,11 @@
 import { SubmitHandler, useForm } from "react-hook-form";
 import { useState } from "react";
-import { LoadingWrapper } from "./common/LoadingWrapper";
 import { useError } from "../contexts/ErrorProvider";
-import { GoArrowRight } from "react-icons/go";
 import PressButton from "./common/buttons/PressButton";
-import InputItem from "./common/form/InputItem";
 import useAuthForm from "../api/hooks/useAuthForm";
-import ErrorMessage from "./common/ErrorMessage";
 import { ROUTES } from "../routes/routes";
 import { useNavigate } from "react-router";
-import Title from "./common/Title";
-import InputList from "./common/form/InputList";
-import GreenSubmitButton from "./common/form/GreenButton";
-import FormSubmitBody from "./common/form/FormSubmitBody";
-import ClickMeText from "./common/ClickMeText";
+import FormBody from "./common/form/FormBody";
 
 type FormValues = {
   email: string;
@@ -97,38 +89,32 @@ export const AuthForm = () => {
       onSubmit={handleSubmit(onSubmit)}
       className="space-y-6 w-full mx-auto p-6 min-w-sm"
     >
-      <Title title={isLogin ? "Sign in to play!" : "Create Account"} />
-      <InputList inputs={inputConfigs} />
-      {error && <ErrorMessage message={error} />}
-
-      <LoadingWrapper loading={isSubmitting || isLoading}>
-        <div className="flex flex-col items-center gap-6 w-full">
-          <FormSubmitBody
-            disabled={isSubmitting || isLoading || !!error}
-            label={isLogin ? "Log in" : "Register"}
-          >
-            <PressButton
-              type="submit"
-              onClick={() => {
-                setIsAnon(true);
-              }}
-              style="group relative flex italic bg-gray-400 border-gray-600"
-              disabled={isSubmitting || isLoading}
-            >
-              <span className="mx-2 p-1 flex items-center justify-center rounded-3xl inset-shadow-sm inset-shadow-gray-500">
-                👤
-              </span>
-              <span className="overflow-hidden text-base font-semibold whitespace-nowrap transition-all duration-300 max-w-0 group-hover:max-w-xs">
-                Sneak in...
-              </span>
-            </PressButton>
-          </FormSubmitBody>
-          <ClickMeText
-            message={isLogin ? " Register" : " Login"}
-            onClick={() => handleInputChange(null)}
-          />
-        </div>
-      </LoadingWrapper>
+      <FormBody
+        error={error}
+        isLoading={isLoading || isSubmitting}
+        title={isLogin ? "Sign in to play!" : "Create Account"}
+        inputConfigs={inputConfigs}
+        disabled={isSubmitting || isLoading || !!error}
+        label={isLogin ? "Log in" : "Register"}
+        clickMessage={isLogin ? " Register" : " Login"}
+        onClick={() => handleInputChange(null)}
+      >
+        <PressButton
+          type="submit"
+          onClick={() => {
+            setIsAnon(true);
+          }}
+          style="group relative flex italic bg-gray-400 border-gray-600"
+          disabled={isSubmitting || isLoading}
+        >
+          <span className="mx-2 p-1 flex items-center justify-center rounded-3xl inset-shadow-sm inset-shadow-gray-500">
+            👤
+          </span>
+          <span className="overflow-hidden text-base font-semibold whitespace-nowrap transition-all duration-300 max-w-0 group-hover:max-w-xs">
+            Sneak in...
+          </span>
+        </PressButton>
+      </FormBody>
     </form>
   );
 };
