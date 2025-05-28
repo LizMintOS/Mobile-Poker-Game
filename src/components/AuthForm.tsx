@@ -11,6 +11,9 @@ import { ROUTES } from "../routes/routes";
 import { useNavigate } from "react-router";
 import Title from "./common/Title";
 import InputList from "./common/form/InputList";
+import GreenSubmitButton from "./common/form/GreenButton";
+import FormSubmitBody from "./common/form/FormSubmitBody";
+import ClickMeText from "./common/ClickMeText";
 
 type FormValues = {
   email: string;
@@ -100,52 +103,30 @@ export const AuthForm = () => {
 
       <LoadingWrapper loading={isSubmitting || isLoading}>
         <div className="flex flex-col items-center gap-6 w-full">
-          <div className="flex flex-row w-full justify-between h-14">
-            <div className="flex mr-2 w-full">
-              <PressButton
-                type="submit"
-                style="bg-green-500 bg-green-600 border-green-700"
-                disabled={isSubmitting || isLoading || !!error}
-              >
-                <div className="flex items-center justify-center">
-                  {isLogin ? "Log in" : "Register"}
-                  <div className="flex items-center justify-center ml-2 self-end transition-all duration-300 group">
-                    <GoArrowRight className="wiggle" size={26} />
-                  </div>
-                </div>
-              </PressButton>
-            </div>
-            <div className="flex flex-col items-center">
-              <PressButton
-                type="submit"
-                onClick={() => {
-                  setIsAnon(true);
-                }}
-                style="group relative flex italic bg-gray-400 border-gray-600"
-                disabled={isSubmitting || isLoading}
-              >
-                <div className="flex items-center">
-                  <span className="mx-2 p-1 flex items-center justify-center rounded-3xl inset-shadow-sm inset-shadow-gray-500">
-                    👤
-                  </span>
-                  <span className="overflow-hidden text-base font-semibold whitespace-nowrap transition-all duration-300 max-w-0 group-hover:max-w-xs">
-                    Sneak in...
-                  </span>
-                </div>
-              </PressButton>
-            </div>
-          </div>
-          <div className="flex items-center justify-center mr-6">
-            <div className="mr-2">👉</div>
-            <div
-              className="flex flex-row"
-              onClick={() => handleInputChange(null)}
+          <FormSubmitBody
+            disabled={isSubmitting || isLoading || !!error}
+            label={isLogin ? "Log in" : "Register"}
+          >
+            <PressButton
+              type="submit"
+              onClick={() => {
+                setIsAnon(true);
+              }}
+              style="group relative flex italic bg-gray-400 border-gray-600"
+              disabled={isSubmitting || isLoading}
             >
-              <p className="text-md w-fit self-center font-bold text-green-500 cursor-pointer underline underline-offset-6">
-                {isLogin ? " Register" : " Login"}
-              </p>
-            </div>
-          </div>
+              <span className="mx-2 p-1 flex items-center justify-center rounded-3xl inset-shadow-sm inset-shadow-gray-500">
+                👤
+              </span>
+              <span className="overflow-hidden text-base font-semibold whitespace-nowrap transition-all duration-300 max-w-0 group-hover:max-w-xs">
+                Sneak in...
+              </span>
+            </PressButton>
+          </FormSubmitBody>
+          <ClickMeText
+            message={isLogin ? " Register" : " Login"}
+            onClick={() => handleInputChange(null)}
+          />
         </div>
       </LoadingWrapper>
     </form>

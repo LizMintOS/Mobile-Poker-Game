@@ -22,7 +22,7 @@ const PressButton = ({
       onClick={onClick}
       className={`rounded-xl py-2 px-4 text-white text-lg border-b-8 transition-border duration-100 w-full font-bold cursor-pointer border-x-2 hover:border-b-4 overflow-hidden ${style}`}
     >
-      {children}
+      <div className="flex items-center justify-center">{children}</div>
     </button>
   );
 };
