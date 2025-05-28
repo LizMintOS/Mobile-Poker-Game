@@ -2,12 +2,12 @@ import { Outlet, useLocation } from "react-router";
 import { useAuth } from "../contexts/AuthProvider";
 import { LoadingWrapper } from "../components/common/LoadingWrapper";
 import { useEffect } from "react";
-import { useNavigation } from "../contexts/NavProvider";
+// import { useNavigation } from "../contexts/NavProvider";
 import { useLoading } from "../contexts/LoadingProvider";
 
 const ProtectedHome = () => {
   const { currentUser } = useAuth();
-  const { goForward } = useNavigation();
+  // const { goForward } = useNavigation();
   const { setLoading, loading } = useLoading();
   const location = useLocation();
 
@@ -18,11 +18,11 @@ const ProtectedHome = () => {
       if (!currentUser) {
         console.log("Not authenticated. Redirecting to auth page.");
         setLoading(false);
-        goForward("/auth");
+        // goForward("/auth");
       } else {
         console.log("Authenticated. Proceeding to protected layout route.");
         if (location.pathname === "/" || location.pathname === "/auth") {
-          goForward(`/user/${currentUser.displayName ?? "Guest"}`);
+          // goForward(`/user/${currentUser.displayName}`);
         }
         setLoading(false);
       }

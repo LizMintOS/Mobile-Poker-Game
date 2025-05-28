@@ -7,6 +7,8 @@ import PressButton from "./common/buttons/PressButton";
 import InputItem from "./common/InputItem";
 import useAuthForm from "../api/hooks/useAuthForm";
 import ErrorMessage from "./common/ErrorMessage";
+import { ROUTES } from "../routes/routes";
+import { useNavigate } from "react-router";
 
 type FormValues = {
   email: string;
@@ -18,6 +20,7 @@ export const AuthForm = () => {
   const { error, clearError } = useError();
   const [isLogin, setIsLogin] = useState(true);
   const [isAnon, setIsAnon] = useState(false);
+  const navigate = useNavigate();
   const { handleSubmitForm } = useAuthForm({
     isLogin: isLogin,
     isAnon: isAnon,
@@ -37,7 +40,7 @@ export const AuthForm = () => {
     clearErrors();
     clearError();
 
-    await handleSubmitForm(data);
+    await handleSubmitForm(data).then(() => navigate(ROUTES.HOME));
   };
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement> | null) => {
