@@ -1,4 +1,4 @@
-import ErrorMessage from "./ErrorMessage";
+import ErrorMessage from "../ErrorMessage";
 
 interface InputItemProps {
   label: string;

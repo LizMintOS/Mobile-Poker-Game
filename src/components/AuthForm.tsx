@@ -4,11 +4,12 @@ import { LoadingWrapper } from "./common/LoadingWrapper";
 import { useError } from "../contexts/ErrorProvider";
 import { GoArrowRight } from "react-icons/go";
 import PressButton from "./common/buttons/PressButton";
-import InputItem from "./common/InputItem";
+import InputItem from "./common/form/InputItem";
 import useAuthForm from "../api/hooks/useAuthForm";
 import ErrorMessage from "./common/ErrorMessage";
 import { ROUTES } from "../routes/routes";
 import { useNavigate } from "react-router";
+import Title from "./common/Title";
 
 type FormValues = {
   email: string;
@@ -64,9 +65,8 @@ export const AuthForm = () => {
       onSubmit={handleSubmit(onSubmit)}
       className="space-y-6 w-full mx-auto p-6 min-w-sm"
     >
-      <h2 className="text-3xl font-bold text-center">
-        {isLogin ? "Sign in to play!" : "Create Account"}
-      </h2>
+      <Title title={isLogin ? "Sign in to play!" : "Create Account"} />
+
       <div className="flex flex-col w-full rounded-xl gap-1 mb-3">
         <InputItem
           label="Email"
