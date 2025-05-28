@@ -39,7 +39,7 @@ export const AuthForm = () => {
     clearError();
     clearErrors();
     await handleSubmitForm(data).then(() => {
-      if (!error) {
+      if (!error && !errors) {
         navigate(ROUTES.HOME);
       }
     });
@@ -98,8 +98,8 @@ export const AuthForm = () => {
           onChange={(e) => handleInputChange(e)}
         />
 
-        {error && <ErrorMessage message={error} />}
       </div>
+        {error && <ErrorMessage message={error} />}
 
       <LoadingWrapper loading={isSubmitting || isLoading}>
         <div className="flex flex-col items-center gap-6 w-full">

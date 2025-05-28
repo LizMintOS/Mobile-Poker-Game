@@ -3,7 +3,7 @@ interface ErrorMessageProps {
 }
 
 const ErrorMessage = ({ message }: ErrorMessageProps) => (
-  <span className="text-sm text-red-500 mt-2">{message}</span>
+  <div className="text-sm text-red-500 mb-4 mt-2">{message}</div>
 );
 
 export default ErrorMessage;
