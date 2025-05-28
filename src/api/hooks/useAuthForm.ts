@@ -27,8 +27,8 @@ const useAuthForm = ({
 
     if (!isAnon && data.email && data.password) {
       isLogin
-        ? await loginUser(data!.email, data!.password)
-        : await registerUser(data!.email, data!.password);
+        ? await loginUser(data.email, data.password)
+        : await registerUser(data.email, data.password);
     } else if (isAnon) {
       await loginAnonymouslyUser();
       setIsAnon(false);
