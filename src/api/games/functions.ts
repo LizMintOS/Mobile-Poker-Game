@@ -8,6 +8,7 @@ import {
   collection,
   getDocs,
   query,
+  onSnapshot,
 } from "firebase/firestore";
 
 import { User } from "firebase/auth";
@@ -49,7 +50,45 @@ export const useGameActions = (user: User | null) => {
     }
   );
 
+  const getGame = handleApiErrors(
+    async (gameId: string): Promise<Game | null> => {
+      console.log("Fetching game with ID:", gameId);
+      const gameDoc = await getDoc(doc(db, "games", gameId));
+
+      if (!gameDoc.exists()) {
+        console.error("Game not found");
+        throw new Error("Game not found");
+      }
+
+      const gameData = gameDoc.data() as Game;
+      console.log("Game data fetched:", gameData);
+
+      return gameData;
+    }
+  );
+
+  const subscribeToGameUpdates = (
+    gameId: string,
+    callback: (game: Game) => void
+  ) => {
+    const gameRef = doc(db, "games", gameId);
+
+    const unsubscribe = onSnapshot(gameRef, (docSnapshot) => {
+      if (docSnapshot.exists()) {
+        const gameData = docSnapshot.data() as Game;
+        callback(gameData);
+      } else {
+        console.error("Game not found for subscription");
+        throw new Error("Game not found for subscription");
+      }
+    });
+
+    return unsubscribe;
+  };
+
   return {
     createGame,
+    getGame,
+    subscribeToGameUpdates,
   };
 };

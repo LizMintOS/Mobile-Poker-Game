@@ -1,4 +1,5 @@
 import { useState, useContext, createContext, ReactNode } from "react";
+import { LoadingWrapper } from "../components/common/LoadingWrapper";
 
 interface LoadingContextType {
   loading: boolean;
@@ -15,16 +16,23 @@ export const useLoading = (): LoadingContextType => {
   return context;
 };
 
-export const LoadingProvider = ({
-  children,
-}: {
-  children: ReactNode;
-}) => {
+export const LoadingProvider = ({ children }: { children: ReactNode }) => {
   const [loading, setLoading] = useState<boolean>(false);
 
   return (
     <LoadingContext.Provider value={{ loading, setLoading }}>
-      {children}
+      <LoadingWrapper
+        loading={loading}
+        style={{
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          height: "100vh",
+        }}
+        size={80}
+      >
+        <>{children}</>
+      </LoadingWrapper>
     </LoadingContext.Provider>
   );
 };

@@ -2,9 +2,30 @@ import GreenButton from "../components/common/buttons/GreenButton";
 import Title from "../components/common/Title";
 import { useNavigate, useParams } from "react-router";
 import { ROUTES } from "../routes/routes";
+import { useGameActions } from "../api/games/functions";
+import { useAuth } from "../contexts/AuthProvider";
+import { useEffect, useState } from "react";
+import { useLoading } from "../contexts/LoadingProvider";
 
 const GameLobby = () => {
   const navigate = useNavigate();
+  const { currentUser } = useAuth();
+  const { loading, setLoading } = useLoading();
+  const { getGame } = useGameActions(currentUser);
+  const [numPlayers, setNumPlayers] = useState(1);
+
+  const fetchGameData = async (gameId: string) => {
+    setLoading(true);
+    const game = await getGame(gameId);
+    if (game) {
+      setNumPlayers(game.playerCount);
+      if (game.hasStarted) {
+        navigate(ROUTES.GAME(gameId), { replace: true });
+      }
+    }
+
+    setLoading(false);
+  };
 
   const { gameId } = useParams<{ gameId: string }>();
   if (!gameId) {
