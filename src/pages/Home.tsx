@@ -3,6 +3,7 @@ import GreenButton from "../components/common/buttons/GreenButton";
 import { ROUTES } from "../routes/routes";
 import { useGameActions } from "../api/games/functions";
 import { useAuth } from "../contexts/AuthProvider";
+import { Card, shuffleCards } from "../utils/shuffleCards";
 
 const HomePage = () => {
   const navigate = useNavigate();
@@ -10,11 +11,11 @@ const HomePage = () => {
   const { createGame } = useGameActions(currentUser);
 
   const handleGameCreation = async () => {
-    // call get deck function then send to create game
-    const game = await createGame("defaultDeck", "defaultCards");
+    const startingDeck: Card[] = shuffleCards();
+    const gameId = await createGame(startingDeck, startingDeck.slice(0, 5));
 
-    if (game) {
-      navigate(ROUTES.GAME_LOBBY(game), { replace: true });
+    if (gameId) {
+      navigate(ROUTES.GAME_LOBBY(gameId), { replace: true });
     }
   };
 

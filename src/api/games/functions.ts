@@ -12,23 +12,25 @@ import {
 
 import { User } from "firebase/auth";
 import { Game } from "./types";
+import { Card } from "../../utils/shuffleCards";
 
 export const useGameActions = (user: User | null) => {
   const { handleApiErrors } = useHandleApiFunction();
 
-  const createGame = handleApiErrors(async (deck: any, cards: any) => {
+  const createGame = handleApiErrors(async (deck: Card[], playerHand: Card[]) => {
     const gameRef = await addDoc(collection(db, "games"), {
       creatorId: user!.uid,
       hasStarted: false,
       playerCount: 1,
       deck: deck,
+      deckIndex: 4,
       turn: 0,
       state: "lobby",
     } as Game);
 
     const playerData = {
       userId: user!.uid,
-      cards: [...cards],
+      hand: [...playerHand],
       isTurn: true,
     };
 

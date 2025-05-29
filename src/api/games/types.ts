@@ -9,6 +9,7 @@ export type Game = {
   hasStarted: boolean;
   playerCount: number;
   deck: any;
+  deckIndex: number;
   turn: number;
   state: "lobby" | "waiting" | "Your Turn" | "Game Over";
 };
