@@ -6,19 +6,17 @@ import {
   getDoc,
   addDoc,
   collection,
-  getDocs,
-  query,
-  onSnapshot,
 } from "firebase/firestore";
 
 import { User } from "firebase/auth";
 import { Game } from "./types";
 import { Card } from "../../utils/shuffleCards";
+import { useCallback } from "react";
 
 export const useGameActions = (user: User | null) => {
   const { handleApiErrors } = useHandleApiFunction();
 
-  const createGame = handleApiErrors(
+  const createGame = useCallback(handleApiErrors(
     async (deck: Card[], playerHand: Card[]): Promise<string> => {
       console.log("Creating game...");
       const gameRef = await addDoc(collection(db, "games"), {
@@ -48,9 +46,9 @@ export const useGameActions = (user: User | null) => {
 
       return gameRef.id;
     }
-  );
+  ), [user, handleApiErrors]);
 
-  const getGame = handleApiErrors(
+  const getGame = useCallback(handleApiErrors(
     async (gameId: string): Promise<Game | null> => {
       console.log("Fetching game with ID:", gameId);
       const gameDoc = await getDoc(doc(db, "games", gameId));
@@ -65,30 +63,22 @@ export const useGameActions = (user: User | null) => {
 
       return gameData;
     }
-  );
+  ), [handleApiErrors]);
 
-  const subscribeToGameUpdates = (
-    gameId: string,
-    callback: (game: Game) => void
-  ) => {
-    const gameRef = doc(db, "games", gameId);
 
-    const unsubscribe = onSnapshot(gameRef, (docSnapshot) => {
-      if (docSnapshot.exists()) {
-        const gameData = docSnapshot.data() as Game;
-        callback(gameData);
-      } else {
-        console.error("Game not found for subscription");
-        throw new Error("Game not found for subscription");
-      }
-    });
+  const deleteGame = useCallback(handleApiErrors(
+    async (gameId: string): Promise<void> => {
+      console.log("Deleting game with ID:", gameId);
+      const gameRef = doc(db, "games", gameId);
 
-    return unsubscribe;
-  };
+      await setDoc(gameRef, {}, { merge: true });
+      console.log("Game deleted successfully");
+    }
+  ), [handleApiErrors]);
 
   return {
     createGame,
     getGame,
-    subscribeToGameUpdates,
+    deleteGame,
   };
 };

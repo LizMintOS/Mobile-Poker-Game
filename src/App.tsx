@@ -6,6 +6,7 @@ import AuthorizedLayout from "./routes/AuthorizedLayout";
 import GameLobby from "./pages/GameLobby";
 import PageNotFound from "./pages/PageNotFound";
 import AuthRedirectGuard from "./routes/AuthRedirectGuard";
+import Game from "./pages/Game";
 
 const App = () => {
   return (
@@ -15,6 +16,7 @@ const App = () => {
           <Route element={<AuthorizedLayout />}>
             <Route index element={<HomePage />} />
             <Route path="lobby/:gameId" element={<GameLobby />} />
+            <Route path="game/:gameId" element={<Game />} />
           </Route>
           <Route path="auth" element={<AuthPage />} />
         </Route>

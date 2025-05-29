@@ -1,3 +1,4 @@
+import { useCallback } from "react";
 import { showErrorToast } from "../../components/common/Toast";
 import { useError } from "../../contexts/ErrorProvider";
 import { mapErrorToConstantErrorMessage } from "../errors/functions";
@@ -5,7 +6,7 @@ import { mapErrorToConstantErrorMessage } from "../errors/functions";
 export const useHandleApiFunction = () => {
   const { setError, clearError } = useError();
 
-  const handleApiErrors = <T extends (...args: any[]) => any>(
+  const handleApiErrors = useCallback(<T extends (...args: any[]) => any>(
     fn: T
   ): ((...args: Parameters<T>) => Promise<any>) => {
     return async (...args: Parameters<T>) => {
@@ -20,6 +21,6 @@ export const useHandleApiFunction = () => {
         throw error;
       }
     };
-  };
+  }, [clearError, setError])
   return { handleApiErrors };
 };
