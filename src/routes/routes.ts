@@ -4,5 +4,5 @@ export const ROUTES = {
   HOME: "home",
   PAGE_NOT_FOUND: "/page-not-found",
   GAME_LOBBY: (gameId: string) => `/lobby/${gameId}`,
-  GAME: "/game/:id",
+  GAME: (gameId: string) => `/game/${gameId}`,
 };
