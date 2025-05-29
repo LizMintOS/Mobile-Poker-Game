@@ -16,26 +16,27 @@ import { Game } from "./types";
 export const useGameActions = (user: User | null) => {
   const { handleApiErrors } = useHandleApiFunction();
 
-  const createGame = handleApiErrors(async () => {
+  const createGame = handleApiErrors(async (deck: any, cards: any) => {
     const gameRef = await addDoc(collection(db, "games"), {
       creatorId: user!.uid,
       hasStarted: false,
       playerCount: 1,
+      deck: deck,
+      turn: 0,
+      state: "lobby",
     } as Game);
 
     const playerData = {
       userId: user!.uid,
-      cards: [],
+      cards: [...cards],
+      isTurn: true,
     };
 
-    await addDoc(collection(db, "games", gameRef.id, "players", user!.uid), playerData).then(() => {
-      return {
-        id: gameRef.id,
-        creatorId: user!.uid,
-        hasStarted: false,
-        playerCount: 1,
-        players: [playerData],
-      } as Game;
+    await addDoc(
+      collection(db, "games", gameRef.id, "players", user!.uid),
+      playerData
+    ).then(() => {
+      return gameRef.id;
     });
     // await addDoc(collection(db, "users", user!.uid), {
     //   game: gameRef.id,

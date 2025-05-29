@@ -11,7 +11,7 @@ const HomePage = () => {
 
   const handleGameCreation = async () => {
     // call get deck function then send to create game
-    const game = await createGame();
+    const game = await createGame("defaultDeck", "defaultCards");
 
     if (game) {
       navigate(ROUTES.GAME_LOBBY(game), { replace: true });

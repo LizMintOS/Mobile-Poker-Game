@@ -8,4 +8,7 @@ export type Game = {
   creatorId: string;
   hasStarted: boolean;
   playerCount: number;
+  deck: any;
+  turn: number;
+  state: "lobby" | "waiting" | "Your Turn" | "Game Over";
 };
