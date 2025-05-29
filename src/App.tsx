@@ -4,7 +4,7 @@ import HomePage from "./pages/Home";
 import AuthPage from "./pages/Auth";
 // import { NavigationProvider } from "./contexts/NavProvider";
 import AuthorizedLayout from "./routes/AuthorizedLayout";
-import CreateGamePage from "./pages/CreateGame";
+import GameLobby from "./pages/GameLobby";
 import PageNotFound from "./pages/PageNotFound";
 import AuthRedirectGuard from "./routes/AuthRedirectGuard";
 
@@ -13,9 +13,9 @@ const App = () => {
     <BrowserRouter>
       <Routes>
         <Route path="/" element={<AuthRedirectGuard />}>
-          <Route path="home" element={<AuthorizedLayout />}>
+          <Route element={<AuthorizedLayout />}>
             <Route index element={<HomePage />} />
-            <Route path="create" element={<CreateGamePage />} />
+            <Route path="lobby" element={<GameLobby />} />
           </Route>
           <Route path="auth" element={<AuthPage />} />
         </Route>

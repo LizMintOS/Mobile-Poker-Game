@@ -15,10 +15,10 @@ const AuthRedirectGuard = () => {
     setLoading(true);
     const timer = setTimeout(() => {
       if (!currentUser) {
-        navigate(ROUTES.AUTH);
-        // setLoading(false);
+        navigate(ROUTES.AUTH, { replace: true });
+        setLoading(false);
       } else if (currentUser && pathname === ROUTES.AUTH) {
-        navigate(ROUTES.HOME);
+        navigate(ROUTES.INDEX, { replace: true });
       }
       setLoading(false);
     }, 500);

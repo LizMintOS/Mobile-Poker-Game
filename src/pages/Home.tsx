@@ -21,7 +21,7 @@ const HomePage = () => {
       <div className="flex flex-col items-center space-y-4 h-fit">
         <PressButton
           type="button"
-          onClick={() => navigate(ROUTES.CREATE_GAME)}
+          onClick={() => navigate(ROUTES.GAME_LOBBY)}
           style="bg-green-600 border-green-700"
         >
           Create a Game

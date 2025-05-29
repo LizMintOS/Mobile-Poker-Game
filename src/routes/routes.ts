@@ -1,8 +1,8 @@
 export const ROUTES = {
+  INDEX: "/",
   AUTH: "/auth",
-  HOME: "/home",
-  CREATE_GAME: "/home/create",
+  HOME: "home",
   PAGE_NOT_FOUND: "/page-not-found",
-  GAME_LOBBY: "/game-lobby",
+  GAME_LOBBY: "/lobby",
   GAME: "/game/:id",
 };

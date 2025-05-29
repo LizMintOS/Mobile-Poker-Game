@@ -1,5 +1,5 @@
 
-const CreateGamePage = () => {
+const GameLobby = () => {
   return (
     <>
       <div className="flex justify-center items-center align-center relative min-h-4/5">
@@ -11,4 +11,4 @@ const CreateGamePage = () => {
   );
 };
 
-export default CreateGamePage;
+export default GameLobby;
