@@ -2,7 +2,6 @@ import { BrowserRouter, Routes, Route, Navigate } from "react-router";
 import "./App.css";
 import HomePage from "./pages/Home";
 import AuthPage from "./pages/Auth";
-// import { NavigationProvider } from "./contexts/NavProvider";
 import AuthorizedLayout from "./routes/AuthorizedLayout";
 import GameLobby from "./pages/GameLobby";
 import PageNotFound from "./pages/PageNotFound";
@@ -15,7 +14,7 @@ const App = () => {
         <Route path="/" element={<AuthRedirectGuard />}>
           <Route element={<AuthorizedLayout />}>
             <Route index element={<HomePage />} />
-            <Route path="lobby" element={<GameLobby />} />
+            <Route path="lobby/:gameId" element={<GameLobby />} />
           </Route>
           <Route path="auth" element={<AuthPage />} />
         </Route>

@@ -17,33 +17,38 @@ import { Card } from "../../utils/shuffleCards";
 export const useGameActions = (user: User | null) => {
   const { handleApiErrors } = useHandleApiFunction();
 
-  const createGame = handleApiErrors(async (deck: Card[], playerHand: Card[]) => {
-    const gameRef = await addDoc(collection(db, "games"), {
-      creatorId: user!.uid,
-      hasStarted: false,
-      playerCount: 1,
-      deck: deck,
-      deckIndex: 4,
-      turn: 0,
-      state: "lobby",
-    } as Game);
+  const createGame = handleApiErrors(
+    async (deck: Card[], playerHand: Card[]): Promise<any> => {
+      console.log("Creating game...");
+      const gameRef = await addDoc(collection(db, "games"), {
+        creatorId: user!.uid,
+        hasStarted: false,
+        playerCount: 1,
+        deck: deck,
+        deckIndex: 4,
+        turn: 0,
+        state: "lobby",
+      } as Game);
 
-    const playerData = {
-      userId: user!.uid,
-      hand: [...playerHand],
-      isTurn: true,
-    };
+      console.log("Game created with ID:", gameRef.id);
 
-    await addDoc(
-      collection(db, "games", gameRef.id, "players", user!.uid),
-      playerData
-    ).then(() => {
-      return gameRef.id;
-    });
-    // await addDoc(collection(db, "users", user!.uid), {
-    //   game: gameRef.id,
-    // });
-  });
+      const playerData = {
+        hand: [...playerHand],
+        isTurn: true,
+      };
+
+      console.log("Adding player data:", playerData);
+
+      const gamePlayersRef = await setDoc(
+        doc(db, "games", gameRef.id, "players", user!.uid),
+        { playerData }
+      );
+
+      console.log("Player data added successfully");
+
+      return gameRef;
+    }
+  );
 
   // const getGames = handleApiErrors(
   //   async (setGames: React.Dispatch<React.SetStateAction<Game[]>>) => {

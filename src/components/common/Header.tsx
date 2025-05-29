@@ -1,8 +1,11 @@
 import { Link } from "react-router";
 import LogoutButton from "./buttons/LogoutButton";
 import { ROUTES } from "../../routes/routes";
+import { useError } from "../../contexts/ErrorProvider";
+import ErrorMessage from "./ErrorMessage";
 
 const Header = () => {
+  const { error } = useError();
   return (
     <header>
       <nav className="w-full align-center flex flex-row justify-between shadow-sm bg-green-50">
@@ -16,7 +19,7 @@ const Header = () => {
             <Link
               to={ROUTES.INDEX}
               className="text-green-600 text-lg font-semibold rounded-xl"
-            >
+              >
               Home
             </Link>
           </div>
@@ -25,6 +28,7 @@ const Header = () => {
           </div>
         </div>
       </nav>
+              {error && <ErrorMessage message={error} />}
     </header>
   );
 };

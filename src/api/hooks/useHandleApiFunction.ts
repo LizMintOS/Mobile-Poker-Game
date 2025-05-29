@@ -6,14 +6,16 @@ export const useHandleApiFunction = () => {
 
   const handleApiErrors = <T extends (...args: any[]) => any>(
     fn: T
-  ): ((...args: Parameters<T>) => Promise<void> | Promise<any>) => {
+  ): ((...args: Parameters<T>) => Promise<any>) => {
     return async (...args: Parameters<T>) => {
       clearError();
       try {
         return await fn(...args);
       } catch (error: any) {
+        console.error("API Error:", error);
         const mappedError = mapErrorToConstantErrorMessage(error);
         setError(mappedError);
+        throw error;
       }
     };
   };
