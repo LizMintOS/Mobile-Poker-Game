@@ -6,13 +6,14 @@ import { useGameActions } from "../api/games/functions";
 import { useAuth } from "../contexts/AuthProvider";
 import { useEffect, useState } from "react";
 import { useLoading } from "../contexts/LoadingProvider";
+import RedButton from "../components/common/buttons/RedButton";
 
 const GameLobby = () => {
   const navigate = useNavigate();
   const { currentUser } = useAuth();
   const { loading, setLoading } = useLoading();
   const { getGame } = useGameActions(currentUser);
-  const [numPlayers, setNumPlayers] = useState(1);
+  const [numPlayers, setNumPlayers] = useState<number>(1);
 
   const fetchGameData = async (gameId: string) => {
     setLoading(true);
@@ -26,6 +27,13 @@ const GameLobby = () => {
 
     setLoading(false);
   };
+
+  const handleDeleteGame = async (gameId: string) => {
+    setLoading(true);
+    // Implement game deletion logic here if needed
+    setLoading(false);
+    navigate(ROUTES.HOME, { replace: true });
+  }
 
   const { gameId } = useParams<{ gameId: string }>();
   if (!gameId) {
@@ -49,10 +57,16 @@ const GameLobby = () => {
             <p className="text-sm text-gray-500">
               {numPlayers} player{numPlayers !== 1 ? "s" : ""} joined
             </p>
-            <GreenButton
-              label="Start Game"
-              type="button"
-              onClick={() => navigate(ROUTES.GAME(gameId))}
+            {numPlayers > 1 && (
+              <GreenButton
+                label="Start Game"
+                type="button"
+                onClick={() => navigate(ROUTES.GAME(gameId))}
+              />
+            )}
+            <RedButton
+              onClick={() => navigate(ROUTES.HOME)}
+              label="Cancel Game"
             />
           </div>
         </div>

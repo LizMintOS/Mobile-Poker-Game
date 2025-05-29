@@ -13,7 +13,7 @@ const Header = () => {
         </div>
         <div className="flex align-center items-center justify-between gap-10 m-0 h-full">
           <Link
-            to={ROUTES.INDEX}
+            to={ROUTES.HOME}
             className="text-green-600 text-lg font-semibold rounded-xl"
           >
             <div className="hover:border-2 hover:border-green-600 w-full h-full p-2 rounded-2xl cursor-pointer">

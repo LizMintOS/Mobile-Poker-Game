@@ -13,7 +13,7 @@ const AuthRedirectGuard = () => {
     if (!currentUser) {
       navigate(ROUTES.AUTH, { replace: true });
     } else if (currentUser && pathname === ROUTES.AUTH) {
-      navigate(ROUTES.INDEX, { replace: true });
+      navigate(ROUTES.HOME, { replace: true });
     }
   }, [currentUser, useNavigate]);
 
