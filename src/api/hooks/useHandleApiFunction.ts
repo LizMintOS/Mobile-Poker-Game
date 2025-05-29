@@ -6,7 +6,7 @@ export const useHandleApiFunction = () => {
 
   const handleApiErrors = <T extends (...args: any[]) => any>(
     fn: T
-  ): ((...args: Parameters<T>) => Promise<void>) => {
+  ): ((...args: Parameters<T>) => Promise<void> | Promise<any>) => {
     return async (...args: Parameters<T>) => {
       clearError();
       try {

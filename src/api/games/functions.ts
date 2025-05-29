@@ -11,6 +11,7 @@ import {
 } from "firebase/firestore";
 
 import { User } from "firebase/auth";
+import { Game } from "./types";
 
 export const useGameActions = (user: User | null) => {
   const { handleApiErrors } = useHandleApiFunction();
@@ -20,10 +21,22 @@ export const useGameActions = (user: User | null) => {
       creatorId: user!.uid,
       hasStarted: false,
       playerCount: 1,
+    } as Game);
+
+    const playerData = {
+      userId: user!.uid,
+      cards: [],
+    };
+
+    await addDoc(collection(db, "games", gameRef.id, "players", user!.uid), playerData).then(() => {
+      return {
+        id: gameRef.id,
+        creatorId: user!.uid,
+        hasStarted: false,
+        playerCount: 1,
+        players: [playerData],
+      } as Game;
     });
-
-    await addDoc(collection(db, "games", gameRef.id, "players", user!.uid), {userId: user!.uid, cards: []});
-
     // await addDoc(collection(db, "users", user!.uid), {
     //   game: gameRef.id,
     // });

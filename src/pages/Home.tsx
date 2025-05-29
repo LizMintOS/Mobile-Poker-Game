@@ -1,5 +1,4 @@
 import { useNavigate } from "react-router";
-import PressButton from "../components/common/buttons/PressButton";
 import GreenButton from "../components/common/buttons/GreenButton";
 import { ROUTES } from "../routes/routes";
 import { useGameActions } from "../api/games/functions";
@@ -12,9 +11,11 @@ const HomePage = () => {
 
   const handleGameCreation = async () => {
     // call get deck function then send to create game
-    await createGame().then(() => {
-      navigate(ROUTES.GAME_LOBBY, { replace: true });
-    });
+    const game = await createGame();
+
+    if (game) {
+      navigate(ROUTES.GAME_LOBBY(game), { replace: true });
+    }
   };
 
   return (

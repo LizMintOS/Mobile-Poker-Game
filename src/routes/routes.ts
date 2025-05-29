@@ -3,6 +3,6 @@ export const ROUTES = {
   AUTH: "/auth",
   HOME: "home",
   PAGE_NOT_FOUND: "/page-not-found",
-  GAME_LOBBY: "/lobby",
+  GAME_LOBBY: (gameId: string) => `/lobby/${gameId}`,
   GAME: "/game/:id",
 };

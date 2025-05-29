@@ -5,7 +5,7 @@ export type CreateGameInput = {
 
 export type Game = {
   id: string;
-  name: string;
   creatorId: string;
   hasStarted: boolean;
+  playerCount: number;
 };
