@@ -2,20 +2,25 @@ import { GoArrowRight } from "react-icons/go";
 import PressButton from "../buttons/PressButton";
 
 interface SubmitButtonProps {
-  disabled: boolean;
+  disabled?: boolean;
   label: string;
+  type: "submit" | "button";
+  onClick?: () => void;
 }
 
-const GreenSubmitButton = ({
+const GreenButton = ({
   disabled,
   label,
+  type,
+  onClick,
 }: SubmitButtonProps) => {
   return (
     <div className="flex mr-2 w-full">
       <PressButton
-        type="submit"
+        type={type}
         style="bg-green-500 bg-green-600 border-green-700"
         disabled={disabled}
+        onClick={onClick}
       >
         {label}
         <span className="flex items-center justify-center ml-2 self-end transition-all duration-300 group">
@@ -26,4 +31,4 @@ const GreenSubmitButton = ({
   );
 };
 
-export default GreenSubmitButton;
+export default GreenButton;

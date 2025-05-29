@@ -3,7 +3,6 @@ import {
   signInWithEmailAndPassword,
   signOut,
   signInAnonymously,
-  updateProfile,
 } from "firebase/auth";
 import { auth } from "../../services/firebase";
 import { useHandleApiFunction } from "../hooks/useHandleApiFunction";
@@ -13,14 +12,7 @@ export const useAuthActions = () => {
 
   const registerUser = handleApiErrors(
     async (email: string, password: string) => {
-      await createUserWithEmailAndPassword(auth, email, password).then(
-        async () => {
-          const user = auth.currentUser;
-          await updateProfile(user!, {
-            displayName: email.substring(0, email.indexOf("@")),
-          });
-        }
-      );
+      await createUserWithEmailAndPassword(auth, email, password);
     }
   );
 
@@ -33,14 +25,7 @@ export const useAuthActions = () => {
   });
 
   const loginAnonymouslyUser = handleApiErrors(async () => {
-    await signInAnonymously(auth).then(async () => {
-      const user = auth.currentUser;
-      await updateProfile(user!, {
-        displayName: "Guest",
-      }).then(() => {
-        console.log("User updated successfully:", user?.displayName);
-      });
-    });
+    await signInAnonymously(auth);
   });
 
   return {
