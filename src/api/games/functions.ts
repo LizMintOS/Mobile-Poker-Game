@@ -18,7 +18,7 @@ export const useGameActions = (user: User | null) => {
   const { handleApiErrors } = useHandleApiFunction();
 
   const createGame = handleApiErrors(
-    async (deck: Card[], playerHand: Card[]): Promise<any> => {
+    async (deck: Card[], playerHand: Card[]): Promise<string> => {
       console.log("Creating game...");
       const gameRef = await addDoc(collection(db, "games"), {
         creatorId: user!.uid,
@@ -45,7 +45,7 @@ export const useGameActions = (user: User | null) => {
 
       console.log("Player data added successfully");
 
-      return gameRef;
+      return gameRef.id;
     }
   );
 

@@ -6,10 +6,8 @@ import { useAuth } from "../contexts/AuthProvider";
 import { Card, shuffleCards } from "../utils/shuffleCards";
 import { useState } from "react";
 import { LoadingWrapper } from "../components/common/LoadingWrapper";
-import { useError } from "../contexts/ErrorProvider";
 
 const HomePage = () => {
-  const { error } = useError();
   const navigate = useNavigate();
   const { currentUser } = useAuth();
   const { createGame } = useGameActions(currentUser);
@@ -17,15 +15,18 @@ const HomePage = () => {
 
   const handleGameCreation = async () => {
     setLoading(true);
+
     const startingDeck: Card[] = shuffleCards();
     console.log("Starting deck first card: ", startingDeck[0]);
+
     const gameId = await createGame(startingDeck, startingDeck.slice(0, 5));
-    
+
     if (gameId) {
-      setLoading(false);
-      console.log("In nav: ", gameId);
+      console.log("New Game ID: ", gameId);
       navigate(ROUTES.GAME_LOBBY(gameId), { replace: true });
     }
+    
+    setLoading(false);
   };
 
   return (

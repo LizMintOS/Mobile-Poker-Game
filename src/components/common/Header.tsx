@@ -1,11 +1,8 @@
 import { Link } from "react-router";
 import LogoutButton from "./buttons/LogoutButton";
 import { ROUTES } from "../../routes/routes";
-import { useError } from "../../contexts/ErrorProvider";
-import ErrorMessage from "./ErrorMessage";
 
 const Header = () => {
-  const { error } = useError();
   return (
     <header>
       <nav className="w-full align-center flex flex-row justify-between shadow-sm bg-green-50">
@@ -15,20 +12,19 @@ const Header = () => {
           </h2>
         </div>
         <div className="flex align-center items-center justify-between gap-10 m-0 h-full">
-          <div className="hover:border-2 hover:border-green-600 w-full h-full p-2 rounded-2xl cursor-pointer">
-            <Link
-              to={ROUTES.INDEX}
-              className="text-green-600 text-lg font-semibold rounded-xl"
-              >
+          <Link
+            to={ROUTES.INDEX}
+            className="text-green-600 text-lg font-semibold rounded-xl"
+          >
+            <div className="hover:border-2 hover:border-green-600 w-full h-full p-2 rounded-2xl cursor-pointer">
               Home
-            </Link>
-          </div>
+            </div>
+          </Link>
           <div className="w-fit items-center flex h-full m-6">
             <LogoutButton />
           </div>
         </div>
       </nav>
-              {error && <ErrorMessage message={error} />}
     </header>
   );
 };

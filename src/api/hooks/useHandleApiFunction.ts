@@ -1,3 +1,4 @@
+import { showErrorToast } from "../../components/common/Toast";
 import { useError } from "../../contexts/ErrorProvider";
 import { mapErrorToConstantErrorMessage } from "../errors/functions";
 
@@ -15,6 +16,7 @@ export const useHandleApiFunction = () => {
         console.error("API Error:", error);
         const mappedError = mapErrorToConstantErrorMessage(error);
         setError(mappedError);
+        showErrorToast(typeof mappedError === "string" ? mappedError : JSON.stringify(mappedError));
         throw error;
       }
     };

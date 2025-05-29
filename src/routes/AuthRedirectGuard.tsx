@@ -2,6 +2,7 @@ import { useEffect } from "react";
 import { Outlet, useNavigate, useLocation } from "react-router";
 import { ROUTES } from "./routes";
 import { useAuth } from "../contexts/AuthProvider";
+import { Toast } from "../components/common/Toast";
 
 const AuthRedirectGuard = () => {
   const { currentUser } = useAuth();
@@ -16,7 +17,12 @@ const AuthRedirectGuard = () => {
     }
   }, [currentUser, useNavigate]);
 
-  return <Outlet />;
+  return (
+    <>
+      <Toast />
+      <Outlet />
+    </>
+  );
 };
 
 export default AuthRedirectGuard;
