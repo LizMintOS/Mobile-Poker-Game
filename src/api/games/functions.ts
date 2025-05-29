@@ -39,10 +39,9 @@ export const useGameActions = (user: User | null) => {
 
       console.log("Adding player data:", playerData);
 
-      const gamePlayersRef = await setDoc(
-        doc(db, "games", gameRef.id, "players", user!.uid),
-        { playerData }
-      );
+      await setDoc(doc(db, "games", gameRef.id, "players", user!.uid), {
+        playerData,
+      });
 
       console.log("Player data added successfully");
 
@@ -50,28 +49,7 @@ export const useGameActions = (user: User | null) => {
     }
   );
 
-  // const getGames = handleApiErrors(
-  //   async (setGames: React.Dispatch<React.SetStateAction<Game[]>>) => {
-  //     const gamesSnapshot = await getDocs(collection(db, "games"));
-  //     const games: Game[] = [];
-
-  //     if (!gamesSnapshot.empty) {
-  //       gamesSnapshot.forEach((doc) => {
-  //         const gameData = doc.data() as Game;
-  //         games.push({
-  //           ...gameData,
-  //         });
-  //       });
-
-  //       setGames(games);
-  //     } else {
-  //       setGames([]);
-  //     }
-  //   }
-  // );
-
   return {
     createGame,
-    // getGames,
   };
 };

@@ -20,11 +20,7 @@ const HomePage = () => {
     const startingDeck: Card[] = shuffleCards();
     console.log("Starting deck first card: ", startingDeck[0]);
     const gameId = await createGame(startingDeck, startingDeck.slice(0, 5));
-
-    console.log("Prenav: ", gameId);
-    if (error) {
-      
-    }
+    
     if (gameId) {
       setLoading(false);
       console.log("In nav: ", gameId);
