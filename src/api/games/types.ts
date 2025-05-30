@@ -1,3 +1,5 @@
+import { Card } from "../../utils/shuffleCards";
+
 export type CreateGameInput = {
   name: string;
   creatorId: string;
@@ -8,7 +10,7 @@ export type Game = {
   creatorId: string;
   hasStarted: boolean;
   playerCount: number;
-  deck: any;
+  deck: Card[];
   deckIndex: number;
   turn: number;
   state: "lobby" | "waiting" | "Your Turn" | "Game Over";

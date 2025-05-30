@@ -7,6 +7,9 @@ import {
   addDoc,
   collection,
   updateDoc,
+  onSnapshot,
+  query,
+  DocumentData,
 } from "firebase/firestore";
 
 import { User } from "firebase/auth";
@@ -17,6 +20,24 @@ import { Player } from "../players/types";
 
 export const useGameActions = (user: User | null) => {
   const { handleApiErrors } = useHandleApiFunction();
+
+  const listenToGame = (
+    gameId: string,
+    callback: (gameData: DocumentData) => void
+  ) => {
+    const gameDocRef = doc(db, "games", gameId);
+
+    const unsubscribe = onSnapshot(gameDocRef, (docSnapshot) => {
+      if (docSnapshot.exists()) {
+        const gameData = docSnapshot.data();
+        callback(gameData);
+      } else {
+        console.log("No such game document!");
+      }
+    });
+
+    return unsubscribe;
+  };
 
   const createGame = useCallback(
     handleApiErrors(
