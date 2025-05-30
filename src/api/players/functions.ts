@@ -1,31 +1,31 @@
 import { useHandleApiFunction } from "../hooks/useHandleApiFunction";
+import { useGameActions } from "../games/functions";
 import { db } from "../../services/firebase";
 import {
   doc,
-  setDoc,
-  getDoc,
   addDoc,
   collection,
   updateDoc,
   DocumentData,
   onSnapshot,
+  setDoc,
+  increment,
 } from "firebase/firestore";
 
 import { User } from "firebase/auth";
 import { Player } from "./types";
 
-import { useGameActions } from "../games/functions";
 import { useCallback } from "react";
 import { Game } from "../games/types";
 
 export const usePlayerActions = (user: User | null) => {
   const { handleApiErrors } = useHandleApiFunction();
-  const { getGame } = useGameActions(user);
+  const { updateGame } = useGameActions(user);
 
   const listenToPlayer = (
     gameId: string,
     playerId: string,
-    callback: (playerData: DocumentData) => void
+    callback: (playerData: DocumentData | null) => void
   ) => {
     const playerDocRef = doc(db, "games", gameId, "players", playerId);
 
@@ -34,33 +34,38 @@ export const usePlayerActions = (user: User | null) => {
         const playerData = docSnapshot.data();
         callback(playerData);
       } else {
-        console.log("No such player document!");
+        callback(null);
       }
     });
 
-    // Return unsubscribe function so you can stop listening when needed
     return unsubscribe;
   };
 
   const addPlayer = useCallback(
-    handleApiErrors(async (gameId: string, game: Game): Promise<string> => {
-      console.log("Creating player for game: ", gameId);
+    handleApiErrors(async (game: Game): Promise<string> => {
+      console.log("Creating player for game: ", game.id);
 
-      //get game data and ensure it exists
-      // get players subcoll from game data
+      if (game.playerCount >= 8) {
+        throw new Error("Game is already full.");
+      }
 
-      const playerRef = await addDoc(
-        collection(db, "games", game.id, "players", user!.uid),
-        {
-          hand: game.deck.slice(game.deckIndex + 1, game.deckIndex + 6),
-          isTurn: false,
-        } as Player
-      );
+      const playerRef = doc(db, "games", game.id, "players", user!.uid);
+      await setDoc(playerRef, {
+        hand: game.deck.slice(game.deckIndex + 1, game.deckIndex + 6),
+        isTurn: false,
+      } as Player);
 
       console.log("Player created with ID: ", playerRef.id);
 
-      await updateDoc;
+      await updateGame({ playerCount: game.playerCount++ }, game.id);
+
+      return playerRef.id;
     }),
-    [handleApiErrors]
+    [handleApiErrors, user]
   );
+
+  return {
+    listenToPlayer,
+    addPlayer,
+  };
 };

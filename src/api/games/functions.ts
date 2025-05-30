@@ -8,7 +8,6 @@ import {
   collection,
   updateDoc,
   onSnapshot,
-  query,
   DocumentData,
 } from "firebase/firestore";
 
@@ -117,6 +116,7 @@ export const useGameActions = (user: User | null) => {
   );
 
   return {
+    listenToGame,
     createGame,
     getGame,
     deleteGame,
