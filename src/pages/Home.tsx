@@ -6,12 +6,14 @@ import { useAuth } from "../contexts/AuthProvider";
 import { Card, shuffleCards } from "../utils/shuffleCards";
 import { useState } from "react";
 import { LoadingWrapper } from "../components/common/LoadingWrapper";
+import InputItem from "../components/common/form/InputItem";
 
 const HomePage = () => {
   const navigate = useNavigate();
   const { currentUser } = useAuth();
   const { createGame } = useGameActions(currentUser);
   const [loading, setLoading] = useState(false);
+  const [gameId, setGameId] = useState<string>("");
 
   const handleGameCreation = async () => {
     setLoading(true);
@@ -19,7 +21,7 @@ const HomePage = () => {
     const startingDeck: Card[] = shuffleCards();
     console.log("Starting deck first card: ", startingDeck[0]);
 
-    const gameId = await createGame(startingDeck, startingDeck.slice(0, 5));
+    setGameId(await createGame(startingDeck, startingDeck.slice(0, 5)));
 
     if (gameId) {
       console.log("New Game ID: ", gameId);
@@ -29,10 +31,16 @@ const HomePage = () => {
     setLoading(false);
   };
 
+  const handleJoinGame = (gameId: string) => {
+    // update game fb fn
+    navigate(ROUTES.GAME_LOBBY(gameId), { replace: true });
+  }
+
   return (
     <div className="flex flex-col items-center justify-center h-full">
       <LoadingWrapper loading={loading}>
         <div className="flex flex-col items-center space-y-4 h-fit">
+          <InputItem label="Game ID" type="text" value={gameId} onChange={(e) => setGameId(e.target.value)} />
           <GreenButton
             type="button"
             onClick={handleGameCreation}
