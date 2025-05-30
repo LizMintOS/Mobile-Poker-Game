@@ -6,6 +6,7 @@ import {
   getDoc,
   addDoc,
   collection,
+  updateDoc,
 } from "firebase/firestore";
 
 import { User } from "firebase/auth";
@@ -16,40 +17,43 @@ import { useCallback } from "react";
 export const useGameActions = (user: User | null) => {
   const { handleApiErrors } = useHandleApiFunction();
 
-  const createGame = useCallback(handleApiErrors(
-    async (deck: Card[], playerHand: Card[]): Promise<string> => {
-      console.log("Creating game...");
-      const gameRef = await addDoc(collection(db, "games"), {
-        creatorId: user!.uid,
-        hasStarted: false,
-        playerCount: 1,
-        deck: deck,
-        deckIndex: 4,
-        turn: 0,
-        state: "lobby",
-      } as Game);
+  const createGame = useCallback(
+    handleApiErrors(
+      async (deck: Card[], playerHand: Card[]): Promise<string> => {
+        console.log("Creating game...");
+        const gameRef = await addDoc(collection(db, "games"), {
+          creatorId: user!.uid,
+          hasStarted: false,
+          playerCount: 1,
+          deck: deck,
+          deckIndex: 4,
+          turn: 0,
+          state: "lobby",
+        } as Game);
 
-      console.log("Game created with ID:", gameRef.id);
+        console.log("Game created with ID:", gameRef.id);
 
-      const playerData = {
-        hand: [...playerHand],
-        isTurn: true,
-      };
+        const playerData = {
+          hand: [...playerHand],
+          isTurn: true,
+        };
 
-      console.log("Adding player data:", playerData);
+        console.log("Adding player data:", playerData);
 
-      await setDoc(doc(db, "games", gameRef.id, "players", user!.uid), {
-        playerData,
-      });
+        await setDoc(doc(db, "games", gameRef.id, "players", user!.uid), {
+          playerData,
+        });
 
-      console.log("Player data added successfully");
+        console.log("Player data added successfully");
 
-      return gameRef.id;
-    }
-  ), [user, handleApiErrors]);
+        return gameRef.id;
+      }
+    ),
+    [user, handleApiErrors]
+  );
 
-  const getGame = useCallback(handleApiErrors(
-    async (gameId: string): Promise<Game | null> => {
+  const getGame = useCallback(
+    handleApiErrors(async (gameId: string): Promise<Game> => {
       console.log("Fetching game with ID:", gameId);
       const gameDoc = await getDoc(doc(db, "games", gameId));
 
@@ -62,23 +66,38 @@ export const useGameActions = (user: User | null) => {
       console.log("Game data fetched:", gameData);
 
       return gameData;
-    }
-  ), [handleApiErrors]);
+    }),
+    [handleApiErrors]
+  );
 
+  const updateGame = useCallback(
+    handleApiErrors(async (data: any, gameId: string): Promise<void | Game> => {
+      console.log("Finding game with ID:", gameId);
+      const gameData = await getGame(gameId);
 
-  const deleteGame = useCallback(handleApiErrors(
-    async (gameId: string): Promise<void> => {
+      await updateDoc(gameData.id, { ...data }).then(async () => {
+        const newGame = await getDoc(doc(db, "games", gameId));
+        return newGame.data() as Game;
+      });
+    }),
+    [handleApiErrors]
+  );
+
+  const deleteGame = useCallback(
+    handleApiErrors(async (gameId: string): Promise<void> => {
       console.log("Deleting game with ID:", gameId);
       const gameRef = doc(db, "games", gameId);
 
       await setDoc(gameRef, {}, { merge: true });
       console.log("Game deleted successfully");
-    }
-  ), [handleApiErrors]);
+    }),
+    [handleApiErrors]
+  );
 
   return {
     createGame,
     getGame,
     deleteGame,
+    updateGame,
   };
 };

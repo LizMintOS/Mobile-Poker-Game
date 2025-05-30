@@ -31,7 +31,9 @@ const HomePage = () => {
     setLoading(false);
   };
 
-  const handleJoinGame = (gameId: string) => {
+  const handleJoinGame = (e: React.ChangeEvent<HTMLInputElement>) => {
+    e.preventDefault();
+    setGameId(e.target.value)
     // update game fb fn
     navigate(ROUTES.GAME_LOBBY(gameId), { replace: true });
   }
@@ -40,7 +42,7 @@ const HomePage = () => {
     <div className="flex flex-col items-center justify-center h-full">
       <LoadingWrapper loading={loading}>
         <div className="flex flex-col items-center space-y-4 h-fit">
-          <InputItem label="Game ID" type="text" value={gameId} onChange={(e) => setGameId(e.target.value)} />
+          <InputItem label="Game ID" type="text" value={gameId} onChange={(e) => handleJoinGame(e)} />
           <GreenButton
             type="button"
             onClick={handleGameCreation}
