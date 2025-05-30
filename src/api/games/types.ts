@@ -13,3 +13,4 @@ export type Game = {
   turn: number;
   state: "lobby" | "waiting" | "Your Turn" | "Game Over";
 };
+

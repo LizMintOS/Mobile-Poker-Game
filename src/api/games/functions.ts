@@ -13,6 +13,7 @@ import { User } from "firebase/auth";
 import { Game } from "./types";
 import { Card } from "../../utils/shuffleCards";
 import { useCallback } from "react";
+import { Player } from "../players/types";
 
 export const useGameActions = (user: User | null) => {
   const { handleApiErrors } = useHandleApiFunction();
@@ -33,7 +34,7 @@ export const useGameActions = (user: User | null) => {
 
         console.log("Game created with ID:", gameRef.id);
 
-        const playerData = {
+        const playerData: Player = {
           hand: [...playerHand],
           isTurn: true,
         };
