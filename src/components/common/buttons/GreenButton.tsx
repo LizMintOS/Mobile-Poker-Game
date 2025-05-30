@@ -1,7 +1,7 @@
 import { GoArrowRight } from "react-icons/go";
 import PressButton from "../buttons/PressButton";
 
-interface SubmitButtonProps {
+interface GreenButtonProps {
   disabled?: boolean;
   label: string;
   type: "submit" | "button";
@@ -13,7 +13,7 @@ const GreenButton = ({
   label,
   type,
   onClick,
-}: SubmitButtonProps) => {
+}: GreenButtonProps) => {
   return (
     <div className="flex mr-2 w-full">
       <PressButton
