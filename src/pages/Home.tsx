@@ -23,7 +23,6 @@ const HomePage = () => {
   const { createGame, getGameByGameId } = useGameActions(currentUser);
   const { addPlayer } = usePlayerActions(currentUser);
   const [loading, setLoading] = useState(false);
-  const [gameId, setGameId] = useState<string>("");
   const [joining, setJoining] = useState<boolean>(true);
   const { error, clearError } = useError();
   const {
@@ -56,19 +55,18 @@ const HomePage = () => {
   };
 
   const onSubmit: SubmitHandler<FormValues> = async (data) => {
+    setLoading(true);
     handleErrors();
 
-    setGameId(data.gameId);
-
-    const game = await getGameByGameId(gameId);
+    const game = await getGameByGameId(data.gameId);
 
     let player;
+
     if (game) {
       player = await addPlayer(game);
     }
 
-    if (gameId && !loading)
-      navigate(ROUTES.GAME_LOBBY(gameId), { replace: true });
+    if (player && !loading) enterLobby(game.id);
   };
 
   const handleGameCreation = async () => {
@@ -77,18 +75,22 @@ const HomePage = () => {
     const startingDeck: Card[] = shuffleCards();
     console.log("Starting deck first card: ", startingDeck[0]);
 
-    setGameId(await createGame(startingDeck, startingDeck.slice(0, 5)));
+    const gameId = await createGame(startingDeck, startingDeck.slice(0, 5));
 
     if (gameId) {
       console.log("New Game ID: ", gameId);
+      enterLobby(gameId);
     }
+  };
 
+  const enterLobby = (lobby: string) => {
     setLoading(false);
+    navigate(ROUTES.GAME_LOBBY(lobby), { replace: true });
   };
 
   return (
     <div className="flex justify-center items-center h-full flex-col">
-      <div className="mb-8">
+      <div className="mb-8 h-14">
         <GreenButton
           type="button"
           onClick={handleGameCreation}

@@ -20,7 +20,7 @@ const Header = () => {
               Home
             </div>
           </Link>
-          <div className="w-fit items-center flex h-full m-6">
+          <div className="w-fit items-center flex h-14 m-6">
             <LogoutButton />
           </div>
         </div>
