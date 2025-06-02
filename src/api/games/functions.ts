@@ -93,9 +93,9 @@ export const useGameActions = (user: User | null) => {
   const updateGame = useCallback(
     handleApiErrors(async (data: any, gameId: string): Promise<void | Game> => {
       console.log("Finding game with ID:", gameId);
-      const gameData = await getGameByGameId(gameId);
+      const gameRef = doc(db, "games", gameId)
 
-      await updateDoc(gameData.id, { ...data }).then(async () => {
+      await updateDoc(gameRef, { ...data }).then(async () => {
         const newGame = await getDoc(doc(db, "games", gameId));
         return {...newGame.data(), id: gameId} as Game;
       });

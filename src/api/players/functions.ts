@@ -57,6 +57,7 @@ export const usePlayerActions = (user: User | null) => {
       const playerDoc = await getDoc(doc(db, path));
 
       if (!playerDoc.exists()) {
+        console.log("Creating new player...")
         const playerDocRef = doc(db, path);
         await setDoc(playerDocRef, {
           hand: hand,
@@ -73,6 +74,9 @@ export const usePlayerActions = (user: User | null) => {
           },
           game.id
         );
+      }
+      else {
+        throw new Error("You're already in this game");
       }
     }),
     [handleApiErrors, user]
