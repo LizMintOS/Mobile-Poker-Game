@@ -11,6 +11,7 @@ import {
   setDoc,
   increment,
   getDoc,
+  deleteDoc,
 } from "firebase/firestore";
 
 import { User } from "firebase/auth";
@@ -64,33 +65,55 @@ export const usePlayerActions = (user: User | null) => {
 
         console.log("Player created");
 
-        await updateGame({ playerCount: game.playerCount++, deckIndex: game.deckIndex + 5, deck: updateDeck(hand) }, game.id);
+        await updateGame(
+          {
+            playerCount: game.playerCount++,
+            deckIndex: game.deckIndex + 5,
+            deck: updateDeck(hand),
+          },
+          game.id
+        );
       }
     }),
     [handleApiErrors, user]
   );
 
-  const getPlayer = useCallback((
-    handleApiErrors(async (playerId: string, gameId: string): Promise<Player> => {
-      console.log("retrieving player...");
+  const getPlayer = useCallback(
+    handleApiErrors(
+      async (playerId: string, gameId: string): Promise<Player> => {
+        console.log("retrieving player...");
 
-      const playerDoc = await getDoc(doc(db, "games", gameId, "players", playerId));
+        const playerDoc = await getDoc(
+          doc(db, "games", gameId, "players", playerId)
+        );
 
-      if (!playerDoc.exists()) {
-        console.error("Player not found");
-        throw new Error("Player not found");
+        if (!playerDoc.exists()) {
+          console.error("Player not found");
+          throw new Error("Player not found");
+        }
+
+        const playerData = playerDoc.data() as Player;
+        console.log("Game data fetched:", playerData);
+
+        return playerData;
       }
+    ),
+    [handleApiErrors]
+  );
 
-      const playerData = playerDoc.data() as Player;
-      console.log("Game data fetched:", playerData);
+  const deletePlayer = useCallback(
+    handleApiErrors(async (playerId: string, gameId: string): Promise<void> => {
+      console.log("Deleting player from game");
 
-      return playerData;
-    })
-  ), [handleApiErrors])
+      await deleteDoc(doc(db, "games", gameId, "players", playerId));
+    }),
+    [handleApiErrors]
+  );
 
   return {
     listenToPlayer,
     addPlayer,
     getPlayer,
+    deletePlayer,
   };
 };
