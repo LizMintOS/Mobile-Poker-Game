@@ -10,6 +10,7 @@ import InputItem from "../components/common/form/InputItem";
 import FormBody from "../components/common/form/FormBody";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { useError } from "../contexts/ErrorProvider";
+import { usePlayerActions } from "../api/players/functions";
 
 type FormValues = {
   gameId: string;
@@ -19,7 +20,9 @@ type FormValues = {
 const HomePage = () => {
   const navigate = useNavigate();
   const { currentUser } = useAuth();
-  const { createGame } = useGameActions(currentUser);
+  const { createGame, listenToGame, getGameByGameId } =
+    useGameActions(currentUser);
+  const { addPlayer } = usePlayerActions(currentUser);
   const [loading, setLoading] = useState(false);
   const [gameId, setGameId] = useState<string>("");
   const [joining, setJoining] = useState<boolean>(false);
@@ -58,8 +61,12 @@ const HomePage = () => {
 
   const onSubmit: SubmitHandler<FormValues> = async (data) => {
     handleErrors();
-    
-    if (joining && data.gameId) await handleJoinGame
+
+    setGameId(data.gameId);
+
+    joining ? await handleJoinGame() : await handleGameCreation();
+
+    if (gameId && !loading) navigate(ROUTES.GAME_LOBBY(gameId), { replace: true });
   };
 
   const handleGameCreation = async () => {
@@ -72,16 +79,17 @@ const HomePage = () => {
 
     if (gameId) {
       console.log("New Game ID: ", gameId);
-      navigate(ROUTES.GAME_LOBBY(gameId), { replace: true });
     }
 
     setLoading(false);
   };
 
-  const handleJoinGame = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    e.preventDefault();
-    setGameId(e.target.value);
-    await addPlayer(game);
+  const handleJoinGame = async () => {
+    const game = await getGameByGameId(gameId);
+    if (game) {
+      const player = await addPlayer(game);
+    }
+    // await addPlayer(game);
     // update game fb fn
     navigate(ROUTES.GAME_LOBBY(gameId), { replace: true });
   };

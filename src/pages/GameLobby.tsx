@@ -14,7 +14,7 @@ const GameLobby = () => {
   const { currentUser } = useAuth();
   const { gameId } = useParams<{ gameId: string }>();
   const [loading, setLoading] = useState(false);
-  const { getGame, deleteGame } = useGameActions(currentUser);
+  const { getGameByGameId, deleteGame } = useGameActions(currentUser);
   const [game, setGame] = useState<Game>();
 
   if (!gameId) {
@@ -24,7 +24,7 @@ const GameLobby = () => {
   const fetchGameData = async () => {
     setLoading(true);
     try {
-      const fetchedGame = await getGame(gameId);
+      const fetchedGame = await getGameByGameId(gameId);
       if (fetchedGame) {
         setGame(fetchedGame);
         if (fetchedGame.hasStarted) {
@@ -40,7 +40,7 @@ const GameLobby = () => {
 
   useEffect(() => {
     fetchGameData();
-  }, [gameId, getGame, navigate]);
+  }, [gameId, getGameByGameId, navigate]);
 
   const handleDeleteGame = async () => {
     setLoading(true);

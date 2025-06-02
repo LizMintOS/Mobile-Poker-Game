@@ -50,6 +50,7 @@ export const usePlayerActions = (user: User | null) => {
       }
 
       const playerRef = doc(db, "games", game.id, "players", user!.uid);
+      
       await setDoc(playerRef, {
         hand: game.deck.slice(game.deckIndex + 1, game.deckIndex + 6),
         isTurn: false,

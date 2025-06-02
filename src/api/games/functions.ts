@@ -41,7 +41,6 @@ export const useGameActions = (user: User | null) => {
   const createGame = useCallback(
     handleApiErrors(
       async (deck: Card[], playerHand: Card[]): Promise<string> => {
-        console.log("Creating game...");
         const gameRef = await addDoc(collection(db, "games"), {
           creatorId: user!.uid,
           hasStarted: false,
@@ -73,7 +72,7 @@ export const useGameActions = (user: User | null) => {
     [user, handleApiErrors]
   );
 
-  const getGame = useCallback(
+  const getGameByGameId = useCallback(
     handleApiErrors(async (gameId: string): Promise<Game> => {
       console.log("Fetching game with ID:", gameId);
       const gameDoc = await getDoc(doc(db, "games", gameId));
@@ -94,7 +93,7 @@ export const useGameActions = (user: User | null) => {
   const updateGame = useCallback(
     handleApiErrors(async (data: any, gameId: string): Promise<void | Game> => {
       console.log("Finding game with ID:", gameId);
-      const gameData = await getGame(gameId);
+      const gameData = await getGameByGameId(gameId);
 
       await updateDoc(gameData.id, { ...data }).then(async () => {
         const newGame = await getDoc(doc(db, "games", gameId));
@@ -118,7 +117,7 @@ export const useGameActions = (user: User | null) => {
   return {
     listenToGame,
     createGame,
-    getGame,
+    getGameByGameId,
     deleteGame,
     updateGame,
   };
