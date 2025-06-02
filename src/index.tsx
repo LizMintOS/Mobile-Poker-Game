@@ -6,6 +6,7 @@ import { ServiceWorkerManager } from "./services/serviceWorkerManager.tsx";
 import { AuthProvider } from "./contexts/AuthProvider.tsx";
 import { ErrorProvider } from "./contexts/ErrorProvider.tsx";
 import { LoadingProvider } from "./contexts/LoadingProvider.tsx";
+import { GameProvider } from "./contexts/GameProvider.tsx";
 
 const root = ReactDOM.createRoot(
   document.getElementById("root") as HTMLElement
@@ -16,8 +17,10 @@ root.render(
     <AuthProvider>
       <LoadingProvider>
         <ErrorProvider>
-          <ServiceWorkerManager />
-          <App />
+          <GameProvider>
+            <ServiceWorkerManager />
+            <App />
+          </GameProvider>
         </ErrorProvider>
       </LoadingProvider>
     </AuthProvider>

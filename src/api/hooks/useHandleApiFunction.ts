@@ -15,7 +15,7 @@ export const useHandleApiFunction = () => {
         return await fn(...args);
       } catch (error: any) {
         console.error("API Error:", error);
-        const mappedError = mapErrorToConstantErrorMessage(error);
+        const mappedError = typeof error === "string" ? error : mapErrorToConstantErrorMessage(error);
         setError(mappedError);
         showErrorToast(typeof mappedError === "string" ? mappedError : JSON.stringify(mappedError));
         throw error;

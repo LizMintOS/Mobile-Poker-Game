@@ -6,12 +6,12 @@ interface GameContextType {
   setGame: (game: Game | null) => void;
 }
 
-const GameContext = createContext<GameContextType | null>(null);
+const GameContext = createContext<GameContextType | undefined>(undefined);
 
-export const useError = (): GameContextType => {
+export const useGame = (): GameContextType => {
   const context = useContext(GameContext);
   if (!context) {
-    throw new Error("useError must be used within an ErrorProvider");
+    throw new Error("useGame must be used within an GameProvider");
   }
   return context;
 };

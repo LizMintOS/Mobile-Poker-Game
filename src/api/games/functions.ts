@@ -78,11 +78,10 @@ export const useGameActions = (user: User | null) => {
       const gameDoc = await getDoc(doc(db, "games", gameId));
 
       if (!gameDoc.exists()) {
-        console.error("Game not found");
-        throw new Error("Game not found");
+        throw "Game not found";
       }
 
-      const gameData = {...gameDoc.data(), id: gameId} as Game;
+      const gameData = { ...gameDoc.data(), id: gameId } as Game;
       console.log("Game data fetched:", gameData);
 
       return gameData;
@@ -93,12 +92,13 @@ export const useGameActions = (user: User | null) => {
   const updateGame = useCallback(
     handleApiErrors(async (data: any, gameId: string): Promise<void | Game> => {
       console.log("UpdateGame - Finding game with ID:", gameId);
-      const gameRef = doc(db, "games", gameId)
+      const gameRef = doc(db, "games", gameId);
 
       await updateDoc(gameRef, { ...data }).then(async () => {
         const newGame = await getDoc(doc(db, "games", gameId));
-        if (newGame) console.log("Updated count: ", newGame.data()!.playerCount);
-        return {...newGame.data(), id: gameId} as Game;
+        if (newGame)
+          console.log("Updated count: ", newGame.data()!.playerCount);
+        return { ...newGame.data(), id: gameId } as Game;
       });
     }),
     [handleApiErrors]

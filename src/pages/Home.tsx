@@ -11,6 +11,7 @@ import FormBody from "../components/common/form/FormBody";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { useError } from "../contexts/ErrorProvider";
 import { usePlayerActions } from "../api/players/functions";
+import { useGame } from "../contexts/GameProvider";
 
 type FormValues = {
   gameId: string;
@@ -20,6 +21,7 @@ type FormValues = {
 const HomePage = () => {
   const navigate = useNavigate();
   const { currentUser } = useAuth();
+  const { game, setGame } = useGame();
   const { createGame, getGameByGameId } = useGameActions(currentUser);
   const { addPlayer } = usePlayerActions(currentUser);
   const [loading, setLoading] = useState(false);
@@ -30,6 +32,7 @@ const HomePage = () => {
     handleSubmit,
     formState: { errors, isSubmitting, isLoading },
     clearErrors,
+    setError,
   } = useForm<FormValues>();
 
   const inputConfig = [
@@ -57,16 +60,18 @@ const HomePage = () => {
   const onSubmit: SubmitHandler<FormValues> = async (data) => {
     setLoading(true);
     handleErrors();
+    const { gameId } = data;
 
-    const game = await getGameByGameId(data.gameId);
+    const gameData = await getGameByGameId(gameId);
 
-    let player;
-
-    if (game) {
-      player = await addPlayer(game);
+    if (gameData) {
+      const player = await addPlayer(gameData);
+      if (player) {
+        enterLobby(gameId);
+      }
+    } else {
+      setError("error", { type: "custom", message: "Game doesn't exist"})
     }
-
-    if (player && !loading) enterLobby(game.id);
   };
 
   const handleGameCreation = async () => {
