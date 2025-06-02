@@ -18,6 +18,7 @@ import { Player } from "./types";
 
 import { useCallback } from "react";
 import { Game } from "../games/types";
+import { updateDeck } from "../../utils/shuffleCards";
 
 export const usePlayerActions = (user: User | null) => {
   const { handleApiErrors } = useHandleApiFunction();
@@ -45,6 +46,7 @@ export const usePlayerActions = (user: User | null) => {
   const addPlayer = useCallback(
     handleApiErrors(async (game: Game): Promise<void> => {
       const path = `/games/${game.id}/players/${user!.uid}`;
+      const hand = game.deck.slice(game.deckIndex + 1, game.deckIndex + 6);
       console.log("Creating player for game: ", game.id);
 
       if (game.playerCount >= 8) {
@@ -56,13 +58,13 @@ export const usePlayerActions = (user: User | null) => {
       if (!playerDoc.exists()) {
         const playerDocRef = doc(db, path);
         await setDoc(playerDocRef, {
-          hand: game.deck.slice(game.deckIndex + 1, game.deckIndex + 6),
+          hand: hand,
           isTurn: false,
         } as Player);
 
         console.log("Player created");
 
-        await updateGame({ playerCount: game.playerCount++ }, game.id);
+        await updateGame({ playerCount: game.playerCount++, deckIndex: game.deckIndex + 5, deck: updateDeck(hand) }, game.id);
       }
     }),
     [handleApiErrors, user]

@@ -97,7 +97,7 @@ export const useGameActions = (user: User | null) => {
 
       await updateDoc(gameData.id, { ...data }).then(async () => {
         const newGame = await getDoc(doc(db, "games", gameId));
-        return newGame.data() as Game;
+        return {...newGame.data(), id: gameId} as Game;
       });
     }),
     [handleApiErrors]

@@ -15,3 +15,10 @@ export const shuffleCards = (): Card[] => {
   return deck;
 };
 
+export const updateDeck = (hand: Card[]): Card[] => {
+  const newDeck = deck.filter((card) => {
+    !hand.includes(card)
+  })
+  return newDeck;
+}
+
