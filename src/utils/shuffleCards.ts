@@ -12,15 +12,11 @@ export const shuffleCards = (): Card[] => {
     const j = Math.floor(Math.random() * (i + 1));
     [deck[i], deck[j]] = [deck[j], deck[i]];
   }
-  
+
   return deck;
 };
 
-export const updateDeck = (hand: Card[]): Card[] => {
-  const newDeck = deck.filter((card) => {
-    return !hand.includes(card);
-  });
+export const updateDeck = (hand: Card[]): Card[] => 
+  deck.filter((card) => !hand.includes(card));
 
-  return newDeck;
-}
 
