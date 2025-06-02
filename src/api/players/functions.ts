@@ -10,6 +10,7 @@ import {
   onSnapshot,
   setDoc,
   increment,
+  getDoc,
 } from "firebase/firestore";
 
 import { User } from "firebase/auth";
@@ -43,24 +44,31 @@ export const usePlayerActions = (user: User | null) => {
 
   const addPlayer = useCallback(
     handleApiErrors(async (game: Game): Promise<string> => {
+      const path = `/games/${game.id}/players/${user!.uid}`;
+      let player;
       console.log("Creating player for game: ", game.id);
 
       if (game.playerCount >= 8) {
         throw new Error("Game is already full.");
       }
 
-      const playerRef = doc(db, "games", game.id, "players", user!.uid);
-      
-      await setDoc(playerRef, {
-        hand: game.deck.slice(game.deckIndex + 1, game.deckIndex + 6),
-        isTurn: false,
-      } as Player);
+      const playerDoc = await getDoc(doc(db, path));
 
-      console.log("Player created with ID: ", playerRef.id);
+      if (!playerDoc.exists()) {
+        const playerCollectionRef = collection(db, path);
+        player = await addDoc(playerCollectionRef, {
+          hand: game.deck.slice(game.deckIndex + 1, game.deckIndex + 6),
+          isTurn: false,
+        } as Player);
+      }
 
-      await updateGame({ playerCount: game.playerCount++ }, game.id);
+      if (player) {
+        console.log("Player created with ID: ", player.id);
 
-      return playerRef.id;
+        await updateGame({ playerCount: game.playerCount++ }, game.id);
+
+        return player.id;
+      }
     }),
     [handleApiErrors, user]
   );

@@ -82,7 +82,7 @@ export const useGameActions = (user: User | null) => {
         throw new Error("Game not found");
       }
 
-      const gameData = gameDoc.data() as Game;
+      const gameData = {...gameDoc.data(), id: gameDoc.data().id} as Game;
       console.log("Game data fetched:", gameData);
 
       return gameData;
