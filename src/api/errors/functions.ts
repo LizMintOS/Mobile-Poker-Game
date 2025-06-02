@@ -42,6 +42,8 @@ export const mapErrorToConstantErrorMessage = (
         return Errors.API_ERROR;
       case "unimplemented":
         return Errors.MISSING_FUNCTION;
+      case "ingame":
+        return Errors.INGAME_ERROR;
       default:
         return Errors.UNKNOWN_ERROR;
     }

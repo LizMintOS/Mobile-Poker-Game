@@ -33,11 +33,16 @@ export const GeneralErrors = {
   INVALID_CREDENTIALS: "Invalid credentials provided.",
 } as const;
 
+export const GameErrors = {
+  INGAME_ERROR: "You're already in this game.",
+}
+
 export const Errors = {
   ...FirebaseErrors,
   ...ApiErrors,
   ...AuthErrors,
   ...GeneralErrors,
+  ...GameErrors,
 } as const;
 
 export type ErrorCode = keyof typeof Errors;

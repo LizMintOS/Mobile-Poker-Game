@@ -20,6 +20,7 @@ import { Player } from "./types";
 import { useCallback } from "react";
 import { Game } from "../games/types";
 import { updateDeck } from "../../utils/shuffleCards";
+import { Errors, LocalError } from "../errors/types";
 
 export const usePlayerActions = (user: User | null) => {
   const { handleApiErrors } = useHandleApiFunction();
@@ -57,7 +58,7 @@ export const usePlayerActions = (user: User | null) => {
       const playerDoc = await getDoc(doc(db, path));
 
       if (!playerDoc.exists()) {
-        console.log("Creating new player...")
+        console.log("Creating new player...");
         const playerDocRef = doc(db, path);
         await setDoc(playerDocRef, {
           hand: hand,
@@ -74,9 +75,8 @@ export const usePlayerActions = (user: User | null) => {
           },
           game.id
         );
-      }
-      else {
-        throw new Error("You're already in this game");
+      } else {
+        console.log("Already in game");
       }
     }),
     [handleApiErrors, user]
