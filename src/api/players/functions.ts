@@ -43,9 +43,8 @@ export const usePlayerActions = (user: User | null) => {
   };
 
   const addPlayer = useCallback(
-    handleApiErrors(async (game: Game): Promise<string> => {
+    handleApiErrors(async (game: Game): Promise<void> => {
       const path = `/games/${game.id}/players/${user!.uid}`;
-      let player;
       console.log("Creating player for game: ", game.id);
 
       if (game.playerCount >= 8) {
@@ -55,26 +54,41 @@ export const usePlayerActions = (user: User | null) => {
       const playerDoc = await getDoc(doc(db, path));
 
       if (!playerDoc.exists()) {
-        const playerCollectionRef = collection(db, path);
-        player = await addDoc(playerCollectionRef, {
+        const playerDocRef = doc(db, path);
+        await setDoc(playerDocRef, {
           hand: game.deck.slice(game.deckIndex + 1, game.deckIndex + 6),
           isTurn: false,
         } as Player);
-      }
 
-      if (player) {
-        console.log("Player created with ID: ", player.id);
+        console.log("Player created");
 
         await updateGame({ playerCount: game.playerCount++ }, game.id);
-
-        return player.id;
       }
     }),
     [handleApiErrors, user]
   );
 
+  const getPlayer = useCallback((
+    handleApiErrors(async (playerId: string, gameId: string): Promise<Player> => {
+      console.log("retrieving player...");
+
+      const playerDoc = await getDoc(doc(db, "games", gameId, "players", playerId));
+
+      if (!playerDoc.exists()) {
+        console.error("Player not found");
+        throw new Error("Player not found");
+      }
+
+      const playerData = playerDoc.data() as Player;
+      console.log("Game data fetched:", playerData);
+
+      return playerData;
+    })
+  ), [handleApiErrors])
+
   return {
     listenToPlayer,
     addPlayer,
+    getPlayer,
   };
 };
