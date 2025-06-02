@@ -4,7 +4,6 @@ import Title from "../Title";
 import InputList from "./InputList";
 import { InputConfig } from "../../types";
 import FormSubmitBody from "./FormSubmitBody";
-import ClickMeText from "../ClickMeText";
 
 interface FormBodyProps {
   error: string | null;
@@ -13,9 +12,7 @@ interface FormBodyProps {
   inputConfigs: InputConfig[];
   disabled: boolean;
   label: string;
-  children: React.ReactNode;
-  clickMessage: string;
-  onClick: () => void;
+  children?: React.ReactNode;
 }
 
 const FormBody = ({
@@ -26,8 +23,6 @@ const FormBody = ({
   disabled,
   label,
   children,
-  clickMessage,
-  onClick,
 }: FormBodyProps) => (
   <>
     <Title title={title} />
@@ -39,7 +34,6 @@ const FormBody = ({
         <FormSubmitBody disabled={disabled} label={label}>
           {children}
         </FormSubmitBody>
-        <ClickMeText message={clickMessage} onClick={onClick} />
       </div>
     </LoadingWrapper>
   </>

@@ -6,6 +6,7 @@ import useAuthForm from "../api/hooks/useAuthForm";
 import { ROUTES } from "../routes/routes";
 import { useNavigate } from "react-router";
 import FormBody from "./common/form/FormBody";
+import ClickMeText from "./common/ClickMeText";
 
 type FormValues = {
   email: string;
@@ -96,8 +97,6 @@ export const AuthForm = () => {
         inputConfigs={inputConfigs}
         disabled={isSubmitting || isLoading || !!error}
         label={isLogin ? "Log in" : "Register"}
-        clickMessage={isLogin ? " Register" : " Login"}
-        onClick={() => handleInputChange(null)}
       >
         <PressButton
           type="submit"
@@ -115,6 +114,10 @@ export const AuthForm = () => {
           </span>
         </PressButton>
       </FormBody>
+      <ClickMeText
+        message={isLogin ? " Register" : " Login"}
+        onClick={() => handleInputChange(null)}
+      />
     </form>
   );
 };

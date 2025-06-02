@@ -20,12 +20,11 @@ type FormValues = {
 const HomePage = () => {
   const navigate = useNavigate();
   const { currentUser } = useAuth();
-  const { createGame, listenToGame, getGameByGameId } =
-    useGameActions(currentUser);
+  const { createGame, getGameByGameId } = useGameActions(currentUser);
   const { addPlayer } = usePlayerActions(currentUser);
   const [loading, setLoading] = useState(false);
   const [gameId, setGameId] = useState<string>("");
-  const [joining, setJoining] = useState<boolean>(false);
+  const [joining, setJoining] = useState<boolean>(true);
   const { error, clearError } = useError();
   const {
     register,
@@ -44,15 +43,12 @@ const HomePage = () => {
         }),
       },
       error: errors.gameId?.message ?? null,
-      onChange: (e: React.ChangeEvent<HTMLInputElement>) =>
-        handleInputChange(e),
+      onChange: (e: React.ChangeEvent<HTMLInputElement>) => {
+        e.preventDefault();
+        handleErrors();
+      },
     },
   ];
-
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    e.preventDefault();
-    handleErrors();
-  };
 
   const handleErrors = () => {
     clearErrors();
@@ -64,9 +60,15 @@ const HomePage = () => {
 
     setGameId(data.gameId);
 
-    joining ? await handleJoinGame() : await handleGameCreation();
+    const game = await getGameByGameId(gameId);
 
-    if (gameId && !loading) navigate(ROUTES.GAME_LOBBY(gameId), { replace: true });
+    let player;
+    if (game) {
+      player = await addPlayer(game);
+    }
+
+    if (gameId && !loading)
+      navigate(ROUTES.GAME_LOBBY(gameId), { replace: true });
   };
 
   const handleGameCreation = async () => {
@@ -84,39 +86,31 @@ const HomePage = () => {
     setLoading(false);
   };
 
-  const handleJoinGame = async () => {
-    const game = await getGameByGameId(gameId);
-    if (game) {
-      const player = await addPlayer(game);
-    }
-    // await addPlayer(game);
-    // update game fb fn
-    navigate(ROUTES.GAME_LOBBY(gameId), { replace: true });
-  };
-
   return (
-    <form
-      onSubmit={handleSubmit(onSubmit)}
-      className="space-y-6 w-full mx-auto p-6 min-w-sm"
-    >
-      <div className="flex flex-col items-center justify-center h-full">
-        <LoadingWrapper loading={loading}>
-          <div className="flex flex-col items-center space-y-4 h-fit">
-            <InputItem
-              label="Game ID"
-              type="text"
-              value={gameId}
-              onChange={(e) => handleJoinGame(e)}
-            />
-            <GreenButton
-              type="button"
-              onClick={handleGameCreation}
-              label="Create Game"
-            />
-          </div>
-        </LoadingWrapper>
+    <div className="flex justify-center items-center h-full flex-col">
+      <div className="mb-8">
+        <GreenButton
+          type="button"
+          onClick={handleGameCreation}
+          label="Create Game"
+        />
       </div>
-    </form>
+      <div className="bg-white shadow-xl rounded-2xl p-8 self-center w-fit text-center border-1 border-slate-100/50">
+        <form
+          onSubmit={handleSubmit(onSubmit)}
+          className="space-y-6 w-full mx-auto p-6 min-w-sm"
+        >
+          <FormBody
+            error={error}
+            isLoading={isLoading || isSubmitting}
+            title="Play Now!"
+            inputConfigs={inputConfig}
+            disabled={isSubmitting || isLoading || !!error}
+            label="Join"
+          />
+        </form>
+      </div>
+    </div>
   );
 };
 
