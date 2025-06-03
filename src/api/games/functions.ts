@@ -40,15 +40,18 @@ export const useGameActions = (user: User | null) => {
 
   const createGame = useCallback(
     handleApiErrors(
-      async (deck: Card[], hand: Card[]): Promise<string> => {
-        const gameRef = await addDoc(collection(db, "games"), {
+      async (deck: Card[], hand: Card[]): Promise<Game> => {
+        let gameData = {
           creatorId: user!.uid,
           hasStarted: false,
           playerCount: 1,
           deck: deck,
           turn: 0,
           state: "lobby",
-        } as Game);
+        };
+        const gameRef = await addDoc(collection(db, "games"), {
+          ...gameData
+        });
 
         console.log("Game created with ID:", gameRef.id);
 
@@ -64,8 +67,8 @@ export const useGameActions = (user: User | null) => {
         });
 
         console.log("Player data added successfully");
-
-        return gameRef.id;
+        
+        return { id: gameRef.id, ...gameData} as Game;
       }
     ),
     [user, handleApiErrors]

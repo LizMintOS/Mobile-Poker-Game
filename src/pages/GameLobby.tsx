@@ -6,16 +6,16 @@ import { useGameActions } from "../api/games/functions";
 import { useAuth } from "../contexts/AuthProvider";
 import { useEffect, useState } from "react";
 import RedButton from "../components/common/buttons/RedButton";
-import { Game } from "../api/games/types";
 import { LoadingWrapper } from "../components/common/LoadingWrapper";
+import { useGame } from "../contexts/GameProvider";
 
 const GameLobby = () => {
   const navigate = useNavigate();
   const { currentUser } = useAuth();
+  const { game, setGame } = useGame();
   const { gameId } = useParams<{ gameId: string }>();
   const [loading, setLoading] = useState(false);
   const { getGameByGameId, deleteGame } = useGameActions(currentUser);
-  const [game, setGame] = useState<Game>();
 
   if (!gameId) {
     throw new Error("Game ID is required to join the lobby.");
@@ -44,9 +44,11 @@ const GameLobby = () => {
 
   const handleDeleteGame = async () => {
     setLoading(true);
-    await deleteGame(game!.id).then(() => {
-      navigate(ROUTES.HOME, { replace: true });
-    });
+    if (game)
+      await deleteGame(game).then(() => {
+        setGame(null);
+        navigate(ROUTES.HOME, { replace: true });
+      });
     setLoading(false);
   };
 

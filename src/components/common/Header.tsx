@@ -1,6 +1,5 @@
-import { Link, useParams } from "react-router";
+import { useParams } from "react-router";
 import LogoutButton from "./buttons/LogoutButton";
-import { ROUTES } from "../../routes/routes";
 
 const Header = () => {
   const { gameId } = useParams();
@@ -13,18 +12,8 @@ const Header = () => {
             Poker
           </h2>
         </div>
-        <div className="flex align-center items-center justify-between gap-10 m-0 h-full">
-          <Link
-            to={ROUTES.HOME}
-            className="text-green-600 text-lg font-semibold rounded-xl"
-          >
-            <div className="hover:border-2 hover:border-green-600 w-full h-full p-2 rounded-2xl cursor-pointer">
-              Home
-            </div>
-          </Link>
-          <div className="w-fit items-center flex h-14 m-6">
-            <LogoutButton gameId={gameId ?? null} />
-          </div>
+        <div className="w-fit items-center flex h-14 m-6">
+          <LogoutButton gameId={gameId ?? null} />
         </div>
       </nav>
     </header>

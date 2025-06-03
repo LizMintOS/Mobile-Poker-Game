@@ -23,6 +23,7 @@ const HomePage = () => {
   const { createGame, getGameByGameId } = useGameActions(currentUser);
   const { addPlayer } = usePlayerActions(currentUser);
   const [loading, setLoading] = useState(false);
+  const [showGame, setShowGame] = useState(false);
   const { error, clearError } = useError();
   const {
     register,
@@ -37,7 +38,7 @@ const HomePage = () => {
       type: "text",
       register: {
         ...register("gameId", {
-          required:  "Game ID is required",
+          required: "Game ID is required",
         }),
       },
       error: errors.gameId?.message ?? null,
@@ -63,7 +64,7 @@ const HomePage = () => {
     if (gameData) {
       const player = await addPlayer(gameData);
       if (player) {
-        enterLobby(gameId);
+        console.log()
       }
     }
   };
@@ -74,17 +75,24 @@ const HomePage = () => {
     const startingDeck: Card[] = shuffleCards();
     console.log("Starting deck first card: ", startingDeck[0]);
 
-    const gameId = await createGame(startingDeck.slice(5), addCardsToHand(startingDeck, 5));
+    const newGame = await createGame(
+      startingDeck.slice(5),
+      addCardsToHand(startingDeck, 5)
+    );
 
-    if (gameId) {
-      console.log("New Game ID: ", gameId);
-      enterLobby(gameId);
+    setGame(newGame);
+
+    if (game) {
+      console.log("New Game ID: ", game.id);
+      enterLobby(game.id);
     }
+    setLoading(false);
   };
 
   const enterLobby = (lobby: string) => {
-    setLoading(false);
+    setLoading(true);
     navigate(ROUTES.GAME_LOBBY(lobby), { replace: true });
+    setLoading(false);
   };
 
   return (
