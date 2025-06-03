@@ -19,7 +19,11 @@ import { Player } from "./types";
 
 import { useCallback } from "react";
 import { Game } from "../games/types";
-import { addCardsToHand, removeCardsFromDeck } from "../../utils/cards";
+import {
+  addCardsToDeck,
+  addCardsToHand,
+  removeCardsFromDeck,
+} from "../../utils/cards";
 
 export const usePlayerActions = (user: User | null) => {
   const { handleApiErrors } = useHandleApiFunction();
@@ -110,10 +114,9 @@ export const usePlayerActions = (user: User | null) => {
 
       await deleteDoc(doc(db, "games", game.id, "players", playerId));
 
-      // const newDeck;
+      const newDeck = addCardsToDeck(player.hand, game.deck);
 
-      await updateGame({ playerCount: increment(-1), deck: removeCardsFromDeck(game.) })
-      await deleteDoc(doc(db, "games", gameId, "players", playerId));
+      await updateGame({ playerCount: increment(-1), deck: newDeck }, game.id);
     }),
     [handleApiErrors]
   );
