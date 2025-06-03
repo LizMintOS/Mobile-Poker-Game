@@ -20,7 +20,7 @@ const InputItem = ({
       <input
         {...register}
         type={type}
-        id={label.toLowerCase()}
+        id={label.toLowerCase().replace(" ", "")}
         placeholder={`Enter your ${label.toLowerCase()}`}
         onChange={onChange}
         className={`px-4 py-2 rounded-xl border w-full ${

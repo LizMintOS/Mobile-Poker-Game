@@ -16,6 +16,7 @@ import { Game } from "./types";
 import { Card, addCardsToHand } from "../../utils/cards";
 import { useCallback } from "react";
 import { Player } from "../players/types";
+import { Errors, LocalError } from "../errors/types";
 
 export const useGameActions = (user: User | null) => {
   const { handleApiErrors } = useHandleApiFunction();
@@ -39,38 +40,36 @@ export const useGameActions = (user: User | null) => {
   };
 
   const createGame = useCallback(
-    handleApiErrors(
-      async (deck: Card[], hand: Card[]): Promise<Game> => {
-        let gameData = {
-          creatorId: user!.uid,
-          hasStarted: false,
-          playerCount: 1,
-          deck: deck,
-          turn: 0,
-          state: "lobby",
-        };
-        const gameRef = await addDoc(collection(db, "games"), {
-          ...gameData
-        });
+    handleApiErrors(async (deck: Card[], hand: Card[]): Promise<Game> => {
+      let gameData = {
+        creatorId: user!.uid,
+        hasStarted: false,
+        playerCount: 1,
+        deck: deck,
+        turn: 0,
+        state: "lobby",
+      };
+      const gameRef = await addDoc(collection(db, "games"), {
+        ...gameData,
+      });
 
-        console.log("Game created with ID:", gameRef.id);
+      console.log("Game created with ID:", gameRef.id);
 
-        const playerData: Player = {
-          hand: hand,
-          isTurn: true,
-        };
+      const playerData: Player = {
+        hand: hand,
+        isTurn: true,
+      };
 
-        console.log("Adding player data:", playerData);
+      console.log("Adding player data:", playerData);
 
-        await setDoc(doc(db, "games", gameRef.id, "players", user!.uid), {
-          playerData,
-        });
+      await setDoc(doc(db, "games", gameRef.id, "players", user!.uid), {
+        playerData,
+      });
 
-        console.log("Player data added successfully");
-        
-        return { id: gameRef.id, ...gameData} as Game;
-      }
-    ),
+      console.log("Player data added successfully");
+
+      return { id: gameRef.id, ...gameData } as Game;
+    }),
     [user, handleApiErrors]
   );
 
@@ -80,7 +79,7 @@ export const useGameActions = (user: User | null) => {
       const gameDoc = await getDoc(doc(db, "games", gameId));
 
       if (!gameDoc.exists()) {
-        throw "no-game";
+        throw {code: "no-game"} as LocalError;
       }
 
       const gameData = { ...gameDoc.data(), id: gameId } as Game;

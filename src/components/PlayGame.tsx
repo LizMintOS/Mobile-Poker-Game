@@ -54,11 +54,14 @@ const PlayGameComponent = () => {
 
   const onSubmit: SubmitHandler<FormValues> = async (data) => {
     setLoading(true);
-    handleErrors();
-    const newGame = await handleSubmitForm(data);
-    if (newGame) setGame(newGame);
-    setLoading(false);
-    if (!errors && !error && game) navigate(ROUTES.GAME_LOBBY(game.id));
+    try {
+      handleErrors();
+      const newGame = await handleSubmitForm(data);
+      if (newGame) setGame(newGame);
+      if (!errors && !error && game) navigate(ROUTES.GAME_LOBBY(game.id));
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -69,7 +72,7 @@ const PlayGameComponent = () => {
       >
         <FormBody
           error={error}
-          isLoading={isLoading || isSubmitting}
+          isLoading={isLoading || isSubmitting || loading}
           title="Play Now!"
           inputConfigs={inputConfig}
           disabled={isSubmitting || isLoading || !!error}

@@ -6,6 +6,10 @@ export const mapErrorToConstantErrorMessage = (
   error: FirestoreError | AuthError | any,
   returnFullError: boolean = false
 ): string | LocalError => {
+  if (typeof error === "string") {
+    return error;
+  }
+
   const message = (() => {
     switch (error.code) {
       case "not-found":
