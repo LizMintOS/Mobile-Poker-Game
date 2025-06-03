@@ -19,7 +19,7 @@ import { Player } from "./types";
 
 import { useCallback } from "react";
 import { Game } from "../games/types";
-import { updateDeck } from "../../utils/cards";
+import { addCardsToHand, removeCardsFromDeck } from "../../utils/cards";
 
 export const usePlayerActions = (user: User | null) => {
   const { handleApiErrors } = useHandleApiFunction();
@@ -47,7 +47,7 @@ export const usePlayerActions = (user: User | null) => {
   const addPlayer = useCallback(
     handleApiErrors(async (game: Game): Promise<void> => {
       const path = `/games/${game.id}/players/${user!.uid}`;
-      const hand = game.deck.slice(game.deckIndex + 1, game.deckIndex + 6);
+      const hand = addCardsToHand(game.deck, 5);
       console.log("Creating player for game: ", game.id);
 
       if (game.playerCount >= 8) {
@@ -69,8 +69,7 @@ export const usePlayerActions = (user: User | null) => {
         await updateGame(
           {
             playerCount: game.playerCount++,
-            deckIndex: game.deckIndex + 5,
-            deck: updateDeck(hand),
+            deck: removeCardsFromDeck(hand),
           },
           game.id
         );
@@ -109,9 +108,11 @@ export const usePlayerActions = (user: User | null) => {
 
       const player = await getPlayer(playerId, game.id);
 
+      await deleteDoc(doc(db, "games", game.id, "players", playerId));
+
       // const newDeck;
 
-      await updateGame({ playerCount: increment(-1), deck: updateDeck(game.) })
+      await updateGame({ playerCount: increment(-1), deck: removeCardsFromDeck(game.) })
       await deleteDoc(doc(db, "games", gameId, "players", playerId));
     }),
     [handleApiErrors]

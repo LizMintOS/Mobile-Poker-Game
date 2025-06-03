@@ -13,7 +13,7 @@ import {
 
 import { User } from "firebase/auth";
 import { Game } from "./types";
-import { Card } from "../../utils/cards";
+import { Card, addCardsToHand } from "../../utils/cards";
 import { useCallback } from "react";
 import { Player } from "../players/types";
 
@@ -40,13 +40,12 @@ export const useGameActions = (user: User | null) => {
 
   const createGame = useCallback(
     handleApiErrors(
-      async (deck: Card[], playerHand: Card[]): Promise<string> => {
+      async (deck: Card[], hand: Card[]): Promise<string> => {
         const gameRef = await addDoc(collection(db, "games"), {
           creatorId: user!.uid,
           hasStarted: false,
           playerCount: 1,
           deck: deck,
-          deckIndex: 4,
           turn: 0,
           state: "lobby",
         } as Game);
@@ -54,7 +53,7 @@ export const useGameActions = (user: User | null) => {
         console.log("Game created with ID:", gameRef.id);
 
         const playerData: Player = {
-          hand: [...playerHand],
+          hand: hand,
           isTurn: true,
         };
 

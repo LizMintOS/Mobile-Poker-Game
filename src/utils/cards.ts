@@ -24,3 +24,7 @@ export const addCardsToDeck = (hand: Card[], deck: Card[]): Card[] => {
   return newDeck;
 }
 
+export const addCardsToHand = (deck: Card[], totalNewCards: number): Card[] => {
+  const newHand: Card[] = deck.slice(0, totalNewCards);
+  return newHand;
+}
