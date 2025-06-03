@@ -4,16 +4,29 @@ import { ROUTES } from "../routes/routes";
 import { useAuth } from "../contexts/AuthProvider";
 import CreateGame from "../components/CreateGame";
 import PlayGameComponent from "../components/PlayGame";
-
+import { useGame } from "../contexts/GameProvider";
 
 const HomePage = () => {
   const navigate = useNavigate();
   const { currentUser } = useAuth();
+  const { game } = useGame();
 
   return (
     <div className="flex justify-center items-center h-full flex-col">
-      <CreateGame />
-      <PlayGameComponent />
+      {!game ? (
+        <>
+          <CreateGame />
+          <PlayGameComponent />
+        </>
+      ) : (
+        <div className="mb-8 h-14">
+          <GreenButton
+            type="button"
+            onClick={() => navigate(ROUTES.GAME_LOBBY(game.id))}
+            label="Enter Game Lobby"
+          />
+        </div>
+      )}
     </div>
   );
 };

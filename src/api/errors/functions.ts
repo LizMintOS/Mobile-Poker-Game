@@ -44,6 +44,8 @@ export const mapErrorToConstantErrorMessage = (
         return Errors.MISSING_FUNCTION;
       case "ingame":
         return Errors.INGAME_ERROR;
+      case "no-game":
+        return Errors.NOT_FOUND_ERROR;
       default:
         return Errors.UNKNOWN_ERROR;
     }

@@ -80,7 +80,7 @@ export const useGameActions = (user: User | null) => {
       const gameDoc = await getDoc(doc(db, "games", gameId));
 
       if (!gameDoc.exists()) {
-        throw "Game not found";
+        throw "no-game";
       }
 
       const gameData = { ...gameDoc.data(), id: gameId } as Game;

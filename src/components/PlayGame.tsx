@@ -56,8 +56,8 @@ const PlayGameComponent = () => {
     setLoading(true);
     handleErrors();
     const newGame = await handleSubmitForm(data);
+    if (newGame) setGame(newGame);
     setLoading(false);
-    setGame(newGame);
     if (!errors && !error && game) navigate(ROUTES.GAME_LOBBY(game.id));
   };
 
@@ -69,7 +69,7 @@ const PlayGameComponent = () => {
       >
         <FormBody
           error={error}
-          isLoading={isLoading || isSubmitting || loading}
+          isLoading={isLoading || isSubmitting}
           title="Play Now!"
           inputConfigs={inputConfig}
           disabled={isSubmitting || isLoading || !!error}

@@ -35,6 +35,7 @@ export const GeneralErrors = {
 
 export const GameErrors = {
   INGAME_ERROR: "You're already in this game.",
+  NOT_FOUND_ERROR: "Game does not exist.",
 }
 
 export const Errors = {

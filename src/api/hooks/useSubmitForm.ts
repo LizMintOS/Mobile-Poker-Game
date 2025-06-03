@@ -49,7 +49,7 @@ export const useGameForm = () => {
   const { getGameByGameId } = useGameActions(currentUser);
   const { addPlayer } = usePlayerActions(currentUser);
 
-  const handleSubmitForm = async (data: GameFormData): Promise<Game> => {
+  const handleSubmitForm = async (data: GameFormData): Promise<Game | void> => {
     const { gameId } = data;
 
     const gameData = await getGameByGameId(gameId);
