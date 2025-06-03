@@ -3,24 +3,26 @@ import { useAuthActions } from "../auth/functions";
 import { useGameActions } from "../games/functions";
 import { useAuth } from "../../contexts/AuthProvider";
 import { usePlayerActions } from "../players/functions";
+import { useGame } from "../../contexts/GameProvider";
 
-const useLogout = (gameId: string | null) => {
+const useLogout = () => {
   const { logoutUser } = useAuthActions();
   const { currentUser } = useAuth();
-  const { getGameByGameId, deleteGame } = useGameActions(currentUser);
+  const { game, setGame } = useGame();
+  const { deleteGame } = useGameActions(currentUser);
   const { deletePlayer } = usePlayerActions(currentUser);
 
   const handleLogout = useCallback(async () => {
-    if (gameId) {
-      const game = await getGameByGameId(gameId);
+    if (game) {
       if (game.creatorId == currentUser!.uid) {
-        await deleteGame(gameId);
+        await deleteGame(game);
+        setGame(null);
       } else {
-        await deletePlayer(currentUser!.uid, gameId);
+        await deletePlayer(currentUser!.uid, game);
       }
     }
     await logoutUser();
-  }, [logoutUser, currentUser]);
+  }, [logoutUser, currentUser, game]);
 
   return { handleLogout };
 };

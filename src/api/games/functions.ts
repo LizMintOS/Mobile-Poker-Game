@@ -13,7 +13,7 @@ import {
 
 import { User } from "firebase/auth";
 import { Game } from "./types";
-import { Card } from "../../utils/shuffleCards";
+import { Card } from "../../utils/cards";
 import { useCallback } from "react";
 import { Player } from "../players/types";
 
@@ -105,9 +105,9 @@ export const useGameActions = (user: User | null) => {
   );
 
   const deleteGame = useCallback(
-    handleApiErrors(async (gameId: string): Promise<void> => {
-      console.log("Deleting game with ID:", gameId);
-      const gameRef = doc(db, "games", gameId);
+    handleApiErrors(async (game: Game): Promise<void> => {
+      console.log("Deleting game with ID:", game.id);
+      const gameRef = doc(db, "games", game.id);
 
       await setDoc(gameRef, {}, { merge: true });
       console.log("Game deleted successfully");

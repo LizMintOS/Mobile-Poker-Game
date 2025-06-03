@@ -1,4 +1,4 @@
-import { Card } from "../../utils/shuffleCards";
+import { Card } from "../../utils/cards";
 
 export type CreateGameInput = {
   name: string;

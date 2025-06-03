@@ -19,8 +19,7 @@ import { Player } from "./types";
 
 import { useCallback } from "react";
 import { Game } from "../games/types";
-import { updateDeck } from "../../utils/shuffleCards";
-import { Errors, LocalError } from "../errors/types";
+import { updateDeck } from "../../utils/cards";
 
 export const usePlayerActions = (user: User | null) => {
   const { handleApiErrors } = useHandleApiFunction();
@@ -52,7 +51,7 @@ export const usePlayerActions = (user: User | null) => {
       console.log("Creating player for game: ", game.id);
 
       if (game.playerCount >= 8) {
-        throw new Error("Game is already full.");
+        throw "Game is already full.";
       }
 
       const playerDoc = await getDoc(doc(db, path));
@@ -92,8 +91,7 @@ export const usePlayerActions = (user: User | null) => {
         );
 
         if (!playerDoc.exists()) {
-          console.error("Player not found");
-          throw new Error("Player not found");
+          throw "Player not found";
         }
 
         const playerData = playerDoc.data() as Player;
@@ -106,9 +104,14 @@ export const usePlayerActions = (user: User | null) => {
   );
 
   const deletePlayer = useCallback(
-    handleApiErrors(async (playerId: string, gameId: string): Promise<void> => {
+    handleApiErrors(async (playerId: string, game: Game): Promise<void> => {
       console.log("Deleting player from game");
 
+      const player = await getPlayer(playerId, game.id);
+
+      // const newDeck;
+
+      await updateGame({ playerCount: increment(-1), deck: updateDeck(game.) })
       await deleteDoc(doc(db, "games", gameId, "players", playerId));
     }),
     [handleApiErrors]

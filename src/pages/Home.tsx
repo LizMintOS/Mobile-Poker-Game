@@ -3,7 +3,7 @@ import GreenButton from "../components/common/buttons/GreenButton";
 import { ROUTES } from "../routes/routes";
 import { useGameActions } from "../api/games/functions";
 import { useAuth } from "../contexts/AuthProvider";
-import { Card, shuffleCards } from "../utils/shuffleCards";
+import { Card, shuffleCards } from "../utils/cards";
 import { useState } from "react";
 import { LoadingWrapper } from "../components/common/LoadingWrapper";
 import InputItem from "../components/common/form/InputItem";
@@ -69,8 +69,6 @@ const HomePage = () => {
       if (player) {
         enterLobby(gameId);
       }
-    } else {
-      setError("error", { type: "custom", message: "Game doesn't exist"})
     }
   };
 

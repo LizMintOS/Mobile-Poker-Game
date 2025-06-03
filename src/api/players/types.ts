@@ -1,4 +1,4 @@
-import { Card } from "../../utils/shuffleCards";
+import { Card } from "../../utils/cards";
 
 export type Player = {
   hand: Card[],
