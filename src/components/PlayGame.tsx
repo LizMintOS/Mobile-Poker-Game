@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useForm, SubmitHandler } from "react-hook-form";
+import { useNavigate } from "react-router";
 
 import GreenButton from "./common/buttons/GreenButton";
 import FormBody from "./common/form/FormBody";
@@ -7,11 +8,13 @@ import FormBody from "./common/form/FormBody";
 import { useAuth } from "../contexts/AuthProvider";
 import { useGame } from "../contexts/GameProvider";
 import { useError } from "../contexts/ErrorProvider";
+import { useLoading } from "../contexts/LoadingProvider";
 
 import { useGameActions } from "../api/games/functions";
 import { usePlayerActions } from "../api/players/functions";
 
 import { useGameForm } from "../api/hooks/useSubmitForm";
+import { ROUTES } from "../routes/routes";
 
 type FormValues = {
   gameId: string;
@@ -22,9 +25,10 @@ const PlayGameComponent = () => {
   const { currentUser } = useAuth();
   const { game, setGame } = useGame();
   const { error, clearError } = useError();
-  const { addPlayer } = usePlayerActions(currentUser);
-  const { createGame, getGameByGameId } = useGameActions(currentUser);
-  const { handleSubmitForm } = useGameForm({user: currentUser});
+
+  const { handleSubmitForm } = useGameForm();
+  const { loading, setLoading } = useLoading();
+  const navigate = useNavigate();
 
   const {
     register,
@@ -56,10 +60,33 @@ const PlayGameComponent = () => {
   };
 
   const onSubmit: SubmitHandler<FormValues> = async (data) => {
+    setLoading(true);
     handleErrors();
-    await handleSubmitForm(data).then(() => {
-        if (!errors && !error)
-    });
-    console.log("Success");
-  }
+    const newGame = await handleSubmitForm(data);
+    setLoading(false);
+    setGame(newGame);
+    if (!errors && !error && game) navigate(ROUTES.GAME_LOBBY(game.id));
+  };
+
+  return (
+    <div className="flex justify-center items-center h-full flex-col">
+      <div className="bg-white shadow-xl rounded-2xl p-8 self-center w-fit text-center border-1 border-slate-100/50">
+        <form
+          onSubmit={handleSubmit(onSubmit)}
+          className="space-y-6 w-full mx-auto p-6 min-w-sm"
+        >
+          <FormBody
+            error={error}
+            isLoading={isLoading || isSubmitting || loading}
+            title="Play Now!"
+            inputConfigs={inputConfig}
+            disabled={isSubmitting || isLoading || !!error}
+            label="Join"
+          />
+        </form>
+      </div>
+    </div>
+  );
 };
+
+export default PlayGameComponent;

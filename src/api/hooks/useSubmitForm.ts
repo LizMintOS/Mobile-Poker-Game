@@ -1,3 +1,4 @@
+import { useAuth } from "../../contexts/AuthProvider";
 import { useAuthActions } from "../auth/functions";
 import { useGameActions } from "../games/functions";
 import { Game } from "../games/types";
@@ -43,23 +44,25 @@ export const useAuthForm = ({
   return { handleSubmitForm };
 };
 
-export const useGameForm = ({ user }: UseGameFormProps) => {
-  const { getGameByGameId } = useGameActions(user);
-  const { addPlayer } = usePlayerActions(user);
+export const useGameForm = () => {
+  const { currentUser } = useAuth();
+  const { getGameByGameId } = useGameActions(currentUser);
+  const { addPlayer } = usePlayerActions(currentUser);
 
   const handleSubmitForm = async (data: GameFormData): Promise<Game> => {
     const { gameId } = data;
 
     const gameData = await getGameByGameId(gameId);
 
-    if (gameData) {
-      const player = await addPlayer(gameData);
-      if (player) {
-        console.log("Player created: ", player.id);
+    let gameWithNewPlayer;
+    if (gameData && !gameData.hasStarted && gameData.playerCount < 8) {
+      gameWithNewPlayer = await addPlayer(gameData);
+      if (gameWithNewPlayer) {
+        console.log("Player created: ", gameWithNewPlayer.id);
       }
     }
-    
-    return gameData as Game;
+
+    return gameWithNewPlayer as Game;
   };
 
   return { handleSubmitForm };

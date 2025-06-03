@@ -49,12 +49,12 @@ export const usePlayerActions = (user: User | null) => {
   };
 
   const addPlayer = useCallback(
-    handleApiErrors(async (game: Game): Promise<void> => {
+    handleApiErrors(async (game: Game): Promise<void | Game> => {
       const path = `/games/${game.id}/players/${user!.uid}`;
       const hand = addCardsToHand(game.deck, 5);
       console.log("Creating player for game: ", game.id);
 
-      if (game.playerCount >= 8) {
+      if (game.playerCount == 8 || game.hasStarted) {
         throw "Game is already full.";
       }
 
@@ -70,13 +70,15 @@ export const usePlayerActions = (user: User | null) => {
 
         console.log("Player created");
 
-        await updateGame(
+        const newGame = await updateGame(
           {
             playerCount: game.playerCount++,
             deck: removeCardsFromDeck(hand),
           },
           game.id
         );
+        
+        return newGame;
       } else {
         console.log("Already in game");
       }
