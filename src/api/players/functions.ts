@@ -62,22 +62,22 @@ export const usePlayerActions = (user: User | null) => {
         await setDoc(playerDocRef, {
           hand: hand,
           isTurn: false,
-        } as Player);
+        });
 
         console.log("Player created");
 
-        const newGame = await updateGame(
+        const newGame: Game = await updateGame(
           {
             playerCount: increment(1),
             deck: removeCardsFromDeck(hand),
           },
           game.id
-        );
+        ) as Game;
         
         return newGame;
       } else {
         console.log("Already in game");
-        return playerDoc.data() as Game;
+        throw "Already in game";
       }
     }),
     [handleApiErrors, user]

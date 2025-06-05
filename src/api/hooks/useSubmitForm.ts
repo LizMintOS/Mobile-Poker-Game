@@ -53,22 +53,20 @@ export const useGameForm = () => {
   const handleSubmitForm = async (data: GameFormData): Promise<Game | void> => {
     const { gameId } = data;
 
-    const gameData: Game = await getGameByGameId(gameId) as Game;
-    console.log("Got game: ", gameData.id, gameData.playerCount)
+    const gameData: Game = (await getGameByGameId(gameId)) as Game;
+    console.log("Got game: ", gameData.id, gameData.playerCount);
 
     if (gameData.playerCount == 8 || gameData.hasStarted) {
       throw "Game is already full.";
     }
 
-    let gameWithNewPlayer;
     if (gameData.id) {
-      gameWithNewPlayer = await addPlayer(gameData) as Game;
+      const gameWithNewPlayer = (await addPlayer(gameData)) as Game;
       if (gameWithNewPlayer) {
         console.log("Player created: ", gameWithNewPlayer.id);
+        return gameWithNewPlayer;
       }
     }
-
-    return gameWithNewPlayer;
   };
 
   return { handleSubmitForm };
