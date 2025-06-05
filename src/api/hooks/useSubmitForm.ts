@@ -63,7 +63,7 @@ export const useGameForm = () => {
     if (gameData.id) {
       const gameWithNewPlayer = (await addPlayer(gameData)) as Game;
       if (gameWithNewPlayer) {
-        console.log("Player created: ", gameWithNewPlayer.id);
+        console.log("FORM HOOK: Player created for game: ", gameWithNewPlayer.id);
         return gameWithNewPlayer;
       }
     }

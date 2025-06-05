@@ -1,5 +1,5 @@
 import { useForm, SubmitHandler } from "react-hook-form";
-import { useNavigate } from "react-router";
+import { Navigate, useNavigate } from "react-router";
 
 import FormBody from "./common/form/FormBody";
 
@@ -9,6 +9,7 @@ import { useLoading } from "../contexts/LoadingProvider";
 
 import { useGameForm } from "../api/hooks/useSubmitForm";
 import { ROUTES } from "../routes/routes";
+import { Game } from "../api/games/types";
 
 type FormValues = {
   gameId: string;
@@ -56,13 +57,13 @@ const JoinGameComponent = () => {
 
     handleErrors();
 
-    const newGame = await handleSubmitForm(data);
+    const newGame: Game = await handleSubmitForm(data) as Game;
 
     if (newGame) {
       setGame(newGame);
       console.log("JOINED", newGame.playerCount);
-      setLoading(false);
       navigate(ROUTES.GAME_LOBBY(newGame.id));
+      setLoading(false);
     }
   };
 
