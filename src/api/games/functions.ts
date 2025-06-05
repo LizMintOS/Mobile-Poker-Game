@@ -60,7 +60,7 @@ export const useGameActions = (user: User | null) => {
         isTurn: true,
       };
 
-      console.log("Adding player data:", playerData);
+      console.log("Adding player data:", playerData as Player);
 
       await setDoc(doc(db, "games", gameRef.id, "players", user!.uid), {
         playerData,

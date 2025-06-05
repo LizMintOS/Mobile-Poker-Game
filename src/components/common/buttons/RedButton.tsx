@@ -7,13 +7,15 @@ interface RedButtonProps {
 
 const RedButton = ({ onClick, label }: RedButtonProps) => {
   return (
-    <PressButton
-      type="button"
-      onClick={onClick}
-      style="bg-red-400 border-red-600"
-    >
-      {label}
-    </PressButton>
+    <div className="h-14">
+      <PressButton
+        type="button"
+        onClick={onClick}
+        style="bg-red-400 border-red-600"
+      >
+        {label}
+      </PressButton>
+    </div>
   );
 };
 
