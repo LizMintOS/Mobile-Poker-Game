@@ -1,5 +1,6 @@
-import { useState, useContext, createContext, useEffect } from "react";
+import { useContext, createContext, useEffect } from "react";
 import { Game } from "../api/games/types";
+import useSessionStorage from "../api/hooks/useSessionStorage";
 
 interface GameContextType {
   game: Game | null;
@@ -17,7 +18,7 @@ export const useGame = (): GameContextType => {
 };
 
 export const GameProvider = ({ children }: { children: React.ReactNode }) => {
-  const [game, setGame] = useState<Game | null>(null);
+  const [game, setGame] = useSessionStorage({key: "game", initialValue: null});
 
   useEffect(() => {
     console.log("Game Context: ", game);

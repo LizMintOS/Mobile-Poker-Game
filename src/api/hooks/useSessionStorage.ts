@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 
 interface StorageTypeProps {
   key: string;
-  initialValue: string;
+  initialValue: any;
 }
 
 const useSessionStorage = ({ key, initialValue }: StorageTypeProps) => {
