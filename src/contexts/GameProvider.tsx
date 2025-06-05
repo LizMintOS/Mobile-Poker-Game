@@ -1,4 +1,4 @@
-import { useState, useContext, createContext } from "react";
+import { useState, useContext, createContext, useEffect } from "react";
 import { Game } from "../api/games/types";
 
 interface GameContextType {
@@ -18,6 +18,10 @@ export const useGame = (): GameContextType => {
 
 export const GameProvider = ({ children }: { children: React.ReactNode }) => {
   const [game, setGame] = useState<Game | null>(null);
+
+  useEffect(() => {
+    console.log("Game Context: ", game);
+  }, [game])
 
   return (
     <GameContext.Provider value={{ game, setGame }}>

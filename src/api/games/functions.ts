@@ -79,7 +79,7 @@ export const useGameActions = (user: User | null) => {
       const gameDoc = await getDoc(doc(db, "games", gameId));
 
       if (!gameDoc.exists()) {
-        throw {code: "no-game"} as LocalError;
+        throw { code: "no-game" } as LocalError;
       }
 
       const gameData = { ...gameDoc.data(), id: gameId } as Game;
@@ -91,16 +91,25 @@ export const useGameActions = (user: User | null) => {
   );
 
   const updateGame = useCallback(
-    handleApiErrors(async (data: any, gameId: string): Promise<void | Game> => {
+    handleApiErrors(async (data: any, gameId: string): Promise<null | Game> => {
       console.log("UpdateGame - Finding game with ID:", gameId);
       const gameRef = doc(db, "games", gameId);
 
-      await updateDoc(gameRef, { ...data }).then(async () => {
-        const newGame = await getDoc(doc(db, "games", gameId));
-        if (newGame)
-          console.log("Updated count: ", newGame.data()!.playerCount);
-        return { ...newGame.data(), id: gameId } as Game;
-      });
+      const updatedGame = await updateDoc(gameRef, { ...data }).then(
+        async () => {
+          const newGame = await getDoc(doc(db, "games", gameId)).then((d) =>
+            d.data()
+          );
+          if (newGame != undefined) {
+            console.log("Updated count: ", newGame.playerCount);
+            return { ...newGame, id: gameId } as Game;
+          } else {
+            return null;
+          }
+        }
+      );
+
+      return updatedGame;
     }),
     [handleApiErrors]
   );

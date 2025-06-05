@@ -54,10 +54,6 @@ export const usePlayerActions = (user: User | null) => {
       const hand = addCardsToHand(game.deck, 5);
       console.log("Creating player for game: ", game.id);
 
-      if (game.playerCount == 8 || game.hasStarted) {
-        throw "Game is already full.";
-      }
-
       const playerDoc = await getDoc(doc(db, path));
 
       if (!playerDoc.exists()) {
@@ -72,7 +68,7 @@ export const usePlayerActions = (user: User | null) => {
 
         const newGame = await updateGame(
           {
-            playerCount: game.playerCount++,
+            playerCount: increment(1),
             deck: removeCardsFromDeck(hand),
           },
           game.id
@@ -81,6 +77,7 @@ export const usePlayerActions = (user: User | null) => {
         return newGame;
       } else {
         console.log("Already in game");
+        return playerDoc.data() as Game;
       }
     }),
     [handleApiErrors, user]

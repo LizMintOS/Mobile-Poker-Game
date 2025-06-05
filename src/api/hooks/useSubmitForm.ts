@@ -4,6 +4,7 @@ import { useGameActions } from "../games/functions";
 import { Game } from "../games/types";
 import { usePlayerActions } from "../players/functions";
 import { User } from "firebase/auth";
+import { Player } from "../players/types";
 
 interface UseAuthFormProps {
   isLogin: boolean;
@@ -52,17 +53,22 @@ export const useGameForm = () => {
   const handleSubmitForm = async (data: GameFormData): Promise<Game | void> => {
     const { gameId } = data;
 
-    const gameData = await getGameByGameId(gameId);
+    const gameData: Game = await getGameByGameId(gameId) as Game;
+    console.log("Got game: ", gameData.id, gameData.playerCount)
+
+    if (gameData.playerCount == 8 || gameData.hasStarted) {
+      throw "Game is already full.";
+    }
 
     let gameWithNewPlayer;
-    if (gameData && !gameData.hasStarted && gameData.playerCount < 8) {
-      gameWithNewPlayer = await addPlayer(gameData);
+    if (gameData.id) {
+      gameWithNewPlayer = await addPlayer(gameData) as Game;
       if (gameWithNewPlayer) {
         console.log("Player created: ", gameWithNewPlayer.id);
       }
     }
 
-    return gameWithNewPlayer as Game;
+    return gameWithNewPlayer;
   };
 
   return { handleSubmitForm };

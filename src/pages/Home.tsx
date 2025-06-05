@@ -2,7 +2,7 @@ import { useNavigate } from "react-router";
 import GreenButton from "../components/common/buttons/GreenButton";
 import { ROUTES } from "../routes/routes";
 import CreateGame from "../components/CreateGame";
-import PlayGameComponent from "../components/PlayGame";
+import JoinGameComponent from "../components/JoinGame";
 import { useGame } from "../contexts/GameProvider";
 
 const HomePage = () => {
@@ -14,7 +14,7 @@ const HomePage = () => {
       {!game ? (
         <>
           <CreateGame />
-          <PlayGameComponent />
+          <JoinGameComponent />
         </>
       ) : (
         <div className="mb-8 h-14">
