@@ -61,10 +61,9 @@ const JoinGameComponent = () => {
     if (newGame) {
       setGame(newGame);
       console.log("JOINED", newGame.playerCount);
+      setLoading(false);
       navigate(ROUTES.GAME_LOBBY(newGame.id));
     }
-    
-    setLoading(false);
   };
 
   return (

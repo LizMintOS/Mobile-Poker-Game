@@ -1,9 +1,6 @@
-import { useParams } from "react-router";
 import LogoutButton from "./buttons/LogoutButton";
 
 const Header = () => {
-  const { gameId } = useParams();
-
   return (
     <header>
       <nav className="w-full align-center flex flex-row justify-between shadow-sm bg-green-50">
@@ -13,7 +10,7 @@ const Header = () => {
           </h2>
         </div>
         <div className="w-fit items-center flex h-14 m-6">
-          <LogoutButton gameId={gameId ?? null} />
+          <LogoutButton />
         </div>
       </nav>
     </header>

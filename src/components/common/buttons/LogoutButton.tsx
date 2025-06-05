@@ -1,12 +1,8 @@
 import PressButton from "./PressButton";
 import useLogout from "../../../api/hooks/useLogout";
 
-type LogoutButtonProps = {
-  gameId: string | null;
-};
-
-const LogoutButton = ({ gameId }: LogoutButtonProps) => {
-  const { handleLogout } = useLogout(gameId);
+const LogoutButton = () => {
+  const { handleLogout } = useLogout();
   return (
     <PressButton
       type="button"

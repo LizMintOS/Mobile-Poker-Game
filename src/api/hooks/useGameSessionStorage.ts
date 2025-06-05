@@ -14,7 +14,7 @@ const useGameSessionStorage = (): [
     if (game) {
       sessionStorage.setItem("game", JSON.stringify(game));
     } else {
-      sessionStorage.removeItem("game");
+      sessionStorage.clear();
     }
   }, [game]);
 

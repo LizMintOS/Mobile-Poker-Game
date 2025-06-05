@@ -14,12 +14,14 @@ const useLogout = () => {
 
   const handleLogout = useCallback(async () => {
     if (game) {
-      if (game.creatorId == currentUser!.uid) {
+      if (game.creatorId === currentUser!.uid) {
+        console.log("Deleting Game")
         await deleteGame(game);
-        setGame(null);
       } else {
+        console.log("Removing Player")
         await deletePlayer(currentUser!.uid, game);
       }
+      setGame(null);
     }
     await logoutUser();
   }, [logoutUser, currentUser, game]);
