@@ -7,13 +7,11 @@ const useGameSessionStorage = (): [
 ] => {
   const [game, setGameState] = useState<Game | null>(() => {
     const stored = sessionStorage.getItem("game");
-    if (stored) console.log("S Storage: ",JSON.parse(stored));
     return stored ? (JSON.parse(stored) as Game) : null;
   });
 
   useEffect(() => {
     if (game) {
-      console.log("UE Storage: ", game)
       sessionStorage.setItem("game", JSON.stringify(game));
     } else {
       sessionStorage.removeItem("game");

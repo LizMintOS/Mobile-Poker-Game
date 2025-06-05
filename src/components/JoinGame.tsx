@@ -16,9 +16,8 @@ type FormValues = {
 };
 
 const JoinGameComponent = () => {
-  const { game, setGame } = useGame();
+  const { setGame } = useGame();
   const { error, clearError } = useError();
-
   const { handleSubmitForm } = useGameForm();
   const { loading, setLoading } = useLoading();
   const navigate = useNavigate();
@@ -54,14 +53,17 @@ const JoinGameComponent = () => {
 
   const onSubmit: SubmitHandler<FormValues> = async (data) => {
     setLoading(true);
+
     handleErrors();
+
     const newGame = await handleSubmitForm(data);
+
     if (newGame) {
       setGame(newGame);
-      navigate(ROUTES.GAME_LOBBY(newGame.id));
       console.log("JOINED", newGame.playerCount);
+      navigate(ROUTES.GAME_LOBBY(newGame.id));
     }
-    if (error) console.log("JoinGame error: ", error);
+    
     setLoading(false);
   };
 

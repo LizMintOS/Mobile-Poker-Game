@@ -59,7 +59,7 @@ const GameLobby = () => {
           <div className="bg-white shadow-xl rounded-2xl p-8 w-fit text-center border-1 border-slate-100/50">
             <Title title="Welcome to the Game Lobby!" />
             <div className="flex flex-col items-center justify-center space-y-4 mt-2">
-              <p className="text-lg text-green-600 font-semibold italic">
+              <p className="text-lg text-green-600 font-semibold italic rounded-3xl border-2 p-2 px-4 mt-2">
                 {gameId}
               </p>
               <p className="text-lg text-gray-700">
@@ -75,11 +75,13 @@ const GameLobby = () => {
                     joined
                   </p>
                   {game.playerCount > 1 && (
-                    <GreenButton
-                      label="Start Game"
-                      type="button"
-                      onClick={() => navigate(ROUTES.GAME(gameId))}
-                    />
+                    <div className="w-full h-14">
+                      <GreenButton
+                        label="Start Game"
+                        type="button"
+                        onClick={() => navigate(ROUTES.GAME(gameId))}
+                      />
+                    </div>
                   )}
                 </>
               )}
