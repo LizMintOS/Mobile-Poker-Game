@@ -1,6 +1,6 @@
 import GreenButton from "../components/common/buttons/GreenButton";
 import Title from "../components/common/Title";
-import { useNavigate, useParams } from "react-router";
+import { useNavigate, useParams } from "react-router-dom";
 import { ROUTES } from "../routes/routes";
 import { useGameActions } from "../api/games/functions";
 import { useAuth } from "../contexts/AuthProvider";
@@ -20,6 +20,8 @@ const GameLobby = () => {
   if (!gameId) {
     throw new Error("Game ID is required to join the lobby.");
   }
+
+  console.log("GameLobby mounted");
 
   const fetchGameData = async () => {
     setLoading(true);

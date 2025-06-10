@@ -4,7 +4,7 @@ import { useError } from "../contexts/ErrorProvider";
 import PressButton from "./common/buttons/PressButton";
 import { useAuthForm } from "../api/hooks/useSubmitForm";
 import { ROUTES } from "../routes/routes";
-import { useNavigate } from "react-router";
+import { useNavigate } from "react-router-dom";
 import FormBody from "./common/form/FormBody";
 import ClickMeText from "./common/ClickMeText";
 

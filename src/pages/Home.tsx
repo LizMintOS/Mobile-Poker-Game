@@ -1,4 +1,4 @@
-import { useNavigate } from "react-router";
+import { useNavigate } from "react-router-dom";
 import GreenButton from "../components/common/buttons/GreenButton";
 import { ROUTES } from "../routes/routes";
 import CreateGame from "../components/CreateGame";

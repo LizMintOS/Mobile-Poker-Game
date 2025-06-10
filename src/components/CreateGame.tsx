@@ -9,7 +9,7 @@ import { useGameActions } from "../api/games/functions";
 import { useGame } from "../contexts/GameProvider";
 import { useAuth } from "../contexts/AuthProvider";
 import { ROUTES } from "../routes/routes";
-import { useNavigate } from "react-router";
+import { useNavigate } from "react-router-dom";
 import { Game } from "../api/games/types";
 
 const CreateGame = () => {

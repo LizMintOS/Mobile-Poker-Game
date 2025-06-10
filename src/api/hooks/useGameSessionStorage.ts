@@ -12,6 +12,7 @@ const useGameSessionStorage = (): [
 
   useEffect(() => {
     if (game) {
+      console.log("Game Session",game.id)
       sessionStorage.setItem("game", JSON.stringify(game));
     } else {
       sessionStorage.clear();

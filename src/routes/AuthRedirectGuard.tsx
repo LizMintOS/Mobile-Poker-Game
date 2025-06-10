@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import { Outlet, useNavigate, useLocation } from "react-router";
+import { Outlet, useNavigate, useLocation, Navigate } from "react-router-dom";
 import { ROUTES } from "./routes";
 import { useAuth } from "../contexts/AuthProvider";
 import { Toast } from "../components/common/Toast";
@@ -11,22 +11,24 @@ const AuthRedirectGuard = () => {
   const { pathname } = useLocation();
   const { game } = useGame();
 
-  useEffect(() => {
-    if (!currentUser) {
-      navigate(ROUTES.AUTH, { replace: true });
-    } else if (currentUser && pathname === ROUTES.AUTH) {
-      navigate(ROUTES.HOME, { replace: true });
-    }
-    if (game && currentUser) {
-      if (!game.hasStarted) navigate(ROUTES.GAME_LOBBY(game.id));
-      else navigate(ROUTES.GAME(game.id));
-    }
-  }, [currentUser, useNavigate, game]);
+  // useEffect(() => {
+  //   if (!currentUser) {
+  //     navigate(ROUTES.AUTH, { replace: true });
+  //   } else if (currentUser && pathname === ROUTES.AUTH) {
+  //     navigate(ROUTES.HOME, { replace: true });
+  //   }
+  //   if (game && currentUser) {
+  //     if (!game.hasStarted) navigate(ROUTES.GAME_LOBBY(game.id));
+  //     else navigate(ROUTES.GAME(game.id));
+  //   }
+  // }, [currentUser, useNavigate, game]);
+
+  
 
   return (
     <>
       <Toast />
-      <Outlet />
+      {currentUser ? <Outlet /> : <Navigate to="/auth" replace />}
     </>
   );
 };

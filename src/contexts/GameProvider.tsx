@@ -1,6 +1,7 @@
-import { useContext, createContext, useEffect } from "react";
+import { useContext, createContext, useEffect, useState } from "react";
 import { Game } from "../api/games/types";
 import useGameSessionStorage from "../api/hooks/useGameSessionStorage";
+import { LoadingWrapper } from "../components/common/LoadingWrapper";
 
 interface GameContextType {
   game: Game | null;
@@ -19,14 +20,30 @@ export const useGame = (): GameContextType => {
 
 export const GameProvider = ({ children }: { children: React.ReactNode }) => {
   const [game, setGame] = useGameSessionStorage();
+  const [isWaiting, setIsWaiting] = useState<boolean>(true);
 
   useEffect(() => {
-    console.log("Game Context: ", game);
-  }, [game])
+    const timer = setTimeout(() => {
+      setIsWaiting(false);
+    }, 500);
+
+    return () => clearTimeout(timer);
+  }, [game]);
 
   return (
     <GameContext.Provider value={{ game, setGame }}>
-      {children}
+      <LoadingWrapper
+        loading={isWaiting}
+        style={{
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          height: "100vh",
+        }}
+        size={80}
+      >
+        <>{children}</>
+      </LoadingWrapper>
     </GameContext.Provider>
   );
 };
