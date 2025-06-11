@@ -1,22 +1,22 @@
 import { useEffect } from "react";
 import { Outlet, useNavigate, useLocation } from "react-router-dom";
 import { ROUTES } from "./routes";
-import { useAuth } from "../contexts/AuthProvider";
 import { Toast } from "../components/common/Toast";
+import { useGame } from "../contexts/GameProvider";
 
-const AuthRedirectGuard = () => {
-  const { currentUser } = useAuth();
+const GameRedirectGuard = () => {
   const navigate = useNavigate();
   const { pathname } = useLocation();
+  const { game } = useGame();
 
   useEffect(() => {
-    console.log("User:", currentUser?.uid)
-    if (!currentUser) {
-      navigate(ROUTES.AUTH, { replace: true });
-    } else if (currentUser && pathname === ROUTES.AUTH) {
+    console.log("Redirect: ", game?.id)
+    if (!game) {
       navigate(ROUTES.HOME, { replace: true });
+    } else if (game && pathname === ROUTES.GAME_LOBBY(game.id)) {
+      navigate(ROUTES.GAME(game.id), { replace: true });
     }
-  }, [currentUser, useNavigate]);
+  }, [useNavigate, game]);
 
   return (
     <>
@@ -26,4 +26,4 @@ const AuthRedirectGuard = () => {
   );
 };
 
-export default AuthRedirectGuard;
+export default GameRedirectGuard;

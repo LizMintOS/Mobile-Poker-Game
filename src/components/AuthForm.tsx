@@ -64,7 +64,7 @@ export const AuthForm = () => {
     clearErrors();
     await handleSubmitForm(data).then(() => {
       if (!error && !errors) {
-        navigate(ROUTES.HOME);
+        navigate(ROUTES.HOME, { replace: true });
       }
     });
   };
