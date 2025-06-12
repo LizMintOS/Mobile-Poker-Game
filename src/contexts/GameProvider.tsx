@@ -6,6 +6,7 @@ import { LoadingWrapper } from "../components/common/LoadingWrapper";
 interface GameContextType {
   game: Game | null;
   setGame: (game: Game | null) => void;
+  clearGame: () => void;
 }
 
 const GameContext = createContext<GameContextType | undefined>(undefined);
@@ -19,19 +20,33 @@ export const useGame = (): GameContextType => {
 };
 
 export const GameProvider = ({ children }: { children: React.ReactNode }) => {
-  const [game, setGame] = useGameSessionStorage();
-  const [isWaiting, setIsWaiting] = useState<boolean>(true);
+  const [isWaiting, setIsWaiting] = useState(true);
+
+  const [game, setGameState] = useState<Game | null>(() => {
+    const stored = sessionStorage.getItem("game");
+    return stored ? (JSON.parse(stored) as Game) : null;
+  });
+
+  const setGame = (newGame: Game | null) => {
+    setGameState(newGame);
+    if (newGame) {
+      sessionStorage.setItem("game", JSON.stringify(newGame));
+    } else {
+      sessionStorage.removeItem("game");
+    }
+  };
+
+  const clearGame = () => {
+    setGameState(null);
+    sessionStorage.removeItem("game");
+  };
 
   useEffect(() => {
-    const timer = setTimeout(() => {
-      setIsWaiting(false);
-    }, 500);
-
-    return () => clearTimeout(timer);
-  }, [game]);
+    setIsWaiting(false);
+  }, []);
 
   return (
-    <GameContext.Provider value={{ game, setGame }}>
+    <GameContext.Provider value={{ game, setGame, clearGame }}>
       <LoadingWrapper
         loading={isWaiting}
         style={{

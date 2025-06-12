@@ -1,7 +1,6 @@
 import { useEffect } from "react";
 import { Outlet, useNavigate, useLocation } from "react-router-dom";
 import { ROUTES } from "./routes";
-import { Toast } from "../components/common/Toast";
 import { useGame } from "../contexts/GameProvider";
 
 const GameRedirectGuard = () => {
@@ -10,7 +9,7 @@ const GameRedirectGuard = () => {
   const { game } = useGame();
 
   useEffect(() => {
-    console.log("Redirect: ", game?.id)
+    // console.log("Redirect: ", game?.id)
     if (!game) {
       navigate(ROUTES.HOME, { replace: true });
     } else if (game.hasStarted && pathname === ROUTES.GAME_LOBBY(game.id)) {
@@ -18,11 +17,11 @@ const GameRedirectGuard = () => {
     } else {
       navigate(ROUTES.GAME_LOBBY(game.id), { replace: true });
     }
-  }, [useNavigate, game]);
+    console.log("Redirect: ", game?.id)
+  }, [navigate, game, pathname]);
 
   return (
     <>
-      <Toast />
       <Outlet />
     </>
   );

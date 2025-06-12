@@ -32,11 +32,14 @@ const CreateGame = () => {
 
     if (newGame) {
       setGame(newGame);
+      // setTimeout(() => {
+      //   navigate(ROUTES.GAME_LOBBY(newGame.id));
+      // }, 500);
       console.log("New Game ID: ", newGame.id);
-      navigate(ROUTES.GAME_LOBBY(newGame.id));
+      setLoading(false);
     }
-    setLoading(false);
   };
+
   return (
     <div className="mb-8 h-14">
       <GreenButton
