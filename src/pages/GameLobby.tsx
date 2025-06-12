@@ -44,20 +44,20 @@ const GameLobby = () => {
   //   fetchGameData();
   // }, [gameId, getGameByGameId, navigate]);
 
-  const fetchGame = async () => {
+  const subscribeGame = async () => {
     setLoading(true);
-    try {
-      if (game && game.hasStarted) {
-        navigate(ROUTES.GAME(game.id), { replace: true });
-      }
-    } finally {
-      setLoading(false);
+
+    const fetchedGame = await getGameByGameId(gameId);
+    if (fetchedGame != game) {
+      setGame(fetchedGame);
     }
+
+    setLoading(false);
   };
 
   useEffect(() => {
-    fetchGame();
-  }, [game, navigate]);
+    subscribeGame();
+  }, [game, navigate, gameId]);
 
   const handleDeleteGame = async () => {
     setLoading(true);
@@ -102,7 +102,9 @@ const GameLobby = () => {
                   )}
                 </>
               )}
-              {game && game.creatorId == currentUser!.uid && <RedButton onClick={handleDeleteGame} label="Cancel Game" />}
+              {game && game.creatorId == currentUser!.uid && (
+                <RedButton onClick={handleDeleteGame} label="Cancel Game" />
+              )}
             </div>
           </div>
         </LoadingWrapper>

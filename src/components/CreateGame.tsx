@@ -32,9 +32,6 @@ const CreateGame = () => {
 
     if (newGame) {
       setGame(newGame);
-      // setTimeout(() => {
-      //   navigate(ROUTES.GAME_LOBBY(newGame.id));
-      // }, 500);
       console.log("New Game ID: ", newGame.id);
       setLoading(false);
     }
