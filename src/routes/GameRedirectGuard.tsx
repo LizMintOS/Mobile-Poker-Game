@@ -13,8 +13,10 @@ const GameRedirectGuard = () => {
     console.log("Redirect: ", game?.id)
     if (!game) {
       navigate(ROUTES.HOME, { replace: true });
-    } else if (game && pathname === ROUTES.GAME_LOBBY(game.id)) {
+    } else if (game.hasStarted && pathname === ROUTES.GAME_LOBBY(game.id)) {
       navigate(ROUTES.GAME(game.id), { replace: true });
+    } else {
+      navigate(ROUTES.GAME_LOBBY(game.id), { replace: true });
     }
   }, [useNavigate, game]);
 

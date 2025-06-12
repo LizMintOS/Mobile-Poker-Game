@@ -7,28 +7,25 @@ import GameLobby from "./pages/GameLobby";
 import PageNotFound from "./pages/PageNotFound";
 import AuthRedirectGuard from "./routes/AuthRedirectGuard";
 import Game from "./pages/Game";
-import { NavigationProvider } from "./contexts/NavigationProvider";
 import GameRedirectGuard from "./routes/GameRedirectGuard";
 
 const App = () => {
   return (
     <BrowserRouter>
-      <NavigationProvider>
-        <Routes>
-          <Route element={<AuthRedirectGuard />}>
-            <Route path="/auth" element={<AuthPage />} />
-            <Route element={<AuthorizedLayout />}>
-              <Route path="/" element={<HomePage />} />
-              <Route element={<GameRedirectGuard />}>
-                <Route path="/lobby/:gameId" element={<GameLobby />} />
-                <Route path="/game/:gameId" element={<Game />} />
-              </Route>
+      <Routes>
+        <Route element={<AuthRedirectGuard />}>
+          <Route path="/auth" element={<AuthPage />} />
+          <Route element={<AuthorizedLayout />}>
+            <Route path="/" element={<HomePage />} />
+            <Route element={<GameRedirectGuard />}>
+              <Route path="/lobby/:gameId" element={<GameLobby />} />
+              <Route path="/game/:gameId" element={<Game />} />
             </Route>
           </Route>
-          <Route path="/page-not-found" element={<PageNotFound />} />
-          <Route path="*" element={<Navigate to="/page-not-found" replace />} />
-        </Routes>
-      </NavigationProvider>
+        </Route>
+        <Route path="/page-not-found" element={<PageNotFound />} />
+        <Route path="*" element={<Navigate to="/page-not-found" replace />} />
+      </Routes>
     </BrowserRouter>
   );
 };

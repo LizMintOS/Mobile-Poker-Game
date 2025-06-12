@@ -23,26 +23,41 @@ const GameLobby = () => {
 
   console.log("GameLobby mounted");
 
-  const fetchGameData = async () => {
+  // const fetchGameData = async () => {
+  //   setLoading(true);
+  //   try {
+  //     const fetchedGame = await getGameByGameId(gameId);
+  //     if (fetchedGame) {
+  //       setGame(fetchedGame);
+  //       if (fetchedGame.hasStarted) {
+  //         navigate(ROUTES.GAME(gameId), { replace: true });
+  //       }
+  //     }
+  //   } catch (error) {
+  //     console.error("Failed to fetch game data:", error);
+  //   } finally {
+  //     setLoading(false);
+  //   }
+  // };
+
+  // useEffect(() => {
+  //   fetchGameData();
+  // }, [gameId, getGameByGameId, navigate]);
+
+  const fetchGame = async () => {
     setLoading(true);
     try {
-      const fetchedGame = await getGameByGameId(gameId);
-      if (fetchedGame) {
-        setGame(fetchedGame);
-        if (fetchedGame.hasStarted) {
-          navigate(ROUTES.GAME(gameId), { replace: true });
-        }
+      if (game && game.hasStarted) {
+        navigate(ROUTES.GAME(game.id), { replace: true });
       }
-    } catch (error) {
-      console.error("Failed to fetch game data:", error);
     } finally {
       setLoading(false);
     }
   };
 
   useEffect(() => {
-    fetchGameData();
-  }, [gameId, getGameByGameId, navigate]);
+    fetchGame();
+  }, [game, navigate]);
 
   const handleDeleteGame = async () => {
     setLoading(true);
@@ -87,7 +102,7 @@ const GameLobby = () => {
                   )}
                 </>
               )}
-              <RedButton onClick={handleDeleteGame} label="Cancel Game" />
+              {game && game.creatorId == currentUser!.uid && <RedButton onClick={handleDeleteGame} label="Cancel Game" />}
             </div>
           </div>
         </LoadingWrapper>
