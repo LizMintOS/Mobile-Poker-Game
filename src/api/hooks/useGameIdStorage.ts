@@ -3,7 +3,7 @@ export const useGameIdStorage = () => {
     return localStorage.getItem("gameId") ?? null;
   };
 
-  const setGameId = (gameId: string) => {
+  const setGameIdStore = (gameId: string) => {
     localStorage.setItem("gameId", gameId);
   };
 
@@ -11,5 +11,5 @@ export const useGameIdStorage = () => {
     localStorage.removeItem("gameId");
   };
 
-  return { getGameId, setGameId, deleteGameId };
+  return { getGameId, setGameIdStore, deleteGameId };
 };

@@ -4,7 +4,6 @@ import { useGameActions } from "../games/functions";
 import { Game } from "../games/types";
 import { usePlayerActions } from "../players/functions";
 import { User } from "firebase/auth";
-import { Player } from "../players/types";
 
 interface UseAuthFormProps {
   isLogin: boolean;
@@ -64,6 +63,7 @@ export const useGameForm = () => {
       const gameWithNewPlayer = (await addPlayer(gameData)) as Game;
       if (gameWithNewPlayer) {
         console.log("FORM HOOK: Player created for game: ", gameWithNewPlayer.id);
+        
         return gameWithNewPlayer;
       }
     }

@@ -13,6 +13,7 @@ const useLogout = () => {
   const { deletePlayer } = usePlayerActions(currentUser);
 
   const handleLogout = useCallback(async () => {
+    console.log("Logout Game: ", game?.id)
     if (game) {
       if (game.creatorId === currentUser!.uid) {
         console.log("Deleting Game")

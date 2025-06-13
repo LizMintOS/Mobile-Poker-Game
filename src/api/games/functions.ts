@@ -17,29 +17,29 @@ import { useCallback } from "react";
 import { Player } from "../players/types";
 import { LocalError } from "../errors/types";
 
+export const listenToGame = (
+  gameId: string,
+  callback: (game: Game | null) => void
+) => {
+  // if (!gameId) return callback(null);
+
+  const gameDocRef = doc(db, "games", gameId);
+
+  const unsubscribe = onSnapshot(gameDocRef, (docSnapshot) => {
+    if (docSnapshot.exists()) {
+      const gameData = docSnapshot.data();
+      callback(gameData as Game);
+    } else {
+      console.log("No such game document!");
+      callback(null);
+    }
+  });
+
+  return unsubscribe;
+};
+
 export const useGameActions = (user: User | null) => {
   const { handleApiErrors } = useHandleApiFunction();
-
-  const listenToGame = (
-    gameId: string | null,
-    callback: (game: Game | null) => void
-  ) => {
-    if (!gameId) return callback(null);
-
-    const gameDocRef = doc(db, "games", gameId);
-
-    const unsubscribe = onSnapshot(gameDocRef, (docSnapshot) => {
-      if (docSnapshot.exists()) {
-        const gameData = docSnapshot.data();
-        callback(gameData as Game);
-      } else {
-        console.log("No such game document!");
-        callback(null);
-      }
-    });
-
-    return unsubscribe;
-  };
 
   const createGame = useCallback(
     handleApiErrors(async (deck: Card[], hand: Card[]): Promise<Game> => {
