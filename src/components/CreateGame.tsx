@@ -15,8 +15,7 @@ import { Game } from "../api/games/types";
 const CreateGame = () => {
   const { currentUser } = useAuth();
   const { setLoading } = useLoading();
-  const { setGame } = useGame();
-  const navigate = useNavigate();
+  const { setGameId } = useGame();
   const { createGame } = useGameActions(currentUser);
 
   const handleGameCreation = async () => {
@@ -25,15 +24,16 @@ const CreateGame = () => {
     const startingDeck: Card[] = shuffleCards();
     console.log("Starting deck first card: ", startingDeck[0]);
 
-    const newGame: Game = (await createGame(
+    const newGame: Game = await createGame(
       startingDeck.slice(5),
       addCardsToHand(startingDeck, 5)
-    )) as Game;
+    ) as Game;
 
     if (newGame) {
-      setGame(newGame);
-      console.log("New Game ID: ", newGame.id);
       setLoading(false);
+      console.log("CreateGame Component New Game: ", newGame)
+      setGameId(newGame.id);
+      // console.log("New Game ID: ", newGame.id);
     }
   };
 

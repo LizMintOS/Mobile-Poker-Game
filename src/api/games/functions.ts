@@ -69,8 +69,9 @@ export const useGameActions = (user: User | null) => {
       });
 
       console.log("Player data added successfully");
-
-      return { id: gameRef.id, ...gameData } as Game;
+      const newGame = { id: gameRef.id, ...gameData } as Game;
+      console.log(newGame.id)
+      return newGame;
     }),
     [user, handleApiErrors]
   );

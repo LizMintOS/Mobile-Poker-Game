@@ -24,7 +24,7 @@ export const useGame = (): GameContextType => {
 export const GameProvider = ({ children }: { children: React.ReactNode }) => {
   const { getGameId, deleteGameId, setGameIdStore } = useGameIdStorage();
 
-  const [isWaiting, setIsWaiting] = useState(true);
+  const [isWaiting, setIsWaiting] = useState(false);
   const [game, setGame] = useState<Game | null>(null);
   const [gameId, setGameId] = useState<string | null>(getGameId());
 
@@ -34,6 +34,8 @@ export const GameProvider = ({ children }: { children: React.ReactNode }) => {
   };
 
   useEffect(() => {
+    setIsWaiting(true);
+    console.log(gameId)
     if (gameId) {
       const unsubscribe = listenToGame(gameId, (game) => {
         setGame(game);
@@ -41,6 +43,8 @@ export const GameProvider = ({ children }: { children: React.ReactNode }) => {
       });
       return () => unsubscribe();
     } else setGame(null);
+    setIsWaiting(false);
+    console.log("Game Context: ", gameId);
   }, [listenToGame, gameId]);
 
   const handleSetGameId = (newGameId: string) => {
@@ -49,7 +53,9 @@ export const GameProvider = ({ children }: { children: React.ReactNode }) => {
   };
 
   return (
-    <GameContext.Provider value={{ game, setGame, clearGame, setGameId: handleSetGameId }}>
+    <GameContext.Provider
+      value={{ game, setGame, clearGame, setGameId: handleSetGameId }}
+    >
       <LoadingWrapper
         loading={isWaiting}
         style={{

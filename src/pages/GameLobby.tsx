@@ -1,10 +1,10 @@
 import GreenButton from "../components/common/buttons/GreenButton";
 import Title from "../components/common/Title";
-import { useNavigate, useParams } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { ROUTES } from "../routes/routes";
 import { useGameActions } from "../api/games/functions";
 import { useAuth } from "../contexts/AuthProvider";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import RedButton from "../components/common/buttons/RedButton";
 import { LoadingWrapper } from "../components/common/LoadingWrapper";
 import { useGame } from "../contexts/GameProvider";
@@ -12,12 +12,12 @@ import { useGame } from "../contexts/GameProvider";
 const GameLobby = () => {
   const navigate = useNavigate();
   const { currentUser } = useAuth();
-  const { game, setGame } = useGame();
-  const { gameId } = useParams<{ gameId: string }>();
+  const { game, clearGame } = useGame();
+  // const { gameId } = useParams<{ gameId: string }>();
   const [loading, setLoading] = useState(false);
-  const { getGameByGameId, deleteGame } = useGameActions(currentUser);
+  const { deleteGame } = useGameActions(currentUser);
 
-  if (!gameId) {
+  if (!game) {
     throw new Error("Game ID is required to join the lobby.");
   }
 
@@ -44,26 +44,26 @@ const GameLobby = () => {
   //   fetchGameData();
   // }, [gameId, getGameByGameId, navigate]);
 
-  const subscribeGame = async () => {
-    setLoading(true);
+  // const subscribeGame = async () => {
+  //   setLoading(true);
 
-    const fetchedGame = await getGameByGameId(gameId);
-    if (fetchedGame != game) {
-      setGame(fetchedGame);
-    }
+  //   const fetchedGame = await getGameByGameId(gameId);
+  //   if (fetchedGame != game) {
+  //     setGame(fetchedGame);
+  //   }
 
-    setLoading(false);
-  };
+  //   setLoading(false);
+  // };
 
-  useEffect(() => {
-    subscribeGame();
-  }, [game, navigate, gameId]);
+  // useEffect(() => {
+  //   subscribeGame();
+  // }, [game, navigate, gameId]);
 
   const handleDeleteGame = async () => {
     setLoading(true);
     if (game)
       await deleteGame(game).then(() => {
-        setGame(null);
+        clearGame();
         navigate(ROUTES.HOME, { replace: true });
       });
     setLoading(false);
@@ -77,7 +77,7 @@ const GameLobby = () => {
             <Title title="Welcome to the Game Lobby!" />
             <div className="flex flex-col items-center justify-center space-y-4 mt-2">
               <p className="text-lg text-green-600 font-semibold italic rounded-3xl border-2 p-2 px-4 mt-2">
-                {gameId}
+                {game.id}
               </p>
               <p className="text-lg text-gray-700">
                 Send this code to your friends to join the lobby
@@ -96,7 +96,7 @@ const GameLobby = () => {
                       <GreenButton
                         label="Start Game"
                         type="button"
-                        onClick={() => navigate(ROUTES.GAME(gameId))}
+                        onClick={() => navigate(ROUTES.GAME(game.d))}
                       />
                     </div>
                   )}

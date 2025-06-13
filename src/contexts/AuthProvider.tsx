@@ -1,5 +1,5 @@
 import { createContext, useContext, useState, useEffect } from "react";
-import { subscribeToAuthChanges } from "../api/auth/functions";
+import { subscribeToAuthChanges, useAuthActions } from "../api/auth/functions";
 import { User } from "firebase/auth";
 import { LoadingWrapper } from "../components/common/LoadingWrapper";
 
@@ -20,10 +20,12 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       setCurrentUser(user);
       setIsWaiting(false);
     });
-    console.log("Auth Context: ", currentUser?.uid);
+    console.log("Auth Context: ", currentUser?.uid == undefined ? null : currentUser.uid);
 
     return () => unsubscribe();
   }, [subscribeToAuthChanges, currentUser]);
+  // setCurrentUser(null)
+  // }, [])
 
   return (
     <AuthContext.Provider value={{ currentUser }}>

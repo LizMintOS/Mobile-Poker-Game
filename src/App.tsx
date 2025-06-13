@@ -16,8 +16,8 @@ const App = () => {
         <Route element={<AuthRedirectGuard />}>
           <Route path="/auth" element={<AuthPage />} />
           <Route element={<AuthorizedLayout />}>
-            <Route element={<GameRedirectGuard />}>
-              <Route path="/" element={<HomePage />} />
+            <Route path="/" element={<GameRedirectGuard />}>
+              <Route index element={<HomePage />} />
               <Route path="/lobby/:gameId" element={<GameLobby />} />
               <Route path="/game/:gameId" element={<Game />} />
             </Route>
