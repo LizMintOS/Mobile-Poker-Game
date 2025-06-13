@@ -22,17 +22,20 @@ export const useGameActions = (user: User | null) => {
   const { handleApiErrors } = useHandleApiFunction();
 
   const listenToGame = (
-    gameId: string,
-    callback: (gameData: DocumentData) => void
+    gameId: string | null,
+    callback: (game: Game | null) => void
   ) => {
+    if (!gameId) return callback(null);
+
     const gameDocRef = doc(db, "games", gameId);
 
     const unsubscribe = onSnapshot(gameDocRef, (docSnapshot) => {
       if (docSnapshot.exists()) {
         const gameData = docSnapshot.data();
-        callback(gameData);
+        callback(gameData as Game);
       } else {
         console.log("No such game document!");
+        callback(null);
       }
     });
 

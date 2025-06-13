@@ -1,6 +1,5 @@
 import { useContext, createContext, useEffect, useState } from "react";
 import { Game } from "../api/games/types";
-import useGameSessionStorage from "../api/hooks/useGameSessionStorage";
 import { LoadingWrapper } from "../components/common/LoadingWrapper";
 
 interface GameContextType {
@@ -22,24 +21,11 @@ export const useGame = (): GameContextType => {
 export const GameProvider = ({ children }: { children: React.ReactNode }) => {
   const [isWaiting, setIsWaiting] = useState(true);
 
-  const [game, setGameState] = useState<Game | null>(() => {
-    const stored = sessionStorage.getItem("game");
-    return stored ? (JSON.parse(stored) as Game) : null;
-  });
-
-  const setGame = (newGame: Game | null) => {
-    setGameState(newGame);
-    if (newGame) {
-      sessionStorage.setItem("game", JSON.stringify(newGame));
-    } else {
-      sessionStorage.removeItem("game");
-    }
-  };
+  const [game, setGame] = useState<Game | null>(null);
 
   const clearGame = () => {
-    setGameState(null);
-    sessionStorage.removeItem("game");
-  };
+    setGame(null);
+  }
 
   useEffect(() => {
     setIsWaiting(false);
