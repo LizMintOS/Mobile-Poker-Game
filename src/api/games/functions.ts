@@ -8,7 +8,6 @@ import {
   collection,
   updateDoc,
   onSnapshot,
-  DocumentData,
 } from "firebase/firestore";
 
 import { User } from "firebase/auth";
@@ -16,7 +15,7 @@ import { Game } from "./types";
 import { Card, addCardsToHand } from "../../utils/cards";
 import { useCallback } from "react";
 import { Player } from "../players/types";
-import { Errors, LocalError } from "../errors/types";
+import { LocalError } from "../errors/types";
 
 export const useGameActions = (user: User | null) => {
   const { handleApiErrors } = useHandleApiFunction();
