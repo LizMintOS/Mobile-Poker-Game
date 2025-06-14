@@ -13,51 +13,10 @@ const GameLobby = () => {
   const navigate = useNavigate();
   const { currentUser } = useAuth();
   const { game, clearGame } = useGame();
-  // const { gameId } = useParams<{ gameId: string }>();
   const [loading, setLoading] = useState(false);
   const { deleteGame } = useGameActions(currentUser);
 
-  if (!game) {
-    throw new Error("Game ID is required to join the lobby.");
-  }
-
-  console.log("GameLobby mounted");
-
-  // const fetchGameData = async () => {
-  //   setLoading(true);
-  //   try {
-  //     const fetchedGame = await getGameByGameId(gameId);
-  //     if (fetchedGame) {
-  //       setGame(fetchedGame);
-  //       if (fetchedGame.hasStarted) {
-  //         navigate(ROUTES.GAME(gameId), { replace: true });
-  //       }
-  //     }
-  //   } catch (error) {
-  //     console.error("Failed to fetch game data:", error);
-  //   } finally {
-  //     setLoading(false);
-  //   }
-  // };
-
-  // useEffect(() => {
-  //   fetchGameData();
-  // }, [gameId, getGameByGameId, navigate]);
-
-  // const subscribeGame = async () => {
-  //   setLoading(true);
-
-  //   const fetchedGame = await getGameByGameId(gameId);
-  //   if (fetchedGame != game) {
-  //     setGame(fetchedGame);
-  //   }
-
-  //   setLoading(false);
-  // };
-
-  // useEffect(() => {
-  //   subscribeGame();
-  // }, [game, navigate, gameId]);
+  console.log("Lobby: ", game?.id ?? null)
 
   const handleDeleteGame = async () => {
     setLoading(true);
@@ -77,7 +36,7 @@ const GameLobby = () => {
             <Title title="Welcome to the Game Lobby!" />
             <div className="flex flex-col items-center justify-center space-y-4 mt-2">
               <p className="text-lg text-green-600 font-semibold italic rounded-3xl border-2 p-2 px-4 mt-2">
-                {game.id}
+                {game?.id ?? "no game ID found"}
               </p>
               <p className="text-lg text-gray-700">
                 Send this code to your friends to join the lobby
@@ -96,7 +55,7 @@ const GameLobby = () => {
                       <GreenButton
                         label="Start Game"
                         type="button"
-                        onClick={() => navigate(ROUTES.GAME(game.d))}
+                        onClick={() => navigate(ROUTES.GAME(game.id))}
                       />
                     </div>
                   )}

@@ -6,6 +6,7 @@ import { listenToGame } from "../api/games/functions";
 
 interface GameContextType {
   game: Game | null;
+  gameId: string | null;
   setGame: (game: Game | null) => void;
   clearGame: () => void;
   setGameId: (gameId: string) => void;
@@ -35,10 +36,11 @@ export const GameProvider = ({ children }: { children: React.ReactNode }) => {
 
   useEffect(() => {
     setIsWaiting(true);
-    console.log(gameId)
+    console.log(gameId);
     if (gameId) {
       const unsubscribe = listenToGame(gameId, (game) => {
         setGame(game);
+        console.log("GProv Game Found: ", game!.id)
         setIsWaiting(false);
       });
       return () => unsubscribe();
@@ -54,7 +56,7 @@ export const GameProvider = ({ children }: { children: React.ReactNode }) => {
 
   return (
     <GameContext.Provider
-      value={{ game, setGame, clearGame, setGameId: handleSetGameId }}
+      value={{ game, gameId, setGame, clearGame, setGameId: handleSetGameId }}
     >
       <LoadingWrapper
         loading={isWaiting}

@@ -8,8 +8,7 @@ import { useGameActions } from "../api/games/functions";
 
 import { useGame } from "../contexts/GameProvider";
 import { useAuth } from "../contexts/AuthProvider";
-import { ROUTES } from "../routes/routes";
-import { useNavigate } from "react-router-dom";
+
 import { Game } from "../api/games/types";
 
 const CreateGame = () => {
@@ -29,11 +28,13 @@ const CreateGame = () => {
       addCardsToHand(startingDeck, 5)
     ) as Game;
 
+    console.log(newGame.id);
+
     if (newGame) {
       setLoading(false);
       console.log("CreateGame Component New Game: ", newGame)
       setGameId(newGame.id);
-      // console.log("New Game ID: ", newGame.id);
+      console.log("New Game ID: ", newGame.id);
     }
   };
 

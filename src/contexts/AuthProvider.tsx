@@ -1,5 +1,5 @@
 import { createContext, useContext, useState, useEffect } from "react";
-import { subscribeToAuthChanges, useAuthActions } from "../api/auth/functions";
+import { subscribeToAuthChanges } from "../api/auth/functions";
 import { User } from "firebase/auth";
 import { LoadingWrapper } from "../components/common/LoadingWrapper";
 

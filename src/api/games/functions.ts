@@ -12,7 +12,7 @@ import {
 
 import { User } from "firebase/auth";
 import { Game } from "./types";
-import { Card, addCardsToHand } from "../../utils/cards";
+import { Card } from "../../utils/cards";
 import { useCallback } from "react";
 import { Player } from "../players/types";
 import { LocalError } from "../errors/types";
@@ -21,13 +21,13 @@ export const listenToGame = (
   gameId: string,
   callback: (game: Game | null) => void
 ) => {
-  // if (!gameId) return callback(null);
-
   const gameDocRef = doc(db, "games", gameId);
 
   const unsubscribe = onSnapshot(gameDocRef, (docSnapshot) => {
     if (docSnapshot.exists()) {
-      const gameData = docSnapshot.data();
+      const gameData = { id: gameId, ...docSnapshot.data() };
+      // const gameData = docSnapshot.data();
+      console.log("Listener FN: ", gameData.id)
       callback(gameData as Game);
     } else {
       console.log("No such game document!");
@@ -70,7 +70,7 @@ export const useGameActions = (user: User | null) => {
 
       console.log("Player data added successfully");
       const newGame = { id: gameRef.id, ...gameData } as Game;
-      console.log(newGame.id)
+      console.log(newGame.id);
       return newGame;
     }),
     [user, handleApiErrors]

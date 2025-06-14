@@ -7,15 +7,14 @@ import { useGame } from "../contexts/GameProvider";
 const GameRedirectGuard = () => {
   const navigate = useNavigate();
   const { pathname } = useLocation();
-  const { game } = useGame();
+  const { game, gameId } = useGame();
   // const { currentUser } = useAuth();
 
   useEffect(() => {
     // if (currentUser) {
-    if (!game) {
+    if (!game || !gameId) {
       navigate(ROUTES.HOME, { replace: true });
     } else {
-      console.log(game);
       if (game.hasStarted && pathname === ROUTES.GAME_LOBBY(game.id)) {
         navigate(ROUTES.GAME(game.id), { replace: true });
       } else {
@@ -23,7 +22,7 @@ const GameRedirectGuard = () => {
       }
     }
     console.log("Redirect: ", game?.id ?? "No game");
-  }, [navigate, game, pathname]);
+  }, [navigate, game]);
 
   return (
     <>

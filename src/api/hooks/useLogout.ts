@@ -8,7 +8,7 @@ import { useGame } from "../../contexts/GameProvider";
 const useLogout = () => {
   const { logoutUser } = useAuthActions();
   const { currentUser } = useAuth();
-  const { game, setGame } = useGame();
+  const { game, clearGame } = useGame();
   const { deleteGame } = useGameActions(currentUser);
   const { deletePlayer } = usePlayerActions(currentUser);
 
@@ -22,7 +22,7 @@ const useLogout = () => {
         console.log("Removing Player")
         await deletePlayer(currentUser!.uid, game);
       }
-      setGame(null);
+      clearGame();
     }
     await logoutUser();
   }, [logoutUser, currentUser, game]);
