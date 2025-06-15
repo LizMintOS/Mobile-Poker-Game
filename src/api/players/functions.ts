@@ -29,7 +29,7 @@ import {
 export const listenToPlayer = (
   gameId: string,
   playerId: string,
-  callback: (playerData: DocumentData | null) => void
+  callback: (playerData: Player) => void
 ) => {
   const playerDocRef = doc(db, "games", gameId, "players", playerId);
 
@@ -40,7 +40,7 @@ export const listenToPlayer = (
       callback(playerData as Player);
     } else {
       console.log("No such player document!");
-      callback(null);
+      callback({id: "", hand: []});
     }
   });
 
@@ -72,7 +72,7 @@ export const usePlayerActions = (user: User | null) => {
           {
             playerCount: increment(1),
             deck: removeCardsFromDeck(hand),
-            turnOrder: arrayUnion(user!.uid)
+            turnOrder: arrayUnion(user!.uid),
           },
           game.id
         )) as Game;
@@ -99,7 +99,8 @@ export const usePlayerActions = (user: User | null) => {
           throw "Player not found";
         }
 
-        const playerData = playerDoc.data() as Player;
+        const playerData = { id: playerId, ...playerDoc.data() } as Player;
+
         console.log("Game data fetched:", playerData);
 
         return playerData;
