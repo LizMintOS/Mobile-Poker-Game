@@ -12,6 +12,7 @@ export type Game = {
   playerCount: number;
   deck: Card[];
   turn: number;
+  turnOrder: string[];
   state: "lobby" | "waiting" | "Your Turn" | "Game Over";
 };
 

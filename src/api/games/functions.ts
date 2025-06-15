@@ -47,6 +47,7 @@ export const useGameActions = (user: User | null) => {
         playerCount: 1,
         deck: deck,
         turn: 0,
+        turnOrder: [user!.uid],
         state: "lobby",
       };
       const gameRef = await addDoc(collection(db, "games"), {
@@ -57,7 +58,6 @@ export const useGameActions = (user: User | null) => {
 
       const playerData = {
         hand: hand,
-        isTurn: true,
       };
 
       console.log("Adding player data:", playerData);

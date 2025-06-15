@@ -12,6 +12,7 @@ import {
   increment,
   getDoc,
   deleteDoc,
+  arrayUnion,
 } from "firebase/firestore";
 
 import { User } from "firebase/auth";
@@ -63,7 +64,6 @@ export const usePlayerActions = (user: User | null) => {
         const playerDocRef = doc(db, path);
         await setDoc(playerDocRef, {
           hand: hand,
-          isTurn: false,
         });
 
         console.log("Player created");
@@ -72,6 +72,7 @@ export const usePlayerActions = (user: User | null) => {
           {
             playerCount: increment(1),
             deck: removeCardsFromDeck(hand),
+            turnOrder: arrayUnion(user!.uid)
           },
           game.id
         )) as Game;
