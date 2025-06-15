@@ -14,7 +14,6 @@ import { User } from "firebase/auth";
 import { Game } from "./types";
 import { Card } from "../../utils/cards";
 import { useCallback } from "react";
-import { Player } from "../players/types";
 import { LocalError } from "../errors/types";
 
 export const listenToGame = (
@@ -56,12 +55,12 @@ export const useGameActions = (user: User | null) => {
 
       console.log("Game created with ID:", gameRef.id);
 
-      const playerData: Player = {
+      const playerData = {
         hand: hand,
         isTurn: true,
       };
 
-      console.log("Adding player data:", playerData as Player);
+      console.log("Adding player data:", playerData);
 
       await setDoc(doc(db, "games", gameRef.id, "players", user!.uid), {
         playerData,

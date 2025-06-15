@@ -12,11 +12,11 @@ import { useGame } from "../contexts/GameProvider";
 const GameLobby = () => {
   const navigate = useNavigate();
   const { currentUser } = useAuth();
-  const { game, clearGame } = useGame();
+  const { game, gameId, clearGame } = useGame();
   const [loading, setLoading] = useState(false);
-  const { deleteGame } = useGameActions(currentUser);
+  const { deleteGame, updateGame } = useGameActions(currentUser);
 
-  console.log("Lobby: ", game?.id ?? null)
+  console.log("Lobby: ", game?.id ?? null);
 
   const handleDeleteGame = async () => {
     setLoading(true);
@@ -26,6 +26,15 @@ const GameLobby = () => {
         navigate(ROUTES.HOME, { replace: true });
       });
     setLoading(false);
+  };
+
+  const startGame = async () => {
+    setLoading(true);
+    const gameStart = await updateGame({ hasStarted: true }, gameId!);
+    if (gameStart) {
+      setLoading(false);
+      navigate(ROUTES.GAME(gameId!));
+    }
   };
 
   return (
@@ -55,7 +64,7 @@ const GameLobby = () => {
                       <GreenButton
                         label="Start Game"
                         type="button"
-                        onClick={() => navigate(ROUTES.GAME(game.id))}
+                        onClick={() => startGame()}
                       />
                     </div>
                   )}

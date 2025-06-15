@@ -25,28 +25,30 @@ import {
   removeCardsFromDeck,
 } from "../../utils/cards";
 
+export const listenToPlayer = (
+  gameId: string,
+  playerId: string,
+  callback: (playerData: DocumentData | null) => void
+) => {
+  const playerDocRef = doc(db, "games", gameId, "players", playerId);
+
+  const unsubscribe = onSnapshot(playerDocRef, (docSnapshot) => {
+    if (docSnapshot.exists()) {
+      const playerData = { id: playerId, ...docSnapshot.data() };
+      console.log("Player Listener FN: ", playerData.id);
+      callback(playerData as Player);
+    } else {
+      console.log("No such player document!");
+      callback(null);
+    }
+  });
+
+  return unsubscribe;
+};
+
 export const usePlayerActions = (user: User | null) => {
   const { handleApiErrors } = useHandleApiFunction();
   const { updateGame } = useGameActions(user);
-
-  const listenToPlayer = (
-    gameId: string,
-    playerId: string,
-    callback: (playerData: DocumentData | null) => void
-  ) => {
-    const playerDocRef = doc(db, "games", gameId, "players", playerId);
-
-    const unsubscribe = onSnapshot(playerDocRef, (docSnapshot) => {
-      if (docSnapshot.exists()) {
-        const playerData = docSnapshot.data();
-        callback(playerData);
-      } else {
-        callback(null);
-      }
-    });
-
-    return unsubscribe;
-  };
 
   const addPlayer = useCallback(
     handleApiErrors(async (game: Game): Promise<void | Game> => {
@@ -66,14 +68,14 @@ export const usePlayerActions = (user: User | null) => {
 
         console.log("Player created");
 
-        const newGame: Game = await updateGame(
+        const newGame: Game = (await updateGame(
           {
             playerCount: increment(1),
             deck: removeCardsFromDeck(hand),
           },
           game.id
-        ) as Game;
-        
+        )) as Game;
+
         return newGame;
       } else {
         console.log("Already in game");
