@@ -5,7 +5,7 @@ interface PlayingCardListProps {
 }
 
 const PlayingCardList = ({ cardNames }: PlayingCardListProps) => (
-  <div>
+  <div className="flex flex-row gap-4">
     {cardNames.map((card, index) => (
       <PlayingCard cardName={card} key={index} />
     ))}
