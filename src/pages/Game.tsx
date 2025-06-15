@@ -6,12 +6,9 @@ import { LoadingWrapper } from "../components/common/LoadingWrapper";
 import { useGame } from "../contexts/GameProvider";
 import { usePlayerActions } from "../api/players/functions";
 
-import { Card as CardType } from "../utils/cards";
-
 import { Player } from "../api/players/types";
 
-import Card from "@mui/material/Card";
-import CardMedia from "@mui/material/CardMedia";
+import PlayingCard from "../components/cards/Card";
 
 const Game = () => {
   // const { currentUser } = useAuth();
@@ -44,6 +41,7 @@ const Game = () => {
       <div className="flex justify-center items-center">
         <div className="bg-white shadow-xl rounded-2xl p-8 w-full text-center border-1 border-slate-100/50">
           <p>game</p>
+          <PlayingCard cardName="2C" />
         </div>
       </div>
     </>

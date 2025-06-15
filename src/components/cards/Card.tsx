@@ -6,10 +6,11 @@ interface PlayingCardProps {
 }
 
 const PlayingCard = ({ cardName }: PlayingCardProps) => {
-  const img = `src\\assets\\cards\\${cardName}.png`;
+  const img = `/src/assets/cards/${cardName}.png`;
+  console.log(img);
   return (
-    <Card sx={{ maxWidth: 300 }}>
-      <CardMedia sx={{ height: 140 }} image={img} />
+    <Card sx={{ maxWidth: "fit-content" }}>
+      <CardMedia sx={{ height: "fit-content", width: 150 }} component="img" alt="card" image={img} />
     </Card>
   );
 };
