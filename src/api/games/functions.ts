@@ -8,6 +8,10 @@ import {
   collection,
   updateDoc,
   onSnapshot,
+  runTransaction,
+  Transaction,
+  DocumentData,
+  increment,
 } from "firebase/firestore";
 
 import { User } from "firebase/auth";
@@ -112,8 +116,22 @@ export const useGameActions = (user: User | null) => {
 
       const newGame = { id: gameRef.id, ...updatedGame } as Game;
       console.log(newGame.id);
-      
+
       return newGame;
+    }),
+    [handleApiErrors]
+  );
+
+  const updateGameTransaction = useCallback(
+    handleApiErrors(async (data: any, gameId: string): Promise<void> => {
+      console.log("Updating transaction...");
+
+      const gameRef = doc(db, "games", gameId);
+
+      await runTransaction(db, async (transaction: Transaction) => {
+        transaction.update(gameRef, { ...data });
+      });
+      console.log("Updated!");
     }),
     [handleApiErrors]
   );
@@ -135,5 +153,6 @@ export const useGameActions = (user: User | null) => {
     getGameByGameId,
     deleteGame,
     updateGame,
+    updateGameTransaction,
   };
 };

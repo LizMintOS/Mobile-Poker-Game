@@ -14,7 +14,7 @@ const GameLobby = () => {
   const { currentUser } = useAuth();
   const { game, gameId, clearGame } = useGame();
   const [loading, setLoading] = useState(false);
-  const { deleteGame, updateGame } = useGameActions(currentUser);
+  const { deleteGame, updateGame, updateGameTransaction } = useGameActions(currentUser);
 
   console.log("Lobby: ", game?.id ?? null);
 
@@ -30,7 +30,7 @@ const GameLobby = () => {
 
   const startGame = async () => {
     setLoading(true);
-    const gameStart = await updateGame({ hasStarted: true }, gameId!);
+    const gameStart = await updateGameTransaction(gameId!, );
     if (gameStart) {
       setLoading(false);
       navigate(ROUTES.GAME(gameId!));
