@@ -13,7 +13,7 @@ const PlayingCard = ({ cardName }: PlayingCardProps) => {
   return (
     <div
       onClick={() => setSelected(!selected)}
-      className={selected ? "shadow-md shadow-green-500" : ""}
+      className={selected ? "shadow-md shadow-green-500 cursor-pointer" : "cursor-pointer"}
     >
       <Card sx={{ maxWidth: "fit-content" }}>
         <CardMedia
