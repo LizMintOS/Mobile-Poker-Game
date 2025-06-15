@@ -26,8 +26,7 @@ export const listenToGame = (
   const unsubscribe = onSnapshot(gameDocRef, (docSnapshot) => {
     if (docSnapshot.exists()) {
       const gameData = { id: gameId, ...docSnapshot.data() };
-      // const gameData = docSnapshot.data();
-      console.log("Listener FN: ", gameData.id)
+      console.log("Listener FN: ", gameData.id);
       callback(gameData as Game);
     } else {
       console.log("No such game document!");
@@ -112,7 +111,10 @@ export const useGameActions = (user: User | null) => {
         }
       );
 
-      return updatedGame;
+      const newGame = { id: gameRef.id, ...updatedGame } as Game;
+      console.log(newGame.id);
+      
+      return newGame;
     }),
     [handleApiErrors]
   );

@@ -59,11 +59,14 @@ const JoinGameComponent = () => {
 
     const newGame: Game = await handleSubmitForm(data) as Game;
 
+    console.log(newGame.id);
+
     if (newGame) {
       setLoading(false)
       console.log("JOINED", newGame.playerCount);
       setGameId(newGame.id)
-      // navigate(ROUTES.GAME_LOBBY(newGame.id), { replace: true });
+      console.log("New Game ID: ", newGame.id);
+      navigate(ROUTES.GAME_LOBBY(newGame.id), { replace: true });
     }
   };
 

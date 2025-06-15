@@ -40,7 +40,7 @@ export const GameProvider = ({ children }: { children: React.ReactNode }) => {
     if (gameId) {
       const unsubscribe = listenToGame(gameId, (game) => {
         setGame(game);
-        console.log("GProv Game Found: ", game!.id)
+        console.log("GProv Game Found: ", game!.id);
         setIsWaiting(false);
       });
       return () => unsubscribe();

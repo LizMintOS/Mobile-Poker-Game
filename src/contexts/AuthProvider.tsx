@@ -24,8 +24,6 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 
     return () => unsubscribe();
   }, [subscribeToAuthChanges, currentUser]);
-  // setCurrentUser(null)
-  // }, [])
 
   return (
     <AuthContext.Provider value={{ currentUser }}>
