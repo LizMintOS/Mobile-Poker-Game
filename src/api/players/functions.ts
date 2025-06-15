@@ -35,9 +35,10 @@ export const listenToPlayer = (
 
   const unsubscribe = onSnapshot(playerDocRef, (docSnapshot) => {
     if (docSnapshot.exists()) {
-      const playerData = { id: playerId, ...docSnapshot.data() };
-      console.log("Player Listener FN: ", playerData.id);
-      callback(playerData as Player);
+      const data = docSnapshot.data();
+      const playerData = { id: playerId, ...data.playerData } as Player;
+      console.log("Player Listener FN: ", playerData);
+      callback(playerData);
     } else {
       console.log("No such player document!");
       callback({id: "", hand: []});
