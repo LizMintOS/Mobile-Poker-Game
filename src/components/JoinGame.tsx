@@ -7,7 +7,7 @@ import { useGame } from "../contexts/GameProvider";
 import { useError } from "../contexts/ErrorProvider";
 import { useLoading } from "../contexts/LoadingProvider";
 
-import { useGameForm } from "../api/hooks/useSubmitForm";
+import { useGameForm } from "../hooks/useSubmitForm";
 import { ROUTES } from "../routes/routes";
 import { Game } from "../api/games/types";
 

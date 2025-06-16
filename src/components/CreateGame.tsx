@@ -4,7 +4,7 @@ import { useLoading } from "../contexts/LoadingProvider";
 
 import { Card, shuffleCards, addCardsToHand } from "../utils/cards";
 
-import { useGameActions } from "../api/games/functions";
+import { useGameProxy } from "../api/games/GameProxy";
 
 import { useGame } from "../contexts/GameProvider";
 import { useAuth } from "../contexts/AuthProvider";
@@ -15,7 +15,7 @@ const CreateGame = () => {
   const { currentUser } = useAuth();
   const { setLoading } = useLoading();
   const { setGameId } = useGame();
-  const { createGame } = useGameActions(currentUser);
+  const { createGame } = useGameProxy(currentUser);
 
   const handleGameCreation = async () => {
     setLoading(true);

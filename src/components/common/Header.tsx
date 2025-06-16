@@ -1,4 +1,4 @@
-import useLogout from "../../api/hooks/useLogout";
+import useLogout from "../../hooks/useLogout";
 import RedButton from "./buttons/RedButton";
 
 const Header = () => {

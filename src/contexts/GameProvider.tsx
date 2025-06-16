@@ -1,8 +1,8 @@
 import { useContext, createContext, useEffect, useState } from "react";
 import { Game } from "../api/games/types";
 import { LoadingWrapper } from "../components/common/LoadingWrapper";
-import { useGameIdStorage } from "../api/hooks/useGameIdStorage";
-import { listenToGame } from "../api/games/functions";
+import { useGameIdStorage } from "../hooks/useGameIdStorage";
+import { subscribeToGameChanges } from "../api/games/GameProxy";
 
 interface GameContextType {
   game: Game | null;
@@ -39,7 +39,7 @@ export const GameProvider = ({ children }: { children: React.ReactNode }) => {
     setIsWaiting(true);
     console.log(gameId);
     if (gameId) {
-      const unsubscribe = listenToGame(gameId, (game) => {
+      const unsubscribe = subscribeToGameChanges(gameId, (game) => {
         if (!game) {
           console.log("Game deleted, clearing state.");
           clearGame();
@@ -55,7 +55,7 @@ export const GameProvider = ({ children }: { children: React.ReactNode }) => {
       setIsWaiting(false);
     }
     console.log("Game Context: ", gameId);
-  }, [listenToGame, gameId]);
+  }, [subscribeToGameChanges, gameId]);
 
   const handleSetGameId = (newGameId: string) => {
     setGameId(newGameId);

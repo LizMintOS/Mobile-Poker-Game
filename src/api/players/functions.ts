@@ -1,5 +1,5 @@
-import { useHandleApiFunction } from "../hooks/useHandleApiFunction";
-import { useGameActions } from "../games/functions";
+import { useHandleApiFunction } from "../../hooks/useHandleApiFunction";
+import { useGameProxy } from "../games/GameProxy";
 import { db } from "../../services/firebase";
 import {
   doc,
@@ -52,7 +52,7 @@ export const listenToPlayer = (
 
 export const usePlayerActions = (user: User | null) => {
   const { handleApiErrors } = useHandleApiFunction();
-  const { updateGame } = useGameActions(user);
+  const { updateGame } = useGameProxy(user);
 
   const addPlayer = useCallback(
     handleApiErrors(async (game: Game): Promise<void | Game> => {
@@ -71,14 +71,11 @@ export const usePlayerActions = (user: User | null) => {
 
         console.log("Player created");
 
-        const newGame: Game = (await updateGame(
-          {
-            playerCount: increment(1),
-            deck: removeCardsFromDeck(game.deck, hand),
-            turnOrder: arrayUnion(user!.uid),
-          },
-          game.id
-        )) as Game;
+        const newGame: Game = (await updateGame(game.id, {
+          playerCount: increment(1),
+          deck: removeCardsFromDeck(game.deck, hand),
+          turnOrder: arrayUnion(user!.uid),
+        })) as Game;
 
         return newGame;
       } else {
@@ -103,7 +100,10 @@ export const usePlayerActions = (user: User | null) => {
         }
         const playerData = playerDoc.data();
 
-        const player: Player = { id: playerId, hand: playerData.playerData.hand };
+        const player: Player = {
+          id: playerId,
+          hand: playerData.playerData.hand,
+        };
 
         console.log("Game data fetched:", player);
 
@@ -145,10 +145,10 @@ export const usePlayerActions = (user: User | null) => {
 
         const newDeck = addCardsToDeck(player.hand, game.deck);
 
-        await updateGame(
-          { playerCount: increment(-1), deck: newDeck },
-          game.id
-        );
+        await updateGame(game.id, {
+          playerCount: increment(-1),
+          deck: newDeck,
+        });
 
         clearGame();
       }

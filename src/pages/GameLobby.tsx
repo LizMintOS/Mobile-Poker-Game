@@ -2,7 +2,7 @@ import GreenButton from "../components/common/buttons/GreenButton";
 import Title from "../components/common/Title";
 import { useNavigate } from "react-router-dom";
 import { ROUTES } from "../routes/routes";
-import { useGameActions } from "../api/games/functions";
+import { useGameProxy } from "../api/games/GameProxy";
 import { useAuth } from "../contexts/AuthProvider";
 import { useState } from "react";
 import RedButton from "../components/common/buttons/RedButton";
@@ -14,7 +14,7 @@ const GameLobby = () => {
   const { currentUser } = useAuth();
   const { game, gameId, clearGame } = useGame();
   const [loading, setLoading] = useState(false);
-  const { deleteGame, updateGame, updateGameTransaction } = useGameActions(currentUser);
+  const { deleteGame, updateGameTransaction } = useGameProxy(currentUser);
 
   console.log("Lobby: ", game?.id ?? null);
 
@@ -30,7 +30,7 @@ const GameLobby = () => {
 
   const startGame = async () => {
     setLoading(true);
-    const gameStart = await updateGameTransaction({ hasStarted: true }, gameId!);
+    const gameStart = await updateGameTransaction(gameId!, { hasStarted: true });
     if (gameStart) {
       setLoading(false);
       navigate(ROUTES.GAME(gameId!));

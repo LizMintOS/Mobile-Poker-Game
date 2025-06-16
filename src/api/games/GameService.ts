@@ -10,14 +10,12 @@ import {
   runTransaction,
   Transaction,
   deleteDoc,
-  query,
   getDocs,
 } from "firebase/firestore";
 
 import { User } from "firebase/auth";
 import { Game } from "./types";
 import { Card } from "../../utils/cards";
-// import { useCallback } from "react";
 
 export const GameService = {
   listenToGame(gameId: string, callback: (game: Game | null) => void) {
@@ -72,11 +70,10 @@ export const GameService = {
 
     const gameData = updatedGame.data();
 
-    return gameData ? { id: gameId, ...gameData } as Game : null;
+    return gameData ? ({ id: gameId, ...gameData } as Game) : null;
   },
 
   async updateGameTransaction(gameId: string, data: any): Promise<void> {
-
     const gameRef = doc(db, "games", gameId);
 
     await runTransaction(db, async (transaction: Transaction) => {
@@ -85,7 +82,9 @@ export const GameService = {
   },
 
   async deleteGame(game: Game): Promise<void> {
-    const playerDocs = await getDocs(collection(db, "games", game.id, "players"));
+    const playerDocs = await getDocs(
+      collection(db, "games", game.id, "players")
+    );
 
     const deletePlayers = playerDocs.docs.map((docRef) =>
       deleteDoc(doc(db, "games", game.id, "players", docRef.id))

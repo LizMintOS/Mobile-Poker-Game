@@ -1,6 +1,6 @@
-import { useGameActions } from "../api/games/functions";
+import { useGameProxy } from "../api/games/GameProxy";
 import { useAuth } from "../contexts/AuthProvider";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 import { LoadingWrapper } from "../components/common/LoadingWrapper";
 import { useGame } from "../contexts/GameProvider";
 import { usePlayerActions } from "../api/players/functions";
@@ -10,14 +10,13 @@ import { Player } from "../api/players/types";
 import PlayingCardList from "../components/cards/CardList";
 import PressButton from "../components/common/buttons/PressButton";
 import { Card, addCardsToHand, removeCardsFromDeck } from "../utils/cards";
-import Title from "../components/common/Title";
 
 const Game = () => {
   const { currentUser } = useAuth();
   const userId = currentUser!.uid;
   const { game, gameId } = useGame();
   const { getPlayer, updatePlayerTransaction } = usePlayerActions(currentUser);
-  const { updateGameTransaction } = useGameActions(currentUser);
+  const { updateGameTransaction } = useGameProxy(currentUser);
 
   const [selectedCards, setSelectedCards] = useState<Card[]>([]);
   const [loading, setLoading] = useState(false);
@@ -81,7 +80,7 @@ const Game = () => {
     await updatePlayerTransaction({ hand: hand }, game!.id, userId);
     const turnIncrement = game!.turn++;
     console.log("Updating game...")
-    await updateGameTransaction({ deck: deck, turn: turnIncrement }, game!.id);
+    await updateGameTransaction(game!.id, { deck: deck, turn: turnIncrement });
     console.log("Turn ended");
     setLoading(false);
   };

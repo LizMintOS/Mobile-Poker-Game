@@ -1,8 +1,8 @@
-import { useAuth } from "../../contexts/AuthProvider";
-import { useAuthProxy } from "../auth/AuthProxy";
-import { useGameActions } from "../games/functions";
-import { Game } from "../games/types";
-import { usePlayerActions } from "../players/functions";
+import { useAuth } from "../contexts/AuthProvider";
+import { useAuthProxy } from "../api/auth/AuthProxy";
+import { useGameProxy } from "../api/games/GameProxy";
+import { Game } from "../api/games/types";
+import { usePlayerActions } from "../api/players/functions";
 import { User } from "firebase/auth";
 
 interface UseAuthFormProps {
@@ -46,7 +46,7 @@ export const useAuthForm = ({
 
 export const useGameForm = () => {
   const { currentUser } = useAuth();
-  const { getGameByGameId } = useGameActions(currentUser);
+  const { getGameByGameId } = useGameProxy(currentUser);
   const { addPlayer } = usePlayerActions(currentUser);
 
   const handleSubmitForm = async (data: GameFormData): Promise<Game | void> => {

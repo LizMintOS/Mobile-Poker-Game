@@ -1,15 +1,15 @@
 import { useCallback } from "react";
-import { useAuthProxy } from "../auth/AuthProxy";
-import { useGameActions } from "../games/functions";
-import { useAuth } from "../../contexts/AuthProvider";
-import { usePlayerActions } from "../players/functions";
-import { useGame } from "../../contexts/GameProvider";
+import { useAuthProxy } from "../api/auth/AuthProxy";
+import { useGameProxy } from "../api/games/GameProxy";
+import { useAuth } from "../contexts/AuthProvider";
+import { usePlayerActions } from "../api/players/functions";
+import { useGame } from "../contexts/GameProvider";
 
 const useLogout = () => {
   const { logoutUser } = useAuthProxy();
   const { currentUser } = useAuth();
   const { game, clearGame } = useGame();
-  const { deleteGame } = useGameActions(currentUser);
+  const { deleteGame } = useGameProxy(currentUser);
   const { deletePlayer } = usePlayerActions(currentUser);
 
   const handleLogout = useCallback(async () => {

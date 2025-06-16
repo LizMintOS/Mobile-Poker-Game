@@ -1,4 +1,4 @@
-import { useHandleApiFunction } from "../hooks/useHandleApiFunction";
+import { useHandleApiFunction } from "../../hooks/useHandleApiFunction";
 import { db } from "../../services/firebase";
 import {
   doc,
