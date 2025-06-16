@@ -9,7 +9,7 @@ import { Player } from "../api/players/types";
 
 import PlayingCardList from "../components/cards/CardList";
 import PressButton from "../components/common/buttons/PressButton";
-import { Card, addCardsToHand } from "../utils/cards";
+import { Card, addCardsToHand, removeCardsFromDeck } from "../utils/cards";
 
 const Game = () => {
   const { currentUser } = useAuth();
@@ -26,6 +26,7 @@ const Game = () => {
     hand: [],
   });
   const [hand, setHand] = useState<Card[]>(player.hand);
+  const [deck, setDeck] = useState<Card[]>([]);
 
   const selectCard = (card: Card, isSelected: boolean) => {
     setSelectedCards((prevSelectedCards) =>
@@ -42,12 +43,15 @@ const Game = () => {
 
       const unsubscribe = listenToPlayer(gameId!, userId, (player) => {
         setPlayer(player);
+        setHand(player.hand);
+        setDeck(game.deck);
         console.log(player);
         setLoading(false);
       });
 
       console.log(isTurn);
       console.log(player.hand);
+      console.log("Deck: ",deck);
 
       return () => unsubscribe();
     }
@@ -60,6 +64,8 @@ const Game = () => {
     const newHand = removeCards.concat(
       addCardsToHand(game!.deck, selectedCards.length)
     );
+    setDeck(removeCardsFromDeck(game!.deck, newHand.slice(-selectedCards.length)))
+    console.log(deck);
     setHand(newHand);
   };
 
@@ -67,7 +73,7 @@ const Game = () => {
     <>
       <div className="flex justify-center items-center">
         <div className="bg-white shadow-xl rounded-2xl p-8 w-full mt-4 text-center border-1 border-slate-100/50">
-          {isTurn && player && player.hand ? (
+          {isTurn && player && hand ? (
             <>
               <h1 className="font-semibold text-green-700 mb-8">Your Turn!</h1>
               <h3>
@@ -88,7 +94,7 @@ const Game = () => {
                 <div className="flex flex-row h-full w-full">
                   <div className="w-full mt-4 ml-4">
                     <PlayingCardList
-                      cardNames={player.hand}
+                      cardNames={hand}
                       selectedCards={selectedCards}
                       selectCard={selectCard}
                     />

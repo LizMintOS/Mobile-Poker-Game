@@ -32,6 +32,7 @@ export const GameProvider = ({ children }: { children: React.ReactNode }) => {
   const clearGame = () => {
     deleteGameId();
     setGameId(null);
+    setGame(null);
   };
 
   useEffect(() => {
@@ -39,13 +40,20 @@ export const GameProvider = ({ children }: { children: React.ReactNode }) => {
     console.log(gameId);
     if (gameId) {
       const unsubscribe = listenToGame(gameId, (game) => {
-        setGame(game);
-        console.log("GProv Game Found: ", game!);
-        setIsWaiting(false);
+        if (!game) {
+          console.log("Game deleted, clearing state.");
+          clearGame();
+        } else {
+          setGame(game);
+          console.log("GProv Game Found: ", game);
+          setIsWaiting(false);
+        }
       });
       return () => unsubscribe();
-    } else setGame(null);
-    setIsWaiting(false);
+    } else {
+      setGame(null);
+      setIsWaiting(false);
+    }
     console.log("Game Context: ", gameId);
   }, [listenToGame, gameId]);
 

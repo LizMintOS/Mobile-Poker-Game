@@ -16,7 +16,7 @@ export const shuffleCards = (): Card[] => {
   return deck;
 };
 
-export const removeCardsFromDeck = (hand: Card[]): Card[] => {
+export const removeCardsFromDeck = (deck: Card[], hand: Card[]): Card[] => {
   return deck.filter((card) => !hand.includes(card));
 }
 

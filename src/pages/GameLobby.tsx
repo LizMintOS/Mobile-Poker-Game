@@ -21,10 +21,10 @@ const GameLobby = () => {
   const handleDeleteGame = async () => {
     setLoading(true);
     if (game)
-      await deleteGame(game).then(() => {
-        clearGame();
-        navigate(ROUTES.HOME, { replace: true });
-      });
+      await deleteGame(game, clearGame)
+    // .then(() => {
+    //     navigate(ROUTES.HOME, { replace: true });
+    //   });
     setLoading(false);
   };
 

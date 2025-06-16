@@ -72,7 +72,7 @@ export const usePlayerActions = (user: User | null) => {
         const newGame: Game = (await updateGame(
           {
             playerCount: increment(1),
-            deck: removeCardsFromDeck(hand),
+            deck: removeCardsFromDeck(game.deck, hand),
             turnOrder: arrayUnion(user!.uid),
           },
           game.id
@@ -111,7 +111,7 @@ export const usePlayerActions = (user: User | null) => {
   );
 
   const deletePlayer = useCallback(
-    handleApiErrors(async (playerId: string, game: Game): Promise<void> => {
+    handleApiErrors(async (playerId: string, game: Game, clearGame: () => void): Promise<void> => {
       console.log("Deleting player from game");
 
       const player = await getPlayer(playerId, game.id);
@@ -121,6 +121,8 @@ export const usePlayerActions = (user: User | null) => {
       const newDeck = addCardsToDeck(player.hand, game.deck);
 
       await updateGame({ playerCount: increment(-1), deck: newDeck }, game.id);
+
+      clearGame();
     }),
     [handleApiErrors]
   );
