@@ -1,6 +1,5 @@
 import Card from "@mui/material/Card";
 import CardMedia from "@mui/material/CardMedia";
-import { useState } from "react";
 
 import { Card as CardType } from "../../utils/cards";
 
@@ -16,7 +15,6 @@ const PlayingCard = ({
   selectCard,
 }: PlayingCardProps) => {
   const img = `/src/assets/cards/${cardName}.png`;
-  const [selected, setSelected] = useState(false);
 
   const handleClick = () => {
     selectCard(cardName as CardType, !isSelected);

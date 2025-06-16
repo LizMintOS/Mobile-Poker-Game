@@ -1,6 +1,6 @@
 import { useGameActions } from "../api/games/functions";
 import { useAuth } from "../contexts/AuthProvider";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { LoadingWrapper } from "../components/common/LoadingWrapper";
 import { useGame } from "../contexts/GameProvider";
 import { usePlayerActions } from "../api/players/functions";
@@ -9,7 +9,7 @@ import { Player } from "../api/players/types";
 
 import PlayingCardList from "../components/cards/CardList";
 import PressButton from "../components/common/buttons/PressButton";
-import { Card } from "../utils/cards";
+import { Card, addCardsToHand } from "../utils/cards";
 
 const Game = () => {
   const { currentUser } = useAuth();
@@ -25,6 +25,7 @@ const Game = () => {
     id: userId,
     hand: [],
   });
+  const [hand, setHand] = useState<Card[]>(player.hand);
 
   const selectCard = (card: Card, isSelected: boolean) => {
     setSelectedCards((prevSelectedCards) =>
@@ -52,6 +53,16 @@ const Game = () => {
     }
   }, [isTurn, gameId, game, userId]);
 
+  const handleSwapCards = () => {
+    const removeCards = player.hand.filter(
+      (card) => !selectedCards.includes(card)
+    );
+    const newHand = removeCards.concat(
+      addCardsToHand(game!.deck, selectedCards.length)
+    );
+    setHand(newHand);
+  };
+
   return (
     <>
       <div className="flex justify-center items-center">
@@ -59,6 +70,11 @@ const Game = () => {
           {isTurn && player && player.hand ? (
             <>
               <h1 className="font-semibold text-green-700 mb-8">Your Turn!</h1>
+              <h3>
+                Click cards that you want to swap then press the "Swap Cards"
+                button
+              </h3>
+              <h3 className="mb-4">When you've finished, press end turn</h3>
               <LoadingWrapper
                 loading={loading}
                 style={{
@@ -89,6 +105,7 @@ const Game = () => {
                       <PressButton
                         type="button"
                         style="bg-yellow-400 border-yellow-600 h-14"
+                        onClick={handleSwapCards}
                       >
                         Swap Cards
                       </PressButton>

@@ -13,9 +13,10 @@ const PlayingCardList = ({
   selectCard,
 }: PlayingCardListProps) => (
   <div className="flex flex-row gap-4">
-    {cardNames.map((card) => (
+    {cardNames.map((card, index) => (
       <PlayingCard
         cardName={card}
+        key={index}
         isSelected={selectedCards.includes(card as Card)}
         selectCard={selectCard}
       />
