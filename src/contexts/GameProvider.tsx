@@ -55,7 +55,7 @@ export const GameProvider = ({ children }: { children: React.ReactNode }) => {
       setIsWaiting(false);
     }
     console.log("Game Context: ", gameId);
-  }, [subscribeToGameChanges, gameId]);
+  }, [gameId]);
 
   const handleSetGameId = (newGameId: string) => {
     setGameId(newGameId);

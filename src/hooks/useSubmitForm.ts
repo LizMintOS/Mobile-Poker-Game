@@ -3,7 +3,6 @@ import { useAuthProxy } from "../api/auth/AuthProxy";
 import { useGameProxy } from "../api/games/GameProxy";
 import { Game } from "../api/games/types";
 import { usePlayerActions } from "../api/players/functions";
-import { User } from "firebase/auth";
 
 interface UseAuthFormProps {
   isLogin: boolean;
@@ -14,10 +13,6 @@ interface UseAuthFormProps {
 interface AuthFormData {
   email: string;
   password: string;
-}
-
-interface UseGameFormProps {
-  user: User | null;
 }
 
 interface GameFormData {

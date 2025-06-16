@@ -1,8 +1,8 @@
 import { useCallback } from "react";
-import { showErrorToast } from "../../components/common/Toast";
-import { useError } from "../../contexts/ErrorProvider";
-import { mapErrorToConstantErrorMessage } from "../errors/functions";
-import { useLoading } from "../../contexts/LoadingProvider";
+import { showErrorToast } from "../components/common/Toast";
+import { useError } from "../contexts/ErrorProvider";
+import { mapErrorToConstantErrorMessage } from "../api/errors/functions";
+import { useLoading } from "../contexts/LoadingProvider";
 
 export const useHandleApiFunction = () => {
   const { setError, clearError } = useError();
