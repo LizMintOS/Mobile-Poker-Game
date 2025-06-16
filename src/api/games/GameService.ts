@@ -59,7 +59,19 @@ export const GameService = {
     const gameDoc = await getDoc(doc(db, "games", gameId));
 
     if (!gameDoc.exists()) throw { code: "no-game" }; //as LocalError?
-    
+
     return { id: gameId, ...gameDoc.data() } as Game;
+  },
+
+  async updateGame(gameId: string, data: any): Promise<Game | null> {
+    const gameRef = doc(db, "games", gameId);
+
+    await updateDoc(gameRef, data);
+
+    const updatedGame = await getDoc(gameRef);
+
+    const gameData = updatedGame.data();
+
+    return gameData ? { id: gameId, ...gameData } as Game : null;
   },
 };
