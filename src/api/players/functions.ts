@@ -3,10 +3,6 @@ import { useGameProxy } from "../games/GameProxy";
 import { db } from "../../services/firebase";
 import {
   doc,
-  addDoc,
-  collection,
-  updateDoc,
-  DocumentData,
   onSnapshot,
   setDoc,
   increment,
