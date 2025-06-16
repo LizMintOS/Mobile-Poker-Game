@@ -54,4 +54,12 @@ export const GameService = {
 
     return newGame;
   },
+
+  async getGameByGameId(gameId: string): Promise<Game> {
+    const gameDoc = await getDoc(doc(db, "games", gameId));
+
+    if (!gameDoc.exists()) throw { code: "no-game" }; //as LocalError?
+    
+    return { id: gameId, ...gameDoc.data() } as Game;
+  },
 };
