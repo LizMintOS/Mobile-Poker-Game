@@ -10,6 +10,7 @@ import { Player } from "../api/players/types";
 import PlayingCardList from "../components/cards/CardList";
 import PressButton from "../components/common/buttons/PressButton";
 import { Card, addCardsToHand, removeCardsFromDeck } from "../utils/cards";
+import Title from "../components/common/Title";
 
 const Game = () => {
   const { currentUser } = useAuth();
@@ -87,7 +88,10 @@ const Game = () => {
         <div className="bg-white shadow-xl rounded-2xl p-8 w-full mt-4 text-center border-1 border-slate-100/50">
           {isTurn && player && hand ? (
             <>
-              <h1 className="font-semibold text-green-700 mb-8">Your Turn!</h1>
+              <h1 className="font-semibold text-green-700 mb-6">Your Turn!</h1>
+              <h3 className="text-red-500">
+                Refreshing page will reset your turn!
+              </h3>
               <h3>
                 Click cards that you want to swap then press the "Swap Cards"
                 button
