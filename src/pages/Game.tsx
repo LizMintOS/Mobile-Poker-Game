@@ -14,13 +14,13 @@ import { Card, addCardsToHand, removeCardsFromDeck } from "../utils/cards";
 const Game = () => {
   const { currentUser } = useAuth();
   const userId = currentUser!.uid;
-  const { game, gameId, clearGame } = useGame();
-  const { getPlayer, listenToPlayer, updatePlayerTransaction } =
-    usePlayerActions(currentUser);
-  const { updateGame, updateGameTransaction } = useGameActions(currentUser);
-  const [selectedCards, setSelectedCards] = useState<Card[]>([]);
+  const { game, gameId } = useGame();
+  const { getPlayer, updatePlayerTransaction } = usePlayerActions(currentUser);
+  const { updateGameTransaction } = useGameActions(currentUser);
 
+  const [selectedCards, setSelectedCards] = useState<Card[]>([]);
   const [loading, setLoading] = useState(false);
+  const [disabled, setDisabled] = useState(false);
   const [isTurn, setIsTurn] = useState(game?.turnOrder[game.turn] === userId);
   const [player, setPlayer] = useState<Player>({
     id: userId,
@@ -61,6 +61,8 @@ const Game = () => {
   }, [isTurn, gameId, game, userId, hand, deck]);
 
   const handleSwapCards = () => {
+    setLoading(true);
+    setDisabled(true);
     console.log("Swapping cards...", selectedCards, selectedCards.length);
     const removeCards = hand.filter((card) => !selectedCards.includes(card));
     const newCards = addCardsToHand(deck, selectedCards.length);
@@ -69,15 +71,14 @@ const Game = () => {
     setDeck(removeCardsFromDeck(deck, newCards.slice(-selectedCards.length)));
     setSelectedCards([]);
     console.log("New Hand: ", newHand);
+    setLoading(false);
   };
 
   const endTurn = async () => {
-    // update player (hand)
     setLoading(true);
     await updatePlayerTransaction({ hand: hand }, game!.id, userId);
     await updateGameTransaction({ deck: deck, turn: game!.turn++ }, game!.id);
     setLoading(false);
-    // update game (deck, turn #)
   };
 
   return (
@@ -123,8 +124,9 @@ const Game = () => {
                         type="button"
                         style="bg-yellow-400 border-yellow-600 h-14"
                         onClick={handleSwapCards}
+                        disabled={disabled}
                       >
-                        Swap Cards
+                        {disabled ? <p>No more swaps</p> : <p>Swap Cards</p>}
                       </PressButton>
                     </div>
                   </div>
