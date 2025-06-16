@@ -83,4 +83,16 @@ export const GameService = {
       transaction.update(gameRef, data);
     });
   },
+
+  async deleteGame(game: Game): Promise<void> {
+    const playerDocs = await getDocs(collection(db, "games", game.id, "players"));
+
+    const deletePlayers = playerDocs.docs.map((docRef) =>
+      deleteDoc(doc(db, "games", game.id, "players", docRef.id))
+    );
+
+    await Promise.all(deletePlayers);
+
+    await deleteDoc(doc(db, "games", game.id));
+  },
 };
