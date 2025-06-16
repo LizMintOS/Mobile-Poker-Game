@@ -1,5 +1,5 @@
 import { createContext, useContext, useState, useEffect } from "react";
-import { subscribeToAuthChanges } from "../api/auth/functions";
+import { subscribeToAuthChanges  } from "../api/auth/AuthProxy";
 import { User } from "firebase/auth";
 import { LoadingWrapper } from "../components/common/LoadingWrapper";
 
@@ -23,7 +23,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     console.log("Auth Context: ", currentUser?.uid == undefined ? null : currentUser.uid);
 
     return () => unsubscribe();
-  }, [subscribeToAuthChanges, currentUser]);
+  }, []);
 
   return (
     <AuthContext.Provider value={{ currentUser }}>

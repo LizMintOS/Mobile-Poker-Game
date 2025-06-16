@@ -1,5 +1,5 @@
 import { useAuth } from "../../contexts/AuthProvider";
-import { useAuthActions } from "../auth/functions";
+import { useAuthProxy } from "../auth/AuthProxy";
 import { useGameActions } from "../games/functions";
 import { Game } from "../games/types";
 import { usePlayerActions } from "../players/functions";
@@ -29,7 +29,7 @@ export const useAuthForm = ({
   isAnon,
   setIsAnon,
 }: UseAuthFormProps) => {
-  const { loginAnonymouslyUser, registerUser, loginUser } = useAuthActions();
+  const { loginAnonymouslyUser, registerUser, loginUser } = useAuthProxy();
   const handleSubmitForm = async (data: AuthFormData): Promise<void> => {
     if (!isAnon && data.email && data.password) {
       isLogin
