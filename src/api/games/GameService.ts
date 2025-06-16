@@ -74,4 +74,13 @@ export const GameService = {
 
     return gameData ? { id: gameId, ...gameData } as Game : null;
   },
+
+  async updateGameTransaction(gameId: string, data: any): Promise<void> {
+
+    const gameRef = doc(db, "games", gameId);
+
+    await runTransaction(db, async (transaction: Transaction) => {
+      transaction.update(gameRef, data);
+    });
+  },
 };
