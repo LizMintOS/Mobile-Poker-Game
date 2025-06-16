@@ -25,10 +25,7 @@ const Game = () => {
     id: userId,
     hand: [],
   });
-  const [hand, setHand] = useState<Card[]>(() => {
-    const savedHand = localStorage.getItem("hand");
-    return savedHand ? JSON.parse(savedHand) : [];
-  });
+  const [hand, setHand] = useState<Card[]>([]);
   const [deck, setDeck] = useState<Card[]>([]);
 
   const selectCard = (card: Card, isSelected: boolean) => {
@@ -40,41 +37,59 @@ const Game = () => {
   };
 
   console.log("Deck: ", deck);
+  console.log("Hand: ", hand);
+  console.log("Selected: ", selectedCards);
 
   useEffect(() => {
     setLoading(true);
     if (game) {
       setIsTurn(game.turnOrder[game.turn] === userId);
-      setDeck(game.deck);
 
-      const unsubscribe = listenToPlayer(gameId!, userId, (player) => {
-        setPlayer(player);
-        setLoading(false);
-        console.log(isTurn);
+      if (player.hand.length == 0 && isTurn) {
+        const playerPromise = async () => {
+          const playerData: Player = await getPlayer(userId, game.id);
+          setPlayer(playerData);
+        };
 
-        if (hand.length === 0 && player.hand.length > 0) {
-          setHand(player.hand);
-          localStorage.setItem("hand", JSON.stringify(player.hand));
-        }
-      });
+        playerPromise();
+        if (deck.length == 0) setDeck(game.deck);
+      }
 
-      return () => unsubscribe();
+
+      // const unsubscribe = listenToPlayer(gameId!, userId, (player) => {
+      //   setPlayer(player);
+      //   setLoading(false);
+      //   console.log(isTurn);
+
+      //   if (hand.length === 0 && player.hand.length > 0) {
+      //     console.log("Setting first hand...");
+      //     setHand(player.hand);
+      //   }
+      // });
+
+      // return () => unsubscribe();
     }
-  }, [isTurn, gameId, game, userId, hand]);
+  }, [isTurn, gameId, game, userId, hand, deck]);
 
   const handleSwapCards = () => {
-    const removeCards = player.hand.filter(
-      (card) => !selectedCards.includes(card)
-    );
+    console.log("Swapping cards...", selectedCards, selectedCards.length);
+    const removeCards = hand.filter((card) => !selectedCards.includes(card));
     const newHand = removeCards.concat(
       addCardsToHand(game!.deck, selectedCards.length)
     );
     setDeck(
       removeCardsFromDeck(game!.deck, newHand.slice(-selectedCards.length))
     );
-    console.log(deck);
+    setSelectedCards([]);
+    console.log("New Hand: ", newHand);
     setHand(newHand);
   };
+
+  const endTurn = () => {
+    // update player (hand)
+    await 
+    // update game (deck, turn #)
+  }
 
   return (
     <>
