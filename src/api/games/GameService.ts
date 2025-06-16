@@ -30,4 +30,28 @@ export const GameService = {
       }
     });
   },
+
+  async createGame(user: User, deck: Card[], hand: Card[]): Promise<Game> {
+    const gameData = {
+      creatorId: user.uid,
+      hasStarted: false,
+      playerCount: 1,
+      deck,
+      turn: 0,
+      turnOrder: [user.uid],
+      state: "lobby",
+    };
+
+    const gameRef = await addDoc(collection(db, "games"), gameData);
+
+    await setDoc(doc(db, "games", gameRef.id, "players", user.uid), {
+      playerData: { hand },
+    });
+
+    const newGame = { id: gameRef.id, ...gameData } as Game;
+
+    console.log(newGame.id);
+
+    return newGame;
+  },
 };
