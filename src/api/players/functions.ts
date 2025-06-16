@@ -13,6 +13,8 @@ import {
   getDoc,
   deleteDoc,
   arrayUnion,
+  runTransaction,
+  Transaction,
 } from "firebase/firestore";
 
 import { User } from "firebase/auth";
@@ -41,7 +43,7 @@ export const listenToPlayer = (
       callback(playerData);
     } else {
       console.log("No such player document!");
-      callback({id: "", hand: []});
+      callback({ id: "", hand: [] });
     }
   });
 
@@ -110,20 +112,43 @@ export const usePlayerActions = (user: User | null) => {
     [handleApiErrors]
   );
 
-  const deletePlayer = useCallback(
-    handleApiErrors(async (playerId: string, game: Game, clearGame: () => void): Promise<void> => {
-      console.log("Deleting player from game");
+  const updatePlayerTransaction = useCallback(
+    handleApiErrors(async (data: any, gameId: string): Promise<void> => {
+      console.log("Updating transaction...");
 
-      const player = await getPlayer(playerId, game.id);
+      const gameRef = doc(db, "games", gameId);
 
-      await deleteDoc(doc(db, "games", game.id, "players", playerId));
-
-      const newDeck = addCardsToDeck(player.hand, game.deck);
-
-      await updateGame({ playerCount: increment(-1), deck: newDeck }, game.id);
-
-      clearGame();
+      await runTransaction(db, async (transaction: Transaction) => {
+        transaction.update(gameRef, { ...data });
+      });
+      console.log("Updated!");
     }),
+    [handleApiErrors]
+  );
+
+  const deletePlayer = useCallback(
+    handleApiErrors(
+      async (
+        playerId: string,
+        game: Game,
+        clearGame: () => void
+      ): Promise<void> => {
+        console.log("Deleting player from game");
+
+        const player = await getPlayer(playerId, game.id);
+
+        await deleteDoc(doc(db, "games", game.id, "players", playerId));
+
+        const newDeck = addCardsToDeck(player.hand, game.deck);
+
+        await updateGame(
+          { playerCount: increment(-1), deck: newDeck },
+          game.id
+        );
+
+        clearGame();
+      }
+    ),
     [handleApiErrors]
   );
 
