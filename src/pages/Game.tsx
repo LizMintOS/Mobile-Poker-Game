@@ -25,7 +25,10 @@ const Game = () => {
     id: userId,
     hand: [],
   });
-  const [hand, setHand] = useState<Card[]>(player.hand);
+  const [hand, setHand] = useState<Card[]>(() => {
+    const savedHand = localStorage.getItem("hand");
+    return savedHand ? JSON.parse(savedHand) : [];
+  });
   const [deck, setDeck] = useState<Card[]>([]);
 
   const selectCard = (card: Card, isSelected: boolean) => {
@@ -36,26 +39,28 @@ const Game = () => {
     );
   };
 
+  console.log("Deck: ", deck);
+
   useEffect(() => {
     setLoading(true);
     if (game) {
       setIsTurn(game.turnOrder[game.turn] === userId);
+      setDeck(game.deck);
 
       const unsubscribe = listenToPlayer(gameId!, userId, (player) => {
         setPlayer(player);
-        setHand(player.hand);
-        setDeck(game.deck);
-        console.log(player);
         setLoading(false);
-      });
+        console.log(isTurn);
 
-      console.log(isTurn);
-      console.log(player.hand);
-      console.log("Deck: ",deck);
+        if (hand.length === 0 && player.hand.length > 0) {
+          setHand(player.hand);
+          localStorage.setItem("hand", JSON.stringify(player.hand));
+        }
+      });
 
       return () => unsubscribe();
     }
-  }, [isTurn, gameId, game, userId]);
+  }, [isTurn, gameId, game, userId, hand]);
 
   const handleSwapCards = () => {
     const removeCards = player.hand.filter(
@@ -64,7 +69,9 @@ const Game = () => {
     const newHand = removeCards.concat(
       addCardsToHand(game!.deck, selectedCards.length)
     );
-    setDeck(removeCardsFromDeck(game!.deck, newHand.slice(-selectedCards.length)))
+    setDeck(
+      removeCardsFromDeck(game!.deck, newHand.slice(-selectedCards.length))
+    );
     console.log(deck);
     setHand(newHand);
   };

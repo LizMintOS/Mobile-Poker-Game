@@ -138,28 +138,30 @@ export const useGameActions = (user: User | null) => {
   );
 
   const deleteGame = useCallback(
-    handleApiErrors(async (game: Game, clearGame: () => void): Promise<void> => {
-      console.log("Deleting game with ID:", game.id);
-      const gameRef = doc(db, "games", game.id);
-      const playerSubcollectionRef = collection(
-        db,
-        "games",
-        game.id,
-        "players"
-      );
-      const playerQuery = await getDocs(query(playerSubcollectionRef));
+    handleApiErrors(
+      async (game: Game, clearGame: () => void): Promise<void> => {
+        console.log("Deleting game with ID:", game.id);
+        const gameRef = doc(db, "games", game.id);
+        const playerSubcollectionRef = collection(
+          db,
+          "games",
+          game.id,
+          "players"
+        );
+        const playerQuery = await getDocs(query(playerSubcollectionRef));
 
-      const deletePlayers = playerQuery.docs.map((playerDocRef) => {
-        deleteDoc(doc(db, "games", game.id, "players", playerDocRef.id));
-      });
+        const deletePlayers = playerQuery.docs.map((playerDocRef) => {
+          deleteDoc(doc(db, "games", game.id, "players", playerDocRef.id));
+        });
 
-      await Promise.all(deletePlayers);
-      console.log("Players subcollection deleted.");
+        await Promise.all(deletePlayers);
+        console.log("Players subcollection deleted.");
 
-      await deleteDoc(gameRef);
-      clearGame();
-      console.log("Game deleted successfully");
-    }),
+        await deleteDoc(gameRef);
+        clearGame();
+        console.log("Game deleted successfully");
+      }
+    ),
     [handleApiErrors]
   );
 
