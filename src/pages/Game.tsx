@@ -134,7 +134,7 @@ const Game = () => {
               </LoadingWrapper>
             </>
           ) : (
-            <h1>Waiting for players to finish...</h1>
+            <h1>Waiting for player {game ? game.turn + 1 : ""} to finish...</h1>
           )}
         </div>
       </div>
