@@ -77,8 +77,12 @@ const Game = () => {
 
   const endTurn = async () => {
     setLoading(true);
+    console.log("Ending turn...", )
     await updatePlayerTransaction({ hand: hand }, game!.id, userId);
-    await updateGameTransaction({ deck: deck, turn: game!.turn++ }, game!.id);
+    const turnIncrement = game!.turn++;
+    console.log("Updating game...")
+    await updateGameTransaction({ deck: deck, turn: turnIncrement }, game!.id);
+    console.log("Turn ended");
     setLoading(false);
   };
 
@@ -89,13 +93,17 @@ const Game = () => {
           {isTurn && player && hand ? (
             <>
               <h1 className="font-semibold text-green-700 mb-6">Your Turn!</h1>
-              <h3 className="text-red-500">
+              <h3 className="text-green-500 italic">
                 Refreshing page will reset your turn!
               </h3>
-              <h3>
-                Click cards that you want to swap then press the "Swap Cards"
-                button
-              </h3>
+              <div>
+                <p>
+                  Click cards that you want to swap then press the "Swap Cards"
+                  button.{" "}
+                </p>
+
+                <p className="italic mb-2">Careful! You can only swap once.</p>
+              </div>
               <h3 className="mb-4">When you've finished, press end turn</h3>
               <LoadingWrapper
                 loading={loading}
@@ -121,6 +129,7 @@ const Game = () => {
                       <PressButton
                         type="submit"
                         style="bg-green-600 border-green-700 h-14"
+                        onClick={endTurn}
                       >
                         End Turn
                       </PressButton>
