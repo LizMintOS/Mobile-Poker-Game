@@ -30,7 +30,7 @@ const GameLobby = () => {
 
   const startGame = async () => {
     setLoading(true);
-    const gameStart = await updateGameTransaction({hasStarted: true}, gameId!);
+    const gameStart = await updateGameTransaction({ hasStarted: true }, gameId!);
     if (gameStart) {
       setLoading(false);
       navigate(ROUTES.GAME(gameId!));

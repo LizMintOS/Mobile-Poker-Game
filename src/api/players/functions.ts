@@ -101,28 +101,32 @@ export const usePlayerActions = (user: User | null) => {
         if (!playerDoc.exists()) {
           throw "Player not found";
         }
+        const playerData = playerDoc.data();
 
-        const playerData = { id: playerId, ...playerDoc.data() } as Player;
+        const player: Player = { id: playerId, hand: playerData.playerData.hand };
 
-        console.log("Game data fetched:", playerData);
+        console.log("Game data fetched:", player);
 
-        return playerData;
+        return player;
       }
     ),
     [handleApiErrors]
   );
 
   const updatePlayerTransaction = useCallback(
-    handleApiErrors(async (data: any, gameId: string): Promise<void> => {
-      console.log("Updating transaction...");
+    handleApiErrors(
+      async (data: any, gameId: string, playerId: string): Promise<void> => {
+        console.log("Updating transaction...");
 
-      const gameRef = doc(db, "games", gameId);
+        const playerRef = doc(db, "games", gameId, "players", playerId);
 
-      await runTransaction(db, async (transaction: Transaction) => {
-        transaction.update(gameRef, { ...data });
-      });
-      console.log("Updated!");
-    }),
+        await runTransaction(db, async (transaction: Transaction) => {
+          transaction.update(playerRef, { ...data });
+        });
+
+        console.log("Updated!");
+      }
+    ),
     [handleApiErrors]
   );
 
@@ -157,5 +161,6 @@ export const usePlayerActions = (user: User | null) => {
     addPlayer,
     getPlayer,
     deletePlayer,
+    updatePlayerTransaction,
   };
 };

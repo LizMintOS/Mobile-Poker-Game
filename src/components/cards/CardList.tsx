@@ -16,7 +16,7 @@ const PlayingCardList = ({
     {cardNames.map((card, index) => (
       <PlayingCard
         cardName={card}
-        key={index}
+        key={`${card}-${index}`}
         isSelected={selectedCards.includes(card as Card)}
         selectCard={selectCard}
       />

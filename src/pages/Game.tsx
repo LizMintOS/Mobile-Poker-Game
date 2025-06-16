@@ -15,7 +15,8 @@ const Game = () => {
   const { currentUser } = useAuth();
   const userId = currentUser!.uid;
   const { game, gameId, clearGame } = useGame();
-  const { getPlayer, listenToPlayer } = usePlayerActions(currentUser);
+  const { getPlayer, listenToPlayer, updatePlayerTransaction } =
+    usePlayerActions(currentUser);
   const { updateGame, updateGameTransaction } = useGameActions(currentUser);
   const [selectedCards, setSelectedCards] = useState<Card[]>([]);
 
@@ -37,59 +38,47 @@ const Game = () => {
   };
 
   console.log("Deck: ", deck);
-  console.log("Hand: ", hand);
-  console.log("Selected: ", selectedCards);
+  console.log("Hand: ", hand ? hand : null);
+  console.log("Selected Cards:", selectedCards);
+  console.log("Turn: ", isTurn);
 
   useEffect(() => {
     setLoading(true);
     if (game) {
       setIsTurn(game.turnOrder[game.turn] === userId);
 
-      if (player.hand.length == 0 && isTurn) {
+      if (hand.length == 0 && isTurn) {
         const playerPromise = async () => {
           const playerData: Player = await getPlayer(userId, game.id);
           setPlayer(playerData);
         };
 
-        playerPromise();
+        playerPromise().then(() => setHand(player.hand));
         if (deck.length == 0) setDeck(game.deck);
       }
-
-
-      // const unsubscribe = listenToPlayer(gameId!, userId, (player) => {
-      //   setPlayer(player);
-      //   setLoading(false);
-      //   console.log(isTurn);
-
-      //   if (hand.length === 0 && player.hand.length > 0) {
-      //     console.log("Setting first hand...");
-      //     setHand(player.hand);
-      //   }
-      // });
-
-      // return () => unsubscribe();
     }
+    setLoading(false);
   }, [isTurn, gameId, game, userId, hand, deck]);
 
   const handleSwapCards = () => {
     console.log("Swapping cards...", selectedCards, selectedCards.length);
     const removeCards = hand.filter((card) => !selectedCards.includes(card));
-    const newHand = removeCards.concat(
-      addCardsToHand(game!.deck, selectedCards.length)
-    );
-    setDeck(
-      removeCardsFromDeck(game!.deck, newHand.slice(-selectedCards.length))
-    );
+    const newCards = addCardsToHand(deck, selectedCards.length);
+    const newHand = removeCards.concat(newCards);
+    setHand(newHand);
+    setDeck(removeCardsFromDeck(deck, newCards.slice(-selectedCards.length)));
     setSelectedCards([]);
     console.log("New Hand: ", newHand);
-    setHand(newHand);
   };
 
-  const endTurn = () => {
+  const endTurn = async () => {
     // update player (hand)
-    await 
+    setLoading(true);
+    await updatePlayerTransaction({ hand: hand }, game!.id, userId);
+    await updateGameTransaction({ deck: deck, turn: game!.turn++ }, game!.id);
+    setLoading(false);
     // update game (deck, turn #)
-  }
+  };
 
   return (
     <>
