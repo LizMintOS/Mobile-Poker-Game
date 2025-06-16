@@ -1,1 +1,3 @@
-jest.mock("../../services/firebase");
+module.exports = {
+  setupFilesAfterEnv: ["<rootDir>/setupTests.ts"],
+};
