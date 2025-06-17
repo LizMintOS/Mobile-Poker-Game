@@ -255,5 +255,21 @@ describe("GameService", () => {
     const mockPlayerDocRef1 = {};
     const mockPlayerDocRef2 = {};
     const mockGameDocRef = {};
+
+    (firestore.doc as jest.Mock)
+      .mockReturnValueOnce(mockPlayerDocRef1)
+      .mockReturnValueOnce(mockPlayerDocRef2)
+      .mockReturnValueOnce(mockGameDocRef);
+
+    (firestore.deleteDoc as jest.Mock)
+      .mockResolvedValueOnce(undefined)
+      .mockRejectedValueOnce(new Error("Failed to delete player2"))
+      .mockResolvedValueOnce(undefined);
+
+    await expect(GameService.deleteGame(game as any)).rejects.toThrow(
+      "Failed to delete player2"
+    );
+
+    expect(firestore.deleteDoc).toHaveBeenCalledTimes(2);
   });
 });
