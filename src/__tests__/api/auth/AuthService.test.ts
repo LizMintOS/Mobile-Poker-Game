@@ -34,5 +34,42 @@ describe("AuthService", () => {
       );
       expect(response.user.uid).toBe("12345");
     });
+
+    it("should fail if registration fails", async () => {
+      (createUserWithEmailAndPassword as jest.Mock).mockRejectedValue(
+        new Error("Registration failed")
+      );
+
+      await expect(
+        AuthService.register("test@example.com", "password123")
+      ).rejects.toThrow("Registration failed");
+
+      expect(createUserWithEmailAndPassword).toHaveBeenCalledWith(
+        auth,
+        "test@example.com",
+        "password123"
+      );
+    });
+  });
+
+  describe("login", () => {
+    it("should successfully log in a user", async () => {
+      const mockUserCredential = { user: { uid: "12345" } };
+      (signInWithEmailAndPassword as jest.Mock).mockResolvedValue(
+        mockUserCredential
+      );
+
+      const response = await AuthService.login(
+        "test@example.com",
+        "password123"
+      );
+
+      expect(signInWithEmailAndPassword).toHaveBeenCalledWith(
+        expect.anything(),
+        "test@example.com",
+        "password123"
+      );
+      expect(response.user.uid).toBe("12345");
+    });
   });
 });
