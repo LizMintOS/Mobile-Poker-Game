@@ -15,6 +15,7 @@ const Game = () => {
   const { currentUser } = useAuth();
   const userId = currentUser!.uid;
   const { game, gameId } = useGame();
+  console.log("Game object in component: ", game);
   const { getPlayer, updatePlayerTransaction } = usePlayerActions(currentUser);
   const { updateGameTransaction } = useGameProxy(currentUser);
 
@@ -55,10 +56,11 @@ const Game = () => {
 
         playerPromise().then(() => setHand(player.hand));
         if (deck.length == 0) setDeck(game.deck);
+        console.log(player);
       }
     }
     setLoading(false);
-  }, [isTurn, gameId, game, userId, hand, deck]);
+  }, [gameId, game, userId, hand, deck]);
 
   const handleSwapCards = () => {
     setLoading(true);
@@ -78,8 +80,8 @@ const Game = () => {
     setLoading(true);
     console.log("Ending turn...", )
     await updatePlayerTransaction({ hand: hand }, game!.id, userId);
-    const turnIncrement = game!.turn++;
-    console.log("Updating game...")
+    const turnIncrement = game!.turn + 1;
+    console.log("Updating game...");
     await updateGameTransaction(game!.id, { deck: deck, turn: turnIncrement });
     console.log("Turn ended");
     setLoading(false);

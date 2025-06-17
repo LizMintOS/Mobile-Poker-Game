@@ -18,6 +18,8 @@ export const AuthService = {
   loginAnonymously: () => signInAnonymously(auth),
 
   onAuthChange: (callback: (user: any) => void) => {
-    return auth.onAuthStateChanged(callback);
+    return auth.onAuthStateChanged((user) => {
+      callback(user);
+    });
   },
 };

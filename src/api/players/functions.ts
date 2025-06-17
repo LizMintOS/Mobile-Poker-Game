@@ -48,10 +48,10 @@ export const listenToPlayer = (
 
 export const usePlayerActions = (user: User | null) => {
   const { handleApiErrors } = useHandleApiFunction();
-  const { updateGame } = useGameProxy(user);
+  const { updateGameTransaction } = useGameProxy(user);
 
   const addPlayer = useCallback(
-    handleApiErrors(async (game: Game): Promise<void | Game> => {
+    handleApiErrors(async (game: Game): Promise<void> => {
       const path = `/games/${game.id}/players/${user!.uid}`;
       const hand = addCardsToHand(game.deck, 5);
       console.log("Creating player for game: ", game.id);
@@ -67,13 +67,11 @@ export const usePlayerActions = (user: User | null) => {
 
         console.log("Player created");
 
-        const newGame: Game = (await updateGame(game.id, {
+        await updateGameTransaction(game.id, {
           playerCount: increment(1),
           deck: removeCardsFromDeck(game.deck, hand),
           turnOrder: arrayUnion(user!.uid),
-        })) as Game;
-
-        return newGame;
+        });
       } else {
         console.log("Already in game");
         throw "Already in game";
@@ -101,7 +99,7 @@ export const usePlayerActions = (user: User | null) => {
           hand: playerData.playerData.hand,
         };
 
-        console.log("Game data fetched:", player);
+        console.log("Player data fetched:", player);
 
         return player;
       }
@@ -130,20 +128,15 @@ export const usePlayerActions = (user: User | null) => {
     handleApiErrors(
       async (
         playerId: string,
-        game: Game,
+        gameId: string,
         clearGame: () => void
       ): Promise<void> => {
         console.log("Deleting player from game");
 
-        const player = await getPlayer(playerId, game.id);
+        await deleteDoc(doc(db, "games", gameId, "players", playerId));
 
-        await deleteDoc(doc(db, "games", game.id, "players", playerId));
-
-        const newDeck = addCardsToDeck(player.hand, game.deck);
-
-        await updateGame(game.id, {
+        await updateGameTransaction(gameId, {
           playerCount: increment(-1),
-          deck: newDeck,
         });
 
         clearGame();

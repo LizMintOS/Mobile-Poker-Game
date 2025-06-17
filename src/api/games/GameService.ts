@@ -79,17 +79,17 @@ export const GameService = {
     });
   },
 
-  async deleteGame(game: Game): Promise<void> {
+  async deleteGame(gameId: string): Promise<void> {
     const playerDocs = await getDocs(
-      collection(db, "games", game.id, "players")
+      collection(db, "games", gameId, "players")
     );
 
     const deletePlayers = playerDocs.docs.map((docRef) =>
-      deleteDoc(doc(db, "games", game.id, "players", docRef.id))
+      deleteDoc(doc(db, "games", gameId, "players", docRef.id))
     );
 
     await Promise.all(deletePlayers);
 
-    await deleteDoc(doc(db, "games", game.id));
+    await deleteDoc(doc(db, "games", gameId));
   },
 };

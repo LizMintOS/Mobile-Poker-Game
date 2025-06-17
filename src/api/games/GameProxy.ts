@@ -27,8 +27,8 @@ export const useGameProxy = (user: User | null) => {
       GameService.updateGameTransaction(gameId, data)
     ),
 
-    deleteGame: handleApiErrors((game: Game, clearGame: () => void) =>
-      GameService.deleteGame(game).then(clearGame)
+    deleteGame: handleApiErrors((gameId: string, clearGame: () => void) =>
+      GameService.deleteGame(gameId).then(clearGame)
     ),
   };
 };
