@@ -65,11 +65,27 @@ describe("AuthService", () => {
       );
 
       expect(signInWithEmailAndPassword).toHaveBeenCalledWith(
-        expect.anything(),
+        auth,
         "test@example.com",
         "password123"
       );
       expect(response.user.uid).toBe("12345");
+    });
+
+    it("should fail if login fails", async () => {
+      (signInWithEmailAndPassword as jest.Mock).mockRejectedValue(
+        new Error("Login failed")
+      );
+
+      await expect(
+        AuthService.login("test@example.com", "wrongpassword")
+      ).rejects.toThrow("Login failed");
+
+      expect(signInWithEmailAndPassword).toHaveBeenCalledWith(
+        auth,
+        "test@example.com",
+        "wrongpassword"
+      );
     });
   });
 });
