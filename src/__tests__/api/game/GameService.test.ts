@@ -243,4 +243,17 @@ describe("GameService", () => {
       expect(firestore.deleteDoc).toHaveBeenNthCalledWith(3, mockGameRef);
     });
   });
+
+  it("should throw an error if deleting any player or game fails", async () => {
+    const game = { id: "game123" };
+    const mockDocs = [{ id: "player1" }, { id: "player2" }];
+
+    const mockCollectionRef = {};
+    (firestore.collection as jest.Mock).mockReturnValue(mockCollectionRef);
+    (firestore.getDocs as jest.Mock).mockResolvedValueOnce({ docs: mockDocs });
+
+    const mockPlayerDocRef1 = {};
+    const mockPlayerDocRef2 = {};
+    const mockGameDocRef = {};
+  });
 });
