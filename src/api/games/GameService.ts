@@ -16,6 +16,7 @@ import {
 import { User } from "firebase/auth";
 import { Game } from "./types";
 import { Card } from "../../utils/cards";
+import { LocalError } from "../errors/types";
 
 export const GameService = {
   listenToGame(gameId: string, callback: (game: Game | null) => void) {
@@ -54,7 +55,7 @@ export const GameService = {
   async getGameByGameId(gameId: string): Promise<Game> {
     const gameDoc = await getDoc(doc(db, "games", gameId));
 
-    if (!gameDoc.exists()) throw { code: "no-game" }; //as LocalError?
+    if (!gameDoc.exists()) throw { code: "no-game" } as LocalError;
 
     return { id: gameId, ...gameDoc.data() } as Game;
   },
