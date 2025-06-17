@@ -8,3 +8,4 @@ import { TextEncoder, TextDecoder } from "util";
 Object.assign(global, { TextDecoder, TextEncoder });
 
 jest.mock("src/services/firebase");
+jest.mock("firebase/firestore");
