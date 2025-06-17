@@ -5,6 +5,14 @@
 // import '@testing-library/jest-dom';
 import "@testing-library/jest-dom";
 import { TextEncoder, TextDecoder } from "util";
-Object.assign(global, { TextDecoder, TextEncoder });
+import fetch, { Headers, Request, Response } from "node-fetch";
+Object.assign(global, {
+  TextDecoder,
+  fetch,
+  Headers,
+  Request,
+  Response,
+  TextEncoder,
+});
 
 jest.mock("src/services/firebase");

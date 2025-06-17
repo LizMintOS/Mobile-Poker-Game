@@ -1,6 +1,6 @@
 module.exports = {
   setupFilesAfterEnv: ["<rootDir>/setupTests.ts"],
-  testEnvironment: "jsdom",
+  testEnvironment: "node",
   transform: {
     "^.+\\.jsx?$": "babel-jest",
     "^.+\\.tsx?$": "babel-jest",
@@ -10,4 +10,7 @@ module.exports = {
   moduleNameMapper: {
     "^src/(.*)$": "<rootDir>/src/$1",
   },
+  moduleFileExtensions: ['js', 'jsx', 'ts', 'tsx'],
+  testPathIgnorePatterns: ['/node_modules/', '/dist/'],
+  transformIgnorePatterns: ['node_modules/(?!.*@vite|react)/'],
 };

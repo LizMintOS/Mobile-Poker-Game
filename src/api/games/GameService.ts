@@ -48,8 +48,6 @@ export const GameService = {
 
     const newGame = { id: gameRef.id, ...gameData } as Game;
 
-    console.log(newGame.id);
-
     return newGame;
   },
 

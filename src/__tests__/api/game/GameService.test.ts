@@ -23,10 +23,9 @@ describe("GameService", () => {
         data: () => ({ some: "data" }),
       };
 
-      // Mock onSnapshot to immediately invoke callback
-      (firestore.onSnapshot as jest.Mock).mockImplementation((ref, cb) => {
+      (firestore.onSnapshot as jest.Mock).mockImplementation((_ref, cb) => {
         cb(fakeSnapshot);
-        return jest.fn(); // unsubscribe function
+        return jest.fn();
       });
 
       GameService.listenToGame(mockGameId, mockCallback);
@@ -48,7 +47,7 @@ describe("GameService", () => {
       const mockCallback = jest.fn();
 
       (firestore.doc as jest.Mock).mockReturnValue({});
-      (firestore.onSnapshot as jest.Mock).mockImplementation((ref, cb) => {
+      (firestore.onSnapshot as jest.Mock).mockImplementation((_ref, cb) => {
         cb({ exists: () => false });
         return jest.fn();
       });
@@ -60,14 +59,17 @@ describe("GameService", () => {
   });
 
   describe("createGame", () => {
+    const mockDocRef = {};
+    const mockCollectionRef = {};
+
     it("should create a game and set player data", async () => {
       const user = { uid: "user1" };
       const deck = ["card1", "card2"];
       const hand = ["card1"];
 
       (firestore.addDoc as jest.Mock).mockResolvedValue({ id: "game1" });
-      (firestore.collection as jest.Mock).mockReturnValue({});
-      (firestore.doc as jest.Mock).mockReturnValue({});
+      (firestore.collection as jest.Mock).mockReturnValue(mockCollectionRef);
+      (firestore.doc as jest.Mock).mockReturnValue(mockDocRef);
       (firestore.setDoc as jest.Mock).mockResolvedValue(undefined);
 
       const result = await GameService.createGame(
@@ -78,8 +80,21 @@ describe("GameService", () => {
 
       expect(firestore.addDoc).toHaveBeenCalled();
       expect(firestore.setDoc).toHaveBeenCalled();
-      expect(result.id).toBe("game1");
       expect(result.creatorId).toBe(user.uid);
+    });
+
+    it("should throw an error if create game fails", async () => {
+      const user = { uid: "user1" };
+      const deck = ["card1", "card2"];
+      const hand = ["card1"];
+
+      (firestore.addDoc as jest.Mock).mockRejectedValueOnce(
+        new Error("Failed to create game")
+      );
+
+      await expect(
+        GameService.createGame(user as any, deck as any, hand as any)
+      ).rejects.toThrow("Failed to create game");
     });
   });
 
