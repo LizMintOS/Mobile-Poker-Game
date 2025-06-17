@@ -21,7 +21,7 @@ export const PlayerService = {
     game: Game,
     user: User,
     hand: Card[]
-  ): Promise<void | string> {
+  ): Promise<string> {
     const path = `/games/${game.id}/players/${user.uid}`;
 
     const playerDoc = await getDoc(doc(db, path));
@@ -32,8 +32,19 @@ export const PlayerService = {
       });
 
       return "success";
-    } else {
-      throw new Error("Already in game");
     }
+    return "Already in game";
+  },
+
+  async getPlayerData(playerId: string, gameId: string): Promise<Player | string> {
+    const playerDoc = await getDoc(
+      doc(db, "games", gameId, "players", playerId)
+    );
+    if (!playerDoc.exists()) {
+      return "Player not found";
+    }
+
+    const playerData = playerDoc.data();
+    return { id: playerId, hand: playerData.playerData.hand } as Player;
   },
 };
