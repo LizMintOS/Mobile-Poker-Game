@@ -88,4 +88,14 @@ describe("AuthService", () => {
       );
     });
   });
+
+  describe("logout", () => {
+    it("should successfully log out", async () => {
+      (signOut as jest.Mock).mockResolvedValue(undefined);
+
+      await AuthService.logout();
+
+      expect(signOut).toHaveBeenCalledWith(auth);
+    });
+  });
 });
