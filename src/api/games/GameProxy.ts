@@ -8,6 +8,7 @@ import { Game } from "./types";
 
 export const useGameProxy = (user: User | null) => {
   const { handleApiErrors } = useHandleApiFunction();
+  const gameCache = new Map<string, Game>();
 
   return {
     createGame: handleApiErrors((deck: Card[], hand: Card[]): Promise<Game> => {
@@ -15,9 +16,15 @@ export const useGameProxy = (user: User | null) => {
       return GameService.createGame(user, deck, hand);
     }),
 
-    getGameByGameId: handleApiErrors((gameId: string) =>
-      GameService.getGameByGameId(gameId)
-    ),
+    getGameByGameId: handleApiErrors(async (gameId: string) => {
+      if (gameCache.has(gameId)) {
+        return gameCache.get(gameId) as Game;
+      }
+
+      const game = await GameService.getGameByGameId(gameId);
+      gameCache.set(gameId, game);
+      return game;
+    }),
 
     updateGame: handleApiErrors((gameId: string, data: any) =>
       GameService.updateGame(gameId, data)

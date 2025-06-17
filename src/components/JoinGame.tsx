@@ -9,7 +9,6 @@ import { useLoading } from "../contexts/LoadingProvider";
 
 import { useGameForm } from "../hooks/useSubmitForm";
 import { ROUTES } from "../routes/routes";
-import { Game } from "../api/games/types";
 
 type FormValues = {
   gameId: string;
@@ -17,7 +16,7 @@ type FormValues = {
 };
 
 const JoinGameComponent = () => {
-  const { setGameId, game, gameId } = useGame();
+  const { setGameId, clearGame } = useGame();
   const { error, clearError } = useError();
   const { handleSubmitForm } = useGameForm();
   const { loading, setLoading } = useLoading();
@@ -57,12 +56,20 @@ const JoinGameComponent = () => {
 
     handleErrors();
 
-    await handleSubmitForm(data);
-    if (gameId) {
-      console.log("JOINED", gameId);
-      // setGameId(game.id);
-      // console.log("New Game ID: ", game.id);
-      navigate(ROUTES.GAME_LOBBY(gameId), { replace: true });
+    clearGame();
+
+    const newGameId = await handleSubmitForm(data);
+    if (newGameId) {
+      console.log("JOINED", newGameId);
+      setGameId(newGameId);
+      console.log("New Game ID: ", newGameId);
+      const newId = localStorage.getItem("gameId");
+      if (newId) {
+        console.log("Got new ID: ", newId)
+        setGameId(newId);
+        
+        navigate(ROUTES.GAME_LOBBY(newId), { replace: true });
+      }
     }
 
     setLoading(false);
@@ -82,6 +89,7 @@ const JoinGameComponent = () => {
           disabled={isSubmitting || isLoading || !!error}
           label="Join"
         />
+        <h2>Please refresh page after you join!</h2>
       </form>
     </div>
   );
