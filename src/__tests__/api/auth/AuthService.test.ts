@@ -106,4 +106,16 @@ describe("AuthService", () => {
       expect(signOut).toHaveBeenCalledWith(auth);
     });
   });
+
+  describe("loginAnonymously", () => {
+    it("should successfully log in anonymously", async () => {
+      const mockUserCredential = { user: { uid: "anon123" } };
+      (signInAnonymously as jest.Mock).mockResolvedValue(mockUserCredential);
+
+      const response = await AuthService.loginAnonymously();
+
+      expect(signInAnonymously).toHaveBeenCalledWith(auth);
+      expect(response.user.uid).toBe("anon123");
+    });
+  });
 });
