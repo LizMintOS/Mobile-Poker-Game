@@ -185,19 +185,62 @@ describe("GameService", () => {
   });
 
   describe("deleteGame", () => {
+    const mockCollectionRef = {};
+    const mockFirstPlayerRef = {};
+    const mockSecondPlayerRef = {};
+    const mockGameRef = {};
+
     it("should delete players and then the game", async () => {
       const game = { id: "game123" };
       const mockDocs = [{ id: "player1" }, { id: "player2" }];
 
-      (firestore.collection as jest.Mock).mockReturnValue({});
+      (firestore.collection as jest.Mock).mockReturnValue(mockCollectionRef);
+
       (firestore.getDocs as jest.Mock).mockResolvedValue({ docs: mockDocs });
-      (firestore.doc as jest.Mock).mockReturnValue({});
+
+      (firestore.doc as jest.Mock)
+        .mockReturnValueOnce(mockFirstPlayerRef)
+        .mockReturnValueOnce(mockSecondPlayerRef)
+        .mockReturnValueOnce(mockGameRef);
+
       (firestore.deleteDoc as jest.Mock).mockResolvedValue(undefined);
 
       await GameService.deleteGame(game as any);
 
-      expect(firestore.getDocs).toHaveBeenCalled();
-      expect(firestore.deleteDoc).toHaveBeenCalledTimes(mockDocs.length + 1); // players + game
+      expect(firestore.collection).toHaveBeenCalledWith(
+        db,
+        "games",
+        game.id,
+        "players"
+      );
+      expect(firestore.getDocs).toHaveBeenCalledWith(mockCollectionRef);
+      expect(firestore.doc).toHaveBeenNthCalledWith(
+        1,
+        db,
+        "games",
+        game.id,
+        "players",
+        "player1"
+      );
+      expect(firestore.doc).toHaveBeenNthCalledWith(
+        2,
+        db,
+        "games",
+        game.id,
+        "players",
+        "player2"
+      );
+      expect(firestore.doc).toHaveBeenNthCalledWith(3, db, "games", game.id);
+      expect(firestore.deleteDoc).toHaveBeenCalledTimes(mockDocs.length + 1);
+      expect(firestore.deleteDoc).toHaveBeenNthCalledWith(
+        1,
+        mockFirstPlayerRef
+      );
+      expect(firestore.deleteDoc).toHaveBeenNthCalledWith(
+        2,
+        mockSecondPlayerRef
+      );
+      expect(firestore.deleteDoc).toHaveBeenNthCalledWith(3, mockGameRef);
     });
   });
 });
