@@ -37,7 +37,6 @@ export const GameProvider = ({ children }: { children: React.ReactNode }) => {
 
   useEffect(() => {
     setIsWaiting(true);
-    console.log(gameId);
     if (gameId) {
       const unsubscribe = subscribeToGameChanges(gameId, (game) => {
         if (!game) {

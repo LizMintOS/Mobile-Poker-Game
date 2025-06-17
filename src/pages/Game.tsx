@@ -51,10 +51,15 @@ const Game = () => {
       if (hand.length == 0 && isTurn) {
         const playerPromise = async () => {
           const playerData: Player = await getPlayer(userId, game.id);
-          setPlayer(playerData);
+          return playerData;
+          // setPlayer(playerData);
         };
 
-        playerPromise().then(() => setHand(player.hand));
+        playerPromise().then((playerData) => {
+          setPlayer(playerData);
+          setHand(playerData.hand);
+        });
+        
         if (deck.length == 0) setDeck(game.deck);
         console.log(player);
       }

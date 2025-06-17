@@ -11,9 +11,11 @@ const AuthRedirectGuard = () => {
 
   useEffect(() => {
     if (!currentUser) {
+      console.log("Navigating to auth page")
       navigate(ROUTES.AUTH, { replace: true });
     } else {
       if (pathname === ROUTES.AUTH) {
+        console.log("Navigating to home")
         navigate(ROUTES.HOME, { replace: true });
       }
     }

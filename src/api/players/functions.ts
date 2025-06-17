@@ -135,11 +135,17 @@ export const usePlayerActions = (user: User | null) => {
 
         await deleteDoc(doc(db, "games", gameId, "players", playerId));
 
+        console.log("Player deleted. Updating player count...")
+
         await updateGameTransaction(gameId, {
           playerCount: increment(-1),
         });
 
+        console.log("Player count updated. Clearing game...")
+
         clearGame();
+
+        console.log("Game cleared")
       }
     ),
     [handleApiErrors]

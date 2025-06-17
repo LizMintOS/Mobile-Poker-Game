@@ -17,7 +17,7 @@ type FormValues = {
 };
 
 const JoinGameComponent = () => {
-  const { setGameId } = useGame();
+  const { setGameId, game, gameId } = useGame();
   const { error, clearError } = useError();
   const { handleSubmitForm } = useGameForm();
   const { loading, setLoading } = useLoading();
@@ -57,17 +57,15 @@ const JoinGameComponent = () => {
 
     handleErrors();
 
-    const newGame: Game = await handleSubmitForm(data) as Game;
-
-    console.log(newGame.id);
-
-    if (newGame) {
-      setLoading(false)
-      console.log("JOINED", newGame.playerCount);
-      setGameId(newGame.id)
-      console.log("New Game ID: ", newGame.id);
-      navigate(ROUTES.GAME_LOBBY(newGame.id), { replace: true });
+    await handleSubmitForm(data);
+    if (gameId) {
+      console.log("JOINED", gameId);
+      // setGameId(game.id);
+      // console.log("New Game ID: ", game.id);
+      navigate(ROUTES.GAME_LOBBY(gameId), { replace: true });
     }
+
+    setLoading(false);
   };
 
   return (

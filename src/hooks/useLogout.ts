@@ -22,10 +22,12 @@ const useLogout = () => {
       } else {
         console.log("Removing Player")
         await deletePlayer(currentUser!.uid, id, clearGame);
+        console.log("Player removed. Logging out user...")
       }
     }
     await logoutUser();
-  }, [logoutUser, currentUser, game, deleteGame, deletePlayer, clearGame]);
+    console.log("Logged out")
+  }, [currentUser, game, deleteGame, deletePlayer, clearGame]);
 
   return { handleLogout };
 };

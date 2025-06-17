@@ -5,17 +5,17 @@ export const useAuthProxy = () => {
   const { handleApiErrors } = useHandleApiFunction();
 
   return {
-    registerUser: handleApiErrors((email: string, password: string) =>
-      AuthService.register(email, password)
+    registerUser: handleApiErrors(async (email: string, password: string) =>
+      await AuthService.register(email, password)
     ),
 
-    loginUser: handleApiErrors((email: string, password: string) =>
-      AuthService.login(email, password)
+    loginUser: handleApiErrors(async (email: string, password: string) =>
+      await AuthService.login(email, password)
     ),
 
-    logoutUser: handleApiErrors(() => AuthService.logout()),
+    logoutUser: handleApiErrors(async () => await AuthService.logout()),
 
-    loginAnonymouslyUser: handleApiErrors(() => AuthService.loginAnonymously()),
+    loginAnonymouslyUser: handleApiErrors(async () => await AuthService.loginAnonymously()),
   };
 };
 

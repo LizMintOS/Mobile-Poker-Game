@@ -3,6 +3,7 @@ import { useAuthProxy } from "../api/auth/AuthProxy";
 import { useGameProxy } from "../api/games/GameProxy";
 import { Game } from "../api/games/types";
 import { usePlayerActions } from "../api/players/functions";
+import { useGame } from "src/contexts/GameProvider";
 
 interface UseAuthFormProps {
   isLogin: boolean;
@@ -41,6 +42,7 @@ export const useAuthForm = ({
 
 export const useGameForm = () => {
   const { currentUser } = useAuth();
+  const { setGameId } = useGame();
   const { getGameByGameId } = useGameProxy(currentUser);
   const { addPlayer } = usePlayerActions(currentUser);
 
@@ -55,12 +57,10 @@ export const useGameForm = () => {
     }
 
     if (gameData.id) {
-      const gameWithNewPlayer = (await addPlayer(gameData)) as Game;
-      if (gameWithNewPlayer) {
-        console.log("FORM HOOK: Player created for game: ", gameWithNewPlayer.id);
-        
-        return gameWithNewPlayer;
-      }
+      await addPlayer(gameData).then(() => {
+        console.log("FORM HOOK: Player created for game: ", gameData.id);
+      });
+      setGameId(gameData.id);
     }
   };
 
