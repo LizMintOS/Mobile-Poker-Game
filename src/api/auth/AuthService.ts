@@ -4,7 +4,7 @@ import {
   signOut,
   signInAnonymously,
 } from "firebase/auth";
-import { auth } from "../../services/firebase";
+import { auth } from "src/services/firebase";
 
 export const AuthService = {
   register: (email: string, password: string) =>

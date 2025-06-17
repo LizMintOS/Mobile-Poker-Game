@@ -15,4 +15,10 @@ Object.assign(global, {
   TextEncoder,
 });
 
+// This sets up a global automatic mock for the firebase service (auth, db)
 jest.mock("src/services/firebase");
+
+// clear all mocks before each test suite
+beforeEach(() => {
+  jest.clearAllMocks();
+});
