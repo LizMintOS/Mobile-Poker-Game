@@ -9,13 +9,13 @@ service cloud.firestore {
     match /games/{gameId} {
       allow read, create: if request.auth != null;
 
-      allow delete, update: if request.auth != null && (
-        exists(/databases/$(database)/documents/games/$(gameId))
-      )
-    }
+      allow update, delete: if request.auth != null && resource.data.creatorId == request.auth.uid;
 
-    match /games/{gameId}/players/{playerId} {
-      allow read, write: if request.auth != null && request.auth.uid == gameId.creatorId;
+      match /players/{playerId} {
+        allow read, write: if request.auth != null && playerId == request.auth.uid;
+
+        allow delete: if request.auth != null && resource.data.gameCreatorId == request.auth.uid;
+      }
     }
   }
 }
