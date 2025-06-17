@@ -8,3 +8,12 @@ export const db = {
   runTransaction: jest.fn(),
   onSnapshot: jest.fn(),
 };
+
+export const auth = {
+  currentUser: null,
+  createUserWithEmailAndPassword: jest.fn(),
+  signInWithEmailAndPassword: jest.fn(),
+  signOut: jest.fn(),
+  signInAnonymously: jest.fn(),
+  onAuthStateChanged: jest.fn(),
+};
