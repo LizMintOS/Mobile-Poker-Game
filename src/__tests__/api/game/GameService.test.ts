@@ -1,4 +1,5 @@
 import { GameService } from "src/api/games/GameService";
+process.env.REACT_USE_EMULATORS = "true";
 import { db } from "src/services/firebase";
 import * as firestore from "firebase/firestore";
 
