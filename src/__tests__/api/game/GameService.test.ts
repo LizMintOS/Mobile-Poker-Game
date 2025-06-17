@@ -122,11 +122,17 @@ describe("GameService", () => {
   });
 
   describe("updateGame", () => {
+    const mockDocRef = {};
+
+    beforeEach(() => {
+      jest.clearAllMocks();
+      (firestore.doc as jest.Mock).mockReturnValue(mockDocRef);
+    });
+
     it("should update and return updated game", async () => {
       const gameId = "game123";
       const data = { hasStarted: true };
 
-      (firestore.doc as jest.Mock).mockReturnValue({});
       (firestore.updateDoc as jest.Mock).mockResolvedValue(undefined);
       (firestore.getDoc as jest.Mock).mockResolvedValueOnce({
         data: () => data,
@@ -135,12 +141,11 @@ describe("GameService", () => {
       const updatedGame = await GameService.updateGame(gameId, data);
 
       expect(firestore.updateDoc).toHaveBeenCalled();
-      expect(firestore.updateDoc).toHaveBeenCalledWith({}, data);
+      expect(firestore.updateDoc).toHaveBeenCalledWith(mockDocRef, data);
       expect(updatedGame).toEqual({ id: gameId, hasStarted: true });
     });
 
     it("should return null if getDoc returns no data", async () => {
-      (firestore.doc as jest.Mock).mockReturnValue({});
       (firestore.updateDoc as jest.Mock).mockResolvedValue(undefined);
       (firestore.getDoc as jest.Mock).mockResolvedValue({
         data: () => undefined,
@@ -153,22 +158,28 @@ describe("GameService", () => {
   });
 
   describe("updateGameTransaction", () => {
+    const mockDocRef = {};
+
+    beforeEach(() => {
+      jest.clearAllMocks();
+      (firestore.doc as jest.Mock).mockReturnValue(mockDocRef);
+    });
+
     it("should call runTransaction with update", async () => {
       const gameId = "game123";
       const data = { state: "started" };
 
-      (firestore.doc as jest.Mock).mockReturnValue({});
-
       (firestore.runTransaction as jest.Mock).mockImplementation(
-        async (db, updateFn) => {
+        async (_db, updateFn) => {
           await updateFn({
             update: jest.fn(),
-          });
+          } as unknown as firestore.Transaction);
         }
       );
 
       await GameService.updateGameTransaction(gameId, data);
 
+      expect(firestore.doc).toHaveBeenCalledWith(db, "games", gameId);
       expect(firestore.runTransaction).toHaveBeenCalled();
     });
   });
