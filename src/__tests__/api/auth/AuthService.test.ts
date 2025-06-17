@@ -97,5 +97,13 @@ describe("AuthService", () => {
 
       expect(signOut).toHaveBeenCalledWith(auth);
     });
+
+    it("should fail if logout fails", async () => {
+      (signOut as jest.Mock).mockRejectedValue(new Error("Logout failed"));
+
+      await expect(AuthService.logout()).rejects.toThrow("Logout failed");
+
+      expect(signOut).toHaveBeenCalledWith(auth);
+    });
   });
 });
