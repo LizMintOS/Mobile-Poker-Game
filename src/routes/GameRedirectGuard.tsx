@@ -9,17 +9,28 @@ const GameRedirectGuard = () => {
   const { game, gameId } = useGame();
 
   useEffect(() => {
-    if (!game && !gameId) {
+    console.log("Redirect check — game:", game, "gameId:", gameId, "path:", pathname);
+    // if (!game && !gameId) {
+    //   navigate(ROUTES.HOME, { replace: true });
+    //   return;
+    // } else {
+    //   if (game && game.hasStarted && pathname === ROUTES.GAME_LOBBY(game.id)) {
+    //     navigate(ROUTES.GAME(game.id), { replace: true });
+    //   } else if (pathname === ROUTES.HOME && gameId) {
+    //     navigate(ROUTES.GAME_LOBBY(gameId), { replace: true });
+    //   }
+    // }
+
+    if (!gameId) {
       navigate(ROUTES.HOME, { replace: true });
-    } else {
-      if (game && game.hasStarted && pathname === ROUTES.GAME_LOBBY(game.id)) {
+    } else if (game && gameId) {
+      if (game.hasStarted && pathname === ROUTES.GAME_LOBBY(game.id)) {
         navigate(ROUTES.GAME(game.id), { replace: true });
-      } else if (pathname === ROUTES.HOME && gameId) {
-        navigate(ROUTES.GAME_LOBBY(gameId), { replace: true });
+      } else if (pathname === ROUTES.HOME) {
+        navigate(ROUTES.GAME_LOBBY(game.id), { replace: true });
       }
     }
-    console.log("Redirect: ", gameId ?? "No game");
-  }, [navigate, game, gameId]);
+  }, [navigate, game, gameId, pathname]);
 
   return (
     <>

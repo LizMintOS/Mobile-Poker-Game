@@ -4,6 +4,8 @@ import { useGameProxy } from "../api/games/GameProxy";
 import { Game } from "../api/games/types";
 import { usePlayerActions } from "../api/players/functions";
 import { useGame } from "src/contexts/GameProvider";
+import { useNavigate } from "react-router";
+import { ROUTES } from "src/routes/routes";
 
 interface UseAuthFormProps {
   isLogin: boolean;
@@ -42,11 +44,10 @@ export const useAuthForm = ({
 
 export const useGameForm = () => {
   const { currentUser } = useAuth();
-  const { setGameId } = useGame();
   const { getGameByGameId } = useGameProxy(currentUser);
   const { addPlayer } = usePlayerActions(currentUser);
 
-  const handleSubmitForm = async (data: GameFormData): Promise<Game | void> => {
+  const handleSubmitForm = async (data: GameFormData): Promise<null | string> => {
     const { gameId } = data;
 
     const gameData: Game = (await getGameByGameId(gameId)) as Game;
@@ -60,8 +61,10 @@ export const useGameForm = () => {
       await addPlayer(gameData).then(() => {
         console.log("FORM HOOK: Player created for game: ", gameData.id);
       });
-      setGameId(gameData.id);
+      return gameData.id;
     }
+
+    return null;
   };
 
   return { handleSubmitForm };

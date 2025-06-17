@@ -1,4 +1,4 @@
-import { useContext, createContext, useEffect, useState } from "react";
+import { useContext, createContext, useEffect, useState, useCallback } from "react";
 import { Game } from "../api/games/types";
 import { LoadingWrapper } from "../components/common/LoadingWrapper";
 import { useGameIdStorage } from "../hooks/useGameIdStorage";
@@ -29,34 +29,46 @@ export const GameProvider = ({ children }: { children: React.ReactNode }) => {
   const [game, setGame] = useState<Game | null>(null);
   const [gameId, setGameId] = useState<string | null>(getGameId());
 
-  const clearGame = () => {
+  const clearGame = useCallback(() => {
     deleteGameId();
-    setGameId(null);
     setGame(null);
-  };
+    setGameId(null);
+  }, []);
 
   useEffect(() => {
     setIsWaiting(true);
-    if (gameId) {
+
+    if (!gameId) {
+      setGame(null);
+      setIsWaiting(false);
+      return;
+    }
+
+    // if (gameId) {
       const unsubscribe = subscribeToGameChanges(gameId, (game) => {
+        const latestId = getGameId();
         if (!game) {
-          console.log("Game deleted, clearing state.");
-          clearGame();
+          console.log("Game deleted? Verifying...");
+          if (latestId === gameId) {
+            console.log("Confirmed deleted. Clearing state.");
+            clearGame();
+          } else {
+            console.log("Ignoring stale unsubscribe for old gameId.");
+          }
         } else {
           setGame(game);
           console.log("GProv Game Found: ", game);
           setIsWaiting(false);
         }
       });
+
       return () => unsubscribe();
-    } else {
-      setGame(null);
-      setIsWaiting(false);
-    }
-    console.log("Game Context: ", gameId);
+    // } 
+    // console.log("Game Context: ", gameId);
   }, [gameId]);
 
   const handleSetGameId = (newGameId: string) => {
+    console.log("Setting new Game ID: ", newGameId);
     setGameId(newGameId);
     setGameIdStore(newGameId);
   };

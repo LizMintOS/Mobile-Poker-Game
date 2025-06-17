@@ -58,6 +58,8 @@ export const usePlayerActions = (user: User | null) => {
 
       const playerDoc = await getDoc(doc(db, path));
 
+      console.log("Retrieved player doc")
+
       if (!playerDoc.exists()) {
         console.log("Creating new player...");
         const playerDocRef = doc(db, path);
