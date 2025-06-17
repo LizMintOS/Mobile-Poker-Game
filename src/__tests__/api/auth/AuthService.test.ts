@@ -117,5 +117,17 @@ describe("AuthService", () => {
       expect(signInAnonymously).toHaveBeenCalledWith(auth);
       expect(response.user.uid).toBe("anon123");
     });
+
+    it("should fail if anonymous login fails", async () => {
+      (signInAnonymously as jest.Mock).mockRejectedValue(
+        new Error("Anonymous login failed")
+      );
+
+      await expect(AuthService.loginAnonymously()).rejects.toThrow(
+        "Anonymous login failed"
+      );
+
+      expect(signInAnonymously).toHaveBeenCalledWith(auth);
+    });
   });
 });
