@@ -2,7 +2,7 @@ import { useAuth } from "../contexts/AuthProvider";
 import { useAuthProxy } from "../api/auth/AuthProxy";
 import { useGameProxy } from "../api/games/GameProxy";
 import { Game } from "../api/games/types";
-import { usePlayerActions } from "../api/players/functions";
+import { usePlayerProxy } from "src/api/players/PlayerProxy";
 import { useGame } from "src/contexts/GameProvider";
 import { useNavigate } from "react-router";
 import { ROUTES } from "src/routes/routes";
@@ -45,7 +45,7 @@ export const useAuthForm = ({
 export const useGameForm = () => {
   const { currentUser } = useAuth();
   const { getGameByGameId } = useGameProxy(currentUser);
-  const { addPlayer } = usePlayerActions(currentUser);
+  const { addPlayer } = usePlayerProxy(currentUser);
 
   const handleSubmitForm = async (data: GameFormData): Promise<null | string> => {
     const { gameId } = data;

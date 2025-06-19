@@ -12,60 +12,57 @@ export const usePlayerProxy = (user: User | null) => {
   const { handleApiErrors } = useHandleApiFunction();
   const { updateGameTransaction } = useGameProxy(user);
   const noAccessError: LocalError = { code: "permission-denied" };
+  const userId: string | null = user ? user.uid : null;
 
-  if (!user) throw "Not authorized";
-
-  const handlePermissionError = (playerId: string, creatorId?: string) => {
-    if ((creatorId && creatorId !== user.uid) || playerId !== user.uid)
-      throw noAccessError;
+  const handlePermissionError = (creatorId?: string): void => {
+    if (!userId || (creatorId && creatorId !== userId)) throw noAccessError;
     return;
   };
 
   return {
-    addPlayer: handleApiErrors(
-      async (playerId: string, game: Game): Promise<void> => {
-        handlePermissionError(playerId, game.creatorId);
-        const hand = addCardsToHand(game.deck, 5);
+    addPlayer: handleApiErrors(async (game: Game): Promise<void> => {
+      handlePermissionError();
+      const hand = addCardsToHand(game.deck, 5);
 
-        const player = await PlayerService.addPlayerToGame(
-          game,
-          playerId,
-          hand
-        );
+      if (userId) {
+        const player = await PlayerService.addPlayerToGame(game, userId, hand);
 
         if (player === "success")
           await updateGameTransaction(game.id, {
             playerCount: game.playerCount + 1,
             deck: removeCardsFromDeck(game.deck, hand),
-            turnOrder: arrayUnion(user.uid),
+            turnOrder: arrayUnion(userId),
           });
         else throw player;
       }
-    ),
+    }),
 
     getPlayer: handleApiErrors(
-      async (playerId: string, gameId: string): Promise<Player> => {
-        handlePermissionError(playerId);
-        const retrievedPlayer = await PlayerService.getPlayerData(
-          playerId,
-          gameId
-        );
+      async (gameId: string): Promise<Player | void> => {
+        if (userId) {
+          handlePermissionError();
+          const retrievedPlayer = await PlayerService.getPlayerData(
+            userId,
+            gameId
+          );
 
-        if (retrievedPlayer == "Player not found") throw retrievedPlayer;
+          if (retrievedPlayer == "Player not found") throw retrievedPlayer;
 
-        return retrievedPlayer as Player;
+          return retrievedPlayer as Player;
+        }
+        return;
       }
     ),
 
     updatePlayerTransaction: handleApiErrors(
       async (data: any, gameId: string, playerId: string): Promise<void> => {
         handlePermissionError(playerId);
-
-        await PlayerService.updatePlayerDataInTransaction(
-          data,
-          gameId,
-          playerId
-        );
+        if (userId)
+          await PlayerService.updatePlayerDataInTransaction(
+            data,
+            gameId,
+            playerId
+          );
       }
     ),
 
@@ -76,10 +73,12 @@ export const usePlayerProxy = (user: User | null) => {
         clearGame: () => void
       ): Promise<void> => {
         handlePermissionError(playerId);
-        await PlayerService.deletePlayerFromGame(playerId, gameId);
-        await updateGameTransaction(gameId, {
-          playerCount: increment(-1),
-        }).then(clearGame);
+        if (userId) {
+          await PlayerService.deletePlayerFromGame(playerId, gameId);
+          await updateGameTransaction(gameId, {
+            playerCount: increment(-1),
+          }).then(clearGame);
+        }
       }
     ),
   };

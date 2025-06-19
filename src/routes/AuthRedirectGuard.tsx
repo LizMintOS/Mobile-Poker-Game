@@ -14,8 +14,9 @@ const AuthRedirectGuard = () => {
       console.log("Navigating to auth page")
       navigate(ROUTES.AUTH, { replace: true });
     } else {
+      console.log(currentUser.uid);
       if (pathname === ROUTES.AUTH) {
-        console.log("Navigating to home")
+        console.log("Navigating to home: ", currentUser.uid)
         navigate(ROUTES.HOME, { replace: true });
       }
     }

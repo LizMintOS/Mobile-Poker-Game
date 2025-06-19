@@ -2,7 +2,7 @@ import { useCallback } from "react";
 import { useAuthProxy } from "../api/auth/AuthProxy";
 import { useGameProxy } from "../api/games/GameProxy";
 import { useAuth } from "../contexts/AuthProvider";
-import { usePlayerActions } from "../api/players/functions";
+import { usePlayerProxy } from "src/api/players/PlayerProxy";
 import { useGame } from "../contexts/GameProvider";
 
 const useLogout = () => {
@@ -10,7 +10,7 @@ const useLogout = () => {
   const { currentUser } = useAuth();
   const { game, clearGame } = useGame();
   const { deleteGame } = useGameProxy(currentUser);
-  const { deletePlayer } = usePlayerActions(currentUser);
+  const { deletePlayer } = usePlayerProxy(currentUser);
 
   const handleLogout = useCallback(async () => {
     console.log("Logout Game: ", game?.id)

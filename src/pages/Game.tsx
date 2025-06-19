@@ -3,7 +3,7 @@ import { useAuth } from "../contexts/AuthProvider";
 import { useEffect, useState } from "react";
 import { LoadingWrapper } from "../components/common/LoadingWrapper";
 import { useGame } from "../contexts/GameProvider";
-import { usePlayerActions } from "../api/players/functions";
+import { usePlayerProxy } from "src/api/players/PlayerProxy";
 
 import { Player } from "../api/players/types";
 
@@ -16,7 +16,7 @@ const Game = () => {
   const userId = currentUser!.uid;
   const { game, gameId } = useGame();
   console.log("Game object in component: ", game);
-  const { getPlayer, updatePlayerTransaction } = usePlayerActions(currentUser);
+  const { getPlayer, updatePlayerTransaction } = usePlayerProxy(currentUser);
   const { updateGameTransaction } = useGameProxy(currentUser);
 
   const [selectedCards, setSelectedCards] = useState<Card[]>([]);
@@ -50,8 +50,8 @@ const Game = () => {
 
       if (hand.length == 0 && isTurn) {
         const playerPromise = async () => {
-          const playerData: Player = await getPlayer(userId, game.id);
-          return playerData;
+          const playerData: Player = await getPlayer(game.id);
+          return playerData ?? null;
           // setPlayer(playerData);
         };
 
