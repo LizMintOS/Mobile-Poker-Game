@@ -5,14 +5,16 @@ import { GameService } from "./GameService";
 import { Card } from "../../utils/cards";
 import { User } from "firebase/auth";
 import { Game } from "./types";
+import { LocalError } from "../errors/types";
 
 export const useGameProxy = (user: User | null) => {
   const { handleApiErrors } = useHandleApiFunction();
+  const noAccessError: LocalError = { code: "permission-denied" };
 
   return {
     createGame: handleApiErrors(
       async (deck: Card[], hand: Card[]): Promise<Game> => {
-        if (!user) throw new Error("No user");
+        if (!user) throw noAccessError;
         const newGame = await GameService.createGame(user, deck, hand);
         return newGame;
       }
@@ -24,23 +26,23 @@ export const useGameProxy = (user: User | null) => {
     }),
 
     updateGame: handleApiErrors(async (gameId: string, data: any) => {
-      if (!user) throw new Error("Not authorized");
+      if (!user) throw noAccessError;
       const updatedGame = await GameService.updateGame(gameId, data);
       return updatedGame;
     }),
 
     updateGameTransaction: handleApiErrors(
       async (gameId: string, data: any) => {
-        if (!user) throw new Error("Not authorized");
+        if (!user) throw noAccessError;
         await GameService.updateGameTransaction(gameId, data);
       }
     ),
 
     deleteGame: handleApiErrors(
       async (gameId: string, clearGame: () => void) => {
-        if (!user) throw new Error("Not authorized");
-          await GameService.deleteGame(gameId).then(clearGame)
-        }
+        if (!user) throw noAccessError;
+        await GameService.deleteGame(gameId).then(clearGame);
+      }
     ),
   };
 };

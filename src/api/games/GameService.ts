@@ -44,7 +44,7 @@ export const GameService = {
     const gameRef = await addDoc(collection(db, "games"), gameData);
 
     await setDoc(doc(db, "games", gameRef.id, "players", user.uid), {
-      playerData: { hand },
+      hand: hand,
     });
 
     const newGame = { id: gameRef.id, ...gameData } as Game;

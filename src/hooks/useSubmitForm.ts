@@ -3,9 +3,6 @@ import { useAuthProxy } from "../api/auth/AuthProxy";
 import { useGameProxy } from "../api/games/GameProxy";
 import { Game } from "../api/games/types";
 import { usePlayerProxy } from "src/api/players/PlayerProxy";
-import { useGame } from "src/contexts/GameProvider";
-import { useNavigate } from "react-router";
-import { ROUTES } from "src/routes/routes";
 
 interface UseAuthFormProps {
   isLogin: boolean;

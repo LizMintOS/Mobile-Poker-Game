@@ -74,7 +74,7 @@ const GameLobby = () => {
                       />
                     </>
                   ) : (
-                    <p>Waiting for game creator to start game...</p>
+                    <p className="italic text-green-600">Waiting for game creator to start game...</p>
                   )}
                 </>
               )}
