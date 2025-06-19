@@ -1,10 +1,10 @@
 import { useHandleApiFunction } from "../../hooks/useHandleApiFunction";
 
-import { GameService } from "./GameService";
+import { GameService } from "../services/GameService";
 
 import { Card } from "../../utils/cards";
 import { User } from "firebase/auth";
-import { Game } from "./types";
+import { Game } from "../types";
 import { LocalError } from "../errors/types";
 
 export const useGameProxy = (user: User | null) => {

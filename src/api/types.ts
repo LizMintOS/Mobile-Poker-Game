@@ -1,4 +1,4 @@
-import { Card } from "../../utils/cards";
+import { Card } from "../utils/cards";
 
 export type CreateGameInput = {
   name: string;
@@ -13,6 +13,9 @@ export type Game = {
   deck: Card[];
   turn: number;
   turnOrder: string[];
-  state: "lobby" | "waiting" | "Your Turn" | "Game Over";
 };
 
+export type Player = {
+  id: string;
+  hand: Card[],
+}

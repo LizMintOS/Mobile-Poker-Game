@@ -1,11 +1,11 @@
-import { useGameProxy } from "../api/games/GameProxy";
+import { useGameProxy } from "../api/proxies/GameProxy";
 import { useAuth } from "../contexts/AuthProvider";
 import { useEffect, useMemo, useState } from "react";
 import { LoadingWrapper } from "../components/common/LoadingWrapper";
 import { useGame } from "../contexts/GameProvider";
-import { usePlayerProxy } from "src/api/players/PlayerProxy";
+import { usePlayerProxy } from "src/api/proxies/PlayerProxy";
 
-import { Player } from "../api/players/types";
+import { Player } from "../api/types";
 
 import PlayingCardList from "../components/cards/CardList";
 import PressButton from "../components/common/buttons/PressButton";
@@ -90,11 +90,17 @@ const Game = () => {
   const endTurn = async () => {
     setLoading(true);
     console.log("Ending turn with hand: ", hand);
+
     await updatePlayerTransaction({ hand: hand }, game!.id, userId);
+
     const turnIncrement = game!.turn + 1;
+
     console.log("Updating game...");
+
     await updateGameTransaction(game!.id, { deck: deck, turn: turnIncrement });
+
     console.log("Turn ended");
+
     setLoading(false);
   };
 

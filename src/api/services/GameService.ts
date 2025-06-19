@@ -10,13 +10,11 @@ import {
   runTransaction,
   Transaction,
   deleteDoc,
-  getDocs,
 } from "firebase/firestore";
 
 import { User } from "firebase/auth";
-import { Game } from "./types";
+import { Game } from "../types";
 import { Card } from "../../utils/cards";
-import { LocalError } from "../errors/types";
 
 export const GameService = {
   listenToGame(gameId: string, callback: (game: Game | null) => void) {
@@ -38,7 +36,6 @@ export const GameService = {
       deck,
       turn: 0,
       turnOrder: [user.uid],
-      state: "lobby",
     };
 
     const gameRef = await addDoc(collection(db, "games"), gameData);

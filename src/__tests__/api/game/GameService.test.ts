@@ -1,4 +1,4 @@
-import { GameService } from "src/api/games/GameService";
+import { GameService } from "src/api/services/GameService";
 process.env.REACT_USE_EMULATORS = "true";
 import { db } from "src/services/firebase";
 import * as firestore from "firebase/firestore";
@@ -106,7 +106,6 @@ describe("GameService", () => {
       deck: [],
       turn: 1,
       turnOrder: ["user123", "user456"],
-      state: "lobby",
     };
     const gameId = "game123";
 
@@ -124,13 +123,15 @@ describe("GameService", () => {
     });
 
     it("should throw error if document does not exist", async () => {
+      const gameId = "invalidID";
+
       (firestore.getDoc as jest.Mock).mockResolvedValueOnce({
         exists: () => false,
       });
 
-      await expect(GameService.getGameByGameId(gameId)).rejects.toEqual({
-        code: "no-game",
-      });
+      await expect(GameService.getGameByGameId(gameId)).rejects.toEqual(
+        "Game not found"
+      );
 
       expect(firestore.doc).toHaveBeenCalledWith(db, "games", gameId);
       expect(firestore.getDoc).toHaveBeenCalledTimes(1);
@@ -183,7 +184,7 @@ describe("GameService", () => {
 
     it("should call runTransaction with update", async () => {
       const gameId = "game123";
-      const data = { state: "started" };
+      const data = { hasStarted: true };
 
       (firestore.runTransaction as jest.Mock).mockImplementation(
         async (_db, updateFn) => {
@@ -201,91 +202,35 @@ describe("GameService", () => {
   });
 
   describe("deleteGame", () => {
-    const mockCollectionRef = {};
-    const mockFirstPlayerRef = {};
-    const mockSecondPlayerRef = {};
-    const mockGameRef = {};
+    it("should only delete the game doc (not players)", async () => {
+      const gameId = "game123";
+      const mockGameRef = {};
 
-    it("should delete players and then the game", async () => {
-      const game = { id: "game123" };
-      const mockDocs = [{ id: "player1" }, { id: "player2" }];
-
-      (firestore.collection as jest.Mock).mockReturnValue(mockCollectionRef);
-
-      (firestore.getDocs as jest.Mock).mockResolvedValue({ docs: mockDocs });
-
-      (firestore.doc as jest.Mock)
-        .mockReturnValueOnce(mockFirstPlayerRef)
-        .mockReturnValueOnce(mockSecondPlayerRef)
-        .mockReturnValueOnce(mockGameRef);
-
+      (firestore.doc as jest.Mock).mockReturnValue(mockGameRef);
       (firestore.deleteDoc as jest.Mock).mockResolvedValue(undefined);
 
-      await GameService.deleteGame(game as any);
+      await GameService.deleteGame(gameId);
 
-      expect(firestore.collection).toHaveBeenCalledWith(
-        db,
-        "games",
-        game.id,
-        "players"
-      );
-      expect(firestore.getDocs).toHaveBeenCalledWith(mockCollectionRef);
-      expect(firestore.doc).toHaveBeenNthCalledWith(
-        1,
-        db,
-        "games",
-        game.id,
-        "players",
-        "player1"
-      );
-      expect(firestore.doc).toHaveBeenNthCalledWith(
-        2,
-        db,
-        "games",
-        game.id,
-        "players",
-        "player2"
-      );
-      expect(firestore.doc).toHaveBeenNthCalledWith(3, db, "games", game.id);
-      expect(firestore.deleteDoc).toHaveBeenCalledTimes(mockDocs.length + 1);
-      expect(firestore.deleteDoc).toHaveBeenNthCalledWith(
-        1,
-        mockFirstPlayerRef
-      );
-      expect(firestore.deleteDoc).toHaveBeenNthCalledWith(
-        2,
-        mockSecondPlayerRef
-      );
-      expect(firestore.deleteDoc).toHaveBeenNthCalledWith(3, mockGameRef);
+      expect(firestore.doc).toHaveBeenCalledWith(db, "games", gameId);
+      expect(firestore.deleteDoc).toHaveBeenCalledWith(mockGameRef);
+      expect(firestore.deleteDoc).toHaveBeenCalledTimes(1);
     });
-  });
 
-  it("should throw an error if deleting any player or game fails", async () => {
-    const game = { id: "game123" };
-    const mockDocs = [{ id: "player1" }, { id: "player2" }];
+    it("should throw an error if deleting the game fails", async () => {
+      const gameId = "game123";
+      const mockGameRef = {};
 
-    const mockCollectionRef = {};
-    (firestore.collection as jest.Mock).mockReturnValue(mockCollectionRef);
-    (firestore.getDocs as jest.Mock).mockResolvedValueOnce({ docs: mockDocs });
+      (firestore.doc as jest.Mock).mockReturnValue(mockGameRef);
 
-    const mockPlayerDocRef1 = {};
-    const mockPlayerDocRef2 = {};
-    const mockGameDocRef = {};
+      const mockError = new Error("Failed to delete game");
+      (firestore.deleteDoc as jest.Mock).mockRejectedValue(mockError);
 
-    (firestore.doc as jest.Mock)
-      .mockReturnValueOnce(mockPlayerDocRef1)
-      .mockReturnValueOnce(mockPlayerDocRef2)
-      .mockReturnValueOnce(mockGameDocRef);
+      await expect(GameService.deleteGame(gameId)).rejects.toThrow(
+        "Failed to delete game"
+      );
 
-    (firestore.deleteDoc as jest.Mock)
-      .mockResolvedValueOnce(undefined)
-      .mockRejectedValueOnce(new Error("Failed to delete player2"))
-      .mockResolvedValueOnce(undefined);
-
-    await expect(GameService.deleteGame(game as any)).rejects.toThrow(
-      "Failed to delete player2"
-    );
-
-    expect(firestore.deleteDoc).toHaveBeenCalledTimes(2);
+      expect(firestore.doc).toHaveBeenCalledWith(db, "games", gameId);
+      expect(firestore.deleteDoc).toHaveBeenCalledWith(mockGameRef);
+    });
   });
 });

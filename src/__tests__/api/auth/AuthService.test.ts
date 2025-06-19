@@ -1,4 +1,4 @@
-import { AuthService } from "src/api/auth/AuthService";
+import { AuthService } from "src/api/services/AuthService";
 process.env.REACT_USE_EMULATORS = "true";
 import {
   createUserWithEmailAndPassword,

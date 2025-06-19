@@ -8,9 +8,8 @@ import {
   Transaction,
 } from "firebase/firestore";
 
-import { Player } from "./types";
-import { Game } from "../games/types";
-
+import { Player } from "../types";
+import { Game } from "../types";
 import { Card } from "../../utils/cards";
 
 export const PlayerService = {

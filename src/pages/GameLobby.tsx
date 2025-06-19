@@ -2,7 +2,7 @@ import GreenButton from "../components/common/buttons/GreenButton";
 import Title from "../components/common/Title";
 import { useNavigate } from "react-router-dom";
 import { ROUTES } from "../routes/routes";
-import { useGameProxy } from "../api/games/GameProxy";
+import { useGameProxy } from "../api/proxies/GameProxy";
 import { useAuth } from "../contexts/AuthProvider";
 import { useState } from "react";
 import RedButton from "../components/common/buttons/RedButton";

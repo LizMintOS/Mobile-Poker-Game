@@ -1,8 +1,7 @@
 import { useAuth } from "../contexts/AuthProvider";
-import { useAuthProxy } from "../api/auth/AuthProxy";
-import { useGameProxy } from "../api/games/GameProxy";
-import { Game } from "../api/games/types";
-import { usePlayerProxy } from "src/api/players/PlayerProxy";
+import { useAuthProxy } from "../api/proxies/AuthProxy";
+import { useGameProxy } from "../api/proxies/GameProxy";
+import { usePlayerProxy } from "src/api/proxies/PlayerProxy";
 
 interface UseAuthFormProps {
   isLogin: boolean;
@@ -52,7 +51,7 @@ export const useGameForm = () => {
     if ('code' in gameData && gameData.code === 'not-found') {
       throw "Game not found.";
     }
-    
+
     console.log("Got game: ", gameData.id, gameData.playerCount);
 
     if (gameData.playerCount == 8 || gameData.hasStarted) {

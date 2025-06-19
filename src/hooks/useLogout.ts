@@ -1,8 +1,8 @@
 import { useCallback } from "react";
-import { useAuthProxy } from "../api/auth/AuthProxy";
-import { useGameProxy } from "../api/games/GameProxy";
+import { useAuthProxy } from "../api/proxies/AuthProxy";
+import { useGameProxy } from "../api/proxies/GameProxy";
 import { useAuth } from "../contexts/AuthProvider";
-import { usePlayerProxy } from "src/api/players/PlayerProxy";
+import { usePlayerProxy } from "src/api/proxies/PlayerProxy";
 import { useGame } from "../contexts/GameProvider";
 
 const useLogout = () => {

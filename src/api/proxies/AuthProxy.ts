@@ -1,4 +1,4 @@
-import { AuthService } from "./AuthService";
+import { AuthService } from "../services/AuthService";
 import { useHandleApiFunction } from "../../hooks/useHandleApiFunction";
 
 export const useAuthProxy = () => {

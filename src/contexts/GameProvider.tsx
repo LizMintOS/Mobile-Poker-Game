@@ -5,10 +5,10 @@ import {
   useState,
   useCallback,
 } from "react";
-import { Game } from "../api/games/types";
+import { Game } from "src/api/types";
 import { LoadingWrapper } from "../components/common/LoadingWrapper";
 import { useGameIdStorage } from "../hooks/useGameIdStorage";
-import { subscribeToGameChanges } from "../api/games/GameProxy";
+import { subscribeToGameChanges } from "../api/proxies/GameProxy";
 
 interface GameContextType {
   game: Game | null;

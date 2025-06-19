@@ -4,12 +4,12 @@ import { useLoading } from "../contexts/LoadingProvider";
 
 import { Card, shuffleCards, addCardsToHand } from "../utils/cards";
 
-import { useGameProxy } from "../api/games/GameProxy";
+import { useGameProxy } from "../api/proxies/GameProxy";
 
 import { useGame } from "../contexts/GameProvider";
 import { useAuth } from "../contexts/AuthProvider";
 
-import { Game } from "../api/games/types";
+import { Game } from "src/api/types";
 
 const CreateGame = () => {
   const { currentUser } = useAuth();
