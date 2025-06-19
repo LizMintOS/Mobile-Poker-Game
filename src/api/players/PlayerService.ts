@@ -6,10 +6,7 @@ import {
   deleteDoc,
   runTransaction,
   Transaction,
-  increment,
-  arrayUnion,
 } from "firebase/firestore";
-import { User } from "firebase/auth";
 
 import { Player } from "./types";
 import { Game } from "../games/types";
@@ -17,8 +14,8 @@ import { Game } from "../games/types";
 import { Card } from "../../utils/cards";
 
 export const PlayerService = {
-  async addPlayerToGame(game: Game, user: User, hand: Card[]): Promise<string> {
-    const path = `/games/${game.id}/players/${user.uid}`;
+  async addPlayerToGame(game: Game, playerId: string, hand: Card[]): Promise<string> {
+    const path = `/games/${game.id}/players/${playerId}`;
 
     const playerDoc = await getDoc(doc(db, path));
     if (!playerDoc.exists()) {
@@ -60,8 +57,5 @@ export const PlayerService = {
 
   async deletePlayerFromGame(playerId: string, gameId: string): Promise<void> {
     await deleteDoc(doc(db, "games", gameId, "players", playerId));
-    // await updateGameTransaction(gameId, {
-    //   playerCount: increment(-1),
-    // }); //move to proxy
   },
 };

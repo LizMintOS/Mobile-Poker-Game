@@ -4,36 +4,48 @@ import { PlayerService } from "./PlayerService";
 import { Game } from "../games/types";
 import { Player } from "./types";
 import { User } from "firebase/auth";
-import { useCallback } from "react";
 import { addCardsToHand, removeCardsFromDeck } from "../../utils/cards";
-import { arrayUnion } from "firebase/firestore";
+import { arrayUnion, increment } from "firebase/firestore";
 import { LocalError } from "../errors/types";
 
 export const usePlayerProxy = (user: User | null) => {
   const { handleApiErrors } = useHandleApiFunction();
   const { updateGameTransaction } = useGameProxy(user);
+  const noAccessError: LocalError = { code: "permission-denied" };
+
   if (!user) throw "Not authorized";
 
+  const handlePermissionError = (playerId: string, creatorId?: string) => {
+    if ((creatorId && creatorId !== user.uid) || playerId !== user.uid)
+      throw noAccessError;
+    return;
+  };
+
   return {
-    addPlayer: handleApiErrors(async (game: Game): Promise<void> => {
-      if (!user) throw new Error("Not authorized");
-      const hand = addCardsToHand(game.deck, 5);
+    addPlayer: handleApiErrors(
+      async (playerId: string, game: Game): Promise<void> => {
+        handlePermissionError(playerId, game.creatorId);
+        const hand = addCardsToHand(game.deck, 5);
 
-      const player = await PlayerService.addPlayerToGame(game, user, hand);
+        const player = await PlayerService.addPlayerToGame(
+          game,
+          playerId,
+          hand
+        );
 
-      if (player === "success")
-        await updateGameTransaction(game.id, {
-          playerCount: game.playerCount + 1,
-          deck: removeCardsFromDeck(game.deck, hand),
-          turnOrder: arrayUnion(user.uid),
-        });
-      else throw player;
-    }),
+        if (player === "success")
+          await updateGameTransaction(game.id, {
+            playerCount: game.playerCount + 1,
+            deck: removeCardsFromDeck(game.deck, hand),
+            turnOrder: arrayUnion(user.uid),
+          });
+        else throw player;
+      }
+    ),
 
     getPlayer: handleApiErrors(
       async (playerId: string, gameId: string): Promise<Player> => {
-        if (user.uid !== playerId)
-          throw { code: "permission-denied" } as LocalError;
+        handlePermissionError(playerId);
         const retrievedPlayer = await PlayerService.getPlayerData(
           playerId,
           gameId
@@ -47,14 +59,27 @@ export const usePlayerProxy = (user: User | null) => {
 
     updatePlayerTransaction: handleApiErrors(
       async (data: any, gameId: string, playerId: string): Promise<void> => {
-        if (user.uid !== playerId)
-          throw { code: "permission-denied" } as LocalError;
+        handlePermissionError(playerId);
 
         await PlayerService.updatePlayerDataInTransaction(
           data,
           gameId,
           playerId
         );
+      }
+    ),
+
+    deletePlayer: handleApiErrors(
+      async (
+        playerId: string,
+        gameId: string,
+        clearGame: () => void
+      ): Promise<void> => {
+        handlePermissionError(playerId);
+        await PlayerService.deletePlayerFromGame(playerId, gameId);
+        await updateGameTransaction(gameId, {
+          playerCount: increment(-1),
+        }).then(clearGame);
       }
     ),
   };
