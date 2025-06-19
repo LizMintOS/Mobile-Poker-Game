@@ -47,7 +47,12 @@ export const useGameForm = () => {
   const handleSubmitForm = async (data: GameFormData): Promise<null | string> => {
     const { gameId } = data;
 
-    const gameData: Game = (await getGameByGameId(gameId)) as Game;
+    const gameData = await getGameByGameId(gameId);
+
+    if ('code' in gameData && gameData.code === 'not-found') {
+      throw "Game not found.";
+    }
+    
     console.log("Got game: ", gameData.id, gameData.playerCount);
 
     if (gameData.playerCount == 8 || gameData.hasStarted) {
