@@ -1,6 +1,6 @@
 import { useGameProxy } from "../api/games/GameProxy";
 import { useAuth } from "../contexts/AuthProvider";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { LoadingWrapper } from "../components/common/LoadingWrapper";
 import { useGame } from "../contexts/GameProvider";
 import { usePlayerProxy } from "src/api/players/PlayerProxy";
@@ -22,7 +22,14 @@ const Game = () => {
   const [selectedCards, setSelectedCards] = useState<Card[]>([]);
   const [loading, setLoading] = useState(false);
   const [disabled, setDisabled] = useState(false);
-  const [isTurn, setIsTurn] = useState(game?.turnOrder[game.turn] === userId);
+  const isEndOfGame = useMemo(() => {
+    return game ? game.turn > game.playerCount : false;
+  }, [game]);
+  const isTurn = useMemo(() => {
+    return game && game.playerCount > game.turn
+      ? game.turnOrder[game.turn] === userId
+      : false;
+  }, [game]);
   const [player, setPlayer] = useState<Player>({
     id: userId,
     hand: [],
@@ -38,52 +45,54 @@ const Game = () => {
     );
   };
 
-  console.log("Deck: ", deck);
-  console.log("Hand: ", hand ? hand : null);
-  console.log("Selected Cards:", selectedCards);
-  console.log("Turn: ", isTurn);
-
   useEffect(() => {
-    setLoading(true);
-    if (game) {
-      setIsTurn(game.turnOrder[game.turn] === userId);
+    const fetchPlayer = async () => {
+      if (game) {
+        console.log("Is it your turn: ", isTurn);
+        console.log("Your hand size: ", hand.length);
 
-      if (hand.length == 0 && isTurn) {
-        const playerPromise = async () => {
+        if (isEndOfGame) {
+          console.log("end of game");
+        } else if (isTurn) {
           const playerData: Player = await getPlayer(game.id);
-          return playerData ?? null;
-          // setPlayer(playerData);
-        };
-
-        playerPromise().then((playerData) => {
+          console.log("Got your data: ", playerData);
           setPlayer(playerData);
-          setHand(playerData.hand);
-        });
-        
-        if (deck.length == 0) setDeck(game.deck);
-        console.log(player);
+
+          if (playerData.hand.length === 0) {
+            setHand(playerData.hand);
+            if (deck.length === 0) setDeck(game.deck);
+          }
+        }
       }
-    }
-    setLoading(false);
-  }, [gameId, game, userId, hand, deck]);
+      setLoading(false);
+    };
+
+    setLoading(true);
+    fetchPlayer();
+  }, [game, userId, isTurn]);
 
   const handleSwapCards = () => {
     setLoading(true);
     setDisabled(true);
+
     console.log("Swapping cards...", selectedCards, selectedCards.length);
+
     const removeCards = hand.filter((card) => !selectedCards.includes(card));
     const newCards = addCardsToHand(deck, selectedCards.length);
     const newHand = removeCards.concat(newCards);
+
     setHand(newHand);
     setDeck(removeCardsFromDeck(deck, newCards.slice(-selectedCards.length)));
     setSelectedCards([]);
+
     console.log("New Hand: ", newHand);
+    
     setLoading(false);
   };
 
   const endTurn = async () => {
     setLoading(true);
-    console.log("Ending turn...", )
+    console.log("Ending turn...");
     await updatePlayerTransaction({ hand: hand }, game!.id, userId);
     const turnIncrement = game!.turn + 1;
     console.log("Updating game...");
