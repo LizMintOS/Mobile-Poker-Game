@@ -49,6 +49,7 @@ const Game = () => {
     const fetchPlayer = async () => {
       if (game) {
         console.log("Is it your turn: ", isTurn);
+        console.log("Is end of game: ", isTurn);
         console.log("Your hand size: ", hand.length);
 
         if (isEndOfGame) {
@@ -58,7 +59,7 @@ const Game = () => {
           console.log("Got your data: ", playerData);
           setPlayer(playerData);
 
-          if (playerData.hand.length === 0) {
+          if (hand.length === 0) {
             setHand(playerData.hand);
             if (deck.length === 0) setDeck(game.deck);
           }
@@ -86,13 +87,13 @@ const Game = () => {
     setSelectedCards([]);
 
     console.log("New Hand: ", newHand);
-    
+
     setLoading(false);
   };
 
   const endTurn = async () => {
     setLoading(true);
-    console.log("Ending turn...");
+    console.log("Ending turn with hand: ", hand);
     await updatePlayerTransaction({ hand: hand }, game!.id, userId);
     const turnIncrement = game!.turn + 1;
     console.log("Updating game...");
@@ -105,64 +106,80 @@ const Game = () => {
     <>
       <div className="flex justify-center items-center">
         <div className="bg-white shadow-xl rounded-2xl p-8 w-full mt-4 text-center border-1 border-slate-100/50">
-          {isTurn && player && hand ? (
+          {!isEndOfGame ? (
             <>
-              <h1 className="font-semibold text-green-700 mb-6">Your Turn!</h1>
-              <h3 className="text-green-500 italic">
-                Refreshing page will reset your turn!
-              </h3>
-              <div>
-                <p>
-                  Click cards that you want to swap then press the "Swap Cards"
-                  button.{" "}
-                </p>
+              {isTurn && player && hand ? (
+                <>
+                  <h1 className="font-semibold text-green-700 mb-6">
+                    Your Turn!
+                  </h1>
+                  <h3 className="text-green-500 italic">
+                    Refreshing page will reset your turn!
+                  </h3>
+                  <div>
+                    <p>
+                      Click cards that you want to swap then press the "Swap
+                      Cards" button.{" "}
+                    </p>
 
-                <p className="italic mb-2">Careful! You can only swap once.</p>
-              </div>
-              <h3 className="mb-4">When you've finished, press end turn</h3>
-              <LoadingWrapper
-                loading={loading}
-                style={{
-                  display: "flex",
-                  justifyContent: "center",
-                  alignItems: "center",
-                  height: "100vh",
-                }}
-                size={80}
-              >
-                <div className="flex flex-row h-full w-full">
-                  <div className="w-full mt-4 ml-4">
-                    <PlayingCardList
-                      cardNames={hand}
-                      selectedCards={selectedCards}
-                      selectCard={selectCard}
-                    />
+                    <p className="italic mb-2">
+                      Careful! You can only swap once.
+                    </p>
                   </div>
+                  <h3 className="mb-4">When you've finished, press end turn</h3>
+                  <LoadingWrapper
+                    loading={loading}
+                    style={{
+                      display: "flex",
+                      justifyContent: "center",
+                      alignItems: "center",
+                      height: "100vh",
+                    }}
+                    size={80}
+                  >
+                    <div className="flex flex-row h-full w-full">
+                      <div className="w-full mt-4 ml-4">
+                        <PlayingCardList
+                          cardNames={hand}
+                          selectedCards={selectedCards}
+                          selectCard={selectCard}
+                        />
+                      </div>
 
-                  <div className="self-center justify-center align-center items-center w-1/2 flex">
-                    <div className="flex flex-col gap-8 w-fit self-center align-center justify-center items-center">
-                      <PressButton
-                        type="submit"
-                        style="bg-green-600 border-green-700 h-14"
-                        onClick={endTurn}
-                      >
-                        End Turn
-                      </PressButton>
-                      <PressButton
-                        type="button"
-                        style="bg-yellow-400 border-yellow-600 h-14"
-                        onClick={handleSwapCards}
-                        disabled={disabled}
-                      >
-                        {disabled ? <p>No more swaps</p> : <p>Swap Cards</p>}
-                      </PressButton>
+                      <div className="self-center justify-center align-center items-center w-1/2 flex">
+                        <div className="flex flex-col gap-8 w-fit self-center align-center justify-center items-center">
+                          <PressButton
+                            type="submit"
+                            style="bg-green-600 border-green-700 h-14"
+                            onClick={endTurn}
+                          >
+                            End Turn
+                          </PressButton>
+                          <PressButton
+                            type="button"
+                            style="bg-yellow-400 border-yellow-600 h-14"
+                            onClick={handleSwapCards}
+                            disabled={disabled}
+                          >
+                            {disabled ? (
+                              <p>No more swaps</p>
+                            ) : (
+                              <p>Swap Cards</p>
+                            )}
+                          </PressButton>
+                        </div>
+                      </div>
                     </div>
-                  </div>
-                </div>
-              </LoadingWrapper>
+                  </LoadingWrapper>
+                </>
+              ) : (
+                <h1>
+                  Waiting for player {game ? game.turn + 1 : ""} to finish...
+                </h1>
+              )}
             </>
           ) : (
-            <h1>Waiting for player {game ? game.turn + 1 : ""} to finish...</h1>
+            <h1>End of game</h1>
           )}
         </div>
       </div>

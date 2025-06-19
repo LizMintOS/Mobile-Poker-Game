@@ -41,7 +41,7 @@ export const PlayerService = {
     }
 
     const playerData = playerDoc.data();
-    return { id: playerId, hand: playerData.playerData.hand } as Player;
+    return { id: playerId, hand: playerData.hand } as Player;
   },
 
   async updatePlayerDataInTransaction(
