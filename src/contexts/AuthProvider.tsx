@@ -23,7 +23,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     console.log("Auth Context: ", currentUser?.uid == undefined ? null : currentUser.uid);
 
     return () => unsubscribe();
-  }, []);
+  }, [currentUser]);
 
   return (
     <AuthContext.Provider value={{ currentUser }}>

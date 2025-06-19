@@ -81,15 +81,15 @@ export const GameService = {
   },
 
   async deleteGame(gameId: string): Promise<void> {
-    const playerDocs = await getDocs(
-      collection(db, "games", gameId, "players")
-    );
+    // const playerDocs = await getDocs(
+    //   collection(db, "games", gameId, "players")
+    // );
 
-    const deletePlayers = playerDocs.docs.map((docRef) =>
-      deleteDoc(doc(db, "games", gameId, "players", docRef.id))
-    );
+    // const deletePlayers = playerDocs.docs.map((docRef) =>
+    //   deleteDoc(doc(db, "games", gameId, "players", docRef.id))
+    // );
 
-    await Promise.all(deletePlayers);
+    // await Promise.all(deletePlayers);
 
     await deleteDoc(doc(db, "games", gameId));
   },

@@ -48,6 +48,19 @@ export default defineConfig({
         globPatterns: ["**/*.{js,ts,tsx,css,html,svg,png,ico}"],
         cleanupOutdatedCaches: true,
         clientsClaim: true,
+        runtimeCaching: [
+          {
+            urlPattern: /\/cards\/.*\.(?:png)/,
+            handler: 'CacheFirst',
+            options: {
+              cacheName: 'card-images',
+              expiration: {
+                maxEntries: 52, // number of cards
+                maxAgeSeconds: 60 * 60 * 24 * 30, // 30 days
+              },
+            },
+          },
+        ],
       },
 
       devOptions: {

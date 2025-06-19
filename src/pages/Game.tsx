@@ -13,17 +13,17 @@ import { Card, addCardsToHand, removeCardsFromDeck } from "../utils/cards";
 
 const Game = () => {
   const { currentUser } = useAuth();
-  const userId = currentUser!.uid;
-  const { game, gameId } = useGame();
-  console.log("Game object in component: ", game);
+  const { game } = useGame();
   const { getPlayer, updatePlayerTransaction } = usePlayerProxy(currentUser);
   const { updateGameTransaction } = useGameProxy(currentUser);
+  
+  const userId = currentUser!.uid;
 
   const [selectedCards, setSelectedCards] = useState<Card[]>([]);
   const [loading, setLoading] = useState(false);
   const [disabled, setDisabled] = useState(false);
   const isEndOfGame = useMemo(() => {
-    return game ? game.turn > game.playerCount : false;
+    return game ? game.turn >= game.playerCount : false;
   }, [game]);
   const isTurn = useMemo(() => {
     return game && game.playerCount > game.turn
@@ -48,12 +48,8 @@ const Game = () => {
   useEffect(() => {
     const fetchPlayer = async () => {
       if (game) {
-        console.log("Is it your turn: ", isTurn);
-        console.log("Is end of game: ", isTurn);
-        console.log("Your hand size: ", hand.length);
-
         if (isEndOfGame) {
-          console.log("end of game");
+          console.log("end of game: ", game.turn);
         } else if (isTurn) {
           const playerData: Player = await getPlayer(game.id);
           console.log("Got your data: ", playerData);

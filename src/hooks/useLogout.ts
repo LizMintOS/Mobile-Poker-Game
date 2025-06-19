@@ -8,26 +8,32 @@ import { useGame } from "../contexts/GameProvider";
 const useLogout = () => {
   const { logoutUser } = useAuthProxy();
   const { currentUser } = useAuth();
-  const { game, clearGame } = useGame();
+  const { game, gameId, clearGame } = useGame();
   const { deleteGame } = useGameProxy(currentUser);
   const { deletePlayer } = usePlayerProxy(currentUser);
 
   const handleLogout = useCallback(async () => {
-    console.log("Logout Game: ", game?.id)
-    if (game) {
-      const id = game.id;
+    console.log("Logout Game: ", game?.id);
+
+    if (game && gameId) {
       if (game.creatorId === currentUser!.uid) {
-        console.log("Deleting Game")
-        await deleteGame(id, clearGame);
+        console.log("Deleting Game");
+        await deleteGame(gameId, clearGame);
       } else {
-        console.log("Removing Player")
-        await deletePlayer(currentUser!.uid, id, clearGame);
-        console.log("Player removed. Logging out user...")
+        console.log("Removing Player");
+        await deletePlayer(currentUser!.uid, gameId, clearGame);
+        console.log("Player removed. Logging out user...");
       }
+    } else if (gameId && !game) {
+      console.log("Removing Player");
+      await deletePlayer(currentUser!.uid, gameId, clearGame);
+      console.log("Player removed. Logging out user...");
     }
-    await logoutUser();
-    console.log("Logged out")
-  }, [currentUser, game, deleteGame, deletePlayer, clearGame]);
+
+    logoutUser();
+
+    console.log("Logged out");
+  }, [currentUser, game, gameId, deleteGame, deletePlayer, clearGame]);
 
   return { handleLogout };
 };

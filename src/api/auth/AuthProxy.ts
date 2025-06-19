@@ -13,7 +13,7 @@ export const useAuthProxy = () => {
       await AuthService.login(email, password)
     ),
 
-    logoutUser: handleApiErrors(async () => await AuthService.logout()),
+    logoutUser: () => AuthService.logout(),
 
     loginAnonymouslyUser: handleApiErrors(async () => await AuthService.loginAnonymously()),
   };
