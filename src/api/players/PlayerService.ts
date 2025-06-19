@@ -57,4 +57,11 @@ export const PlayerService = {
       transaction.update(playerRef, { ...data });
     });
   },
+
+  async deletePlayerFromGame(playerId: string, gameId: string): Promise<void> {
+    await deleteDoc(doc(db, "games", gameId, "players", playerId));
+    // await updateGameTransaction(gameId, {
+    //   playerCount: increment(-1),
+    // }); //move to proxy
+  },
 };

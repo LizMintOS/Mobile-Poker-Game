@@ -44,5 +44,18 @@ export const usePlayerProxy = (user: User | null) => {
         return retrievedPlayer as Player;
       }
     ),
+
+    updatePlayerTransaction: handleApiErrors(
+      async (data: any, gameId: string, playerId: string): Promise<void> => {
+        if (user.uid !== playerId)
+          throw { code: "permission-denied" } as LocalError;
+
+        await PlayerService.updatePlayerDataInTransaction(
+          data,
+          gameId,
+          playerId
+        );
+      }
+    ),
   };
 };
