@@ -17,11 +17,7 @@ import { Game } from "../games/types";
 import { Card } from "../../utils/cards";
 
 export const PlayerService = {
-  async addPlayerToGame(
-    game: Game,
-    user: User,
-    hand: Card[]
-  ): Promise<string> {
+  async addPlayerToGame(game: Game, user: User, hand: Card[]): Promise<string> {
     const path = `/games/${game.id}/players/${user.uid}`;
 
     const playerDoc = await getDoc(doc(db, path));
@@ -36,7 +32,10 @@ export const PlayerService = {
     return "Already in game";
   },
 
-  async getPlayerData(playerId: string, gameId: string): Promise<Player | string> {
+  async getPlayerData(
+    playerId: string,
+    gameId: string
+  ): Promise<Player | string> {
     const playerDoc = await getDoc(
       doc(db, "games", gameId, "players", playerId)
     );
@@ -46,5 +45,16 @@ export const PlayerService = {
 
     const playerData = playerDoc.data();
     return { id: playerId, hand: playerData.playerData.hand } as Player;
+  },
+
+  async updatePlayerDataInTransaction(
+    data: any,
+    gameId: string,
+    playerId: string
+  ): Promise<void> {
+    const playerRef = doc(db, "games", gameId, "players", playerId);
+    await runTransaction(db, async (transaction: Transaction) => {
+      transaction.update(playerRef, { ...data });
+    });
   },
 };

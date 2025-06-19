@@ -37,8 +37,10 @@ export const useGameProxy = (user: User | null) => {
     ),
 
     deleteGame: handleApiErrors(
-      async (gameId: string, clearGame: () => void) =>
-        await GameService.deleteGame(gameId).then(clearGame)
+      async (gameId: string, clearGame: () => void) => {
+        if (!user) throw new Error("Not authorized");
+          await GameService.deleteGame(gameId).then(clearGame)
+        }
     ),
   };
 };

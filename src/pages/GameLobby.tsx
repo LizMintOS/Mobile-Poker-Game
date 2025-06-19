@@ -20,14 +20,15 @@ const GameLobby = () => {
 
   const handleDeleteGame = async () => {
     setLoading(true);
-    if (gameId)
-      await deleteGame(gameId, clearGame)
+    if (gameId) await deleteGame(gameId, clearGame);
     setLoading(false);
   };
 
   const startGame = async () => {
     setLoading(true);
-    const gameStart = await updateGameTransaction(gameId!, { hasStarted: true });
+    const gameStart = await updateGameTransaction(gameId!, {
+      hasStarted: true,
+    });
     if (gameStart) {
       setLoading(false);
       navigate(ROUTES.GAME(gameId!));
@@ -44,11 +45,11 @@ const GameLobby = () => {
               <p className="text-lg text-green-600 font-semibold italic rounded-3xl border-2 p-2 px-4 mt-2">
                 {game?.id ?? "no game ID found"}
               </p>
-              <p className="text-lg text-gray-700">
+              <p className="text-lg text-gray-700 mb-0">
                 Send this code to your friends to join the lobby
               </p>
-              <p className="text-sm text-gray-500">
-                Waiting for players to join...
+              <p className="text-lg text-gray-700">
+                Need at least 2 players to start game
               </p>
               {game && (
                 <>
@@ -56,19 +57,26 @@ const GameLobby = () => {
                     {game.playerCount} player{game.playerCount !== 1 ? "s" : ""}{" "}
                     joined
                   </p>
-                  {game.playerCount > 1 && (
-                    <div className="w-full h-14">
-                      <GreenButton
-                        label="Start Game"
-                        type="button"
-                        onClick={() => startGame()}
+                  {game.creatorId === currentUser!.uid ? (
+                    <>
+                      {game.playerCount > 1 && (
+                        <div className="w-full h-14">
+                          <GreenButton
+                            label="Start Game"
+                            type="button"
+                            onClick={() => startGame()}
+                          />
+                        </div>
+                      )}
+                      <RedButton
+                        onClick={handleDeleteGame}
+                        label="Cancel Game"
                       />
-                    </div>
+                    </>
+                  ) : (
+                    <p>Waiting for game creator to start game...</p>
                   )}
                 </>
-              )}
-              {game && game.creatorId == currentUser!.uid && (
-                <RedButton onClick={handleDeleteGame} label="Cancel Game" />
               )}
             </div>
           </div>
