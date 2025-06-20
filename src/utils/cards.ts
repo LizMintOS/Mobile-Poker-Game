@@ -43,28 +43,40 @@ export const addCardsToHand = (deck: Card[], totalNewCards: number): Card[] => {
   return newHand;
 }
 
+const valueOrder = [
+  "2", "3", "4", "5", "6", "7", "8", "9", "10",
+  "J", "Q", "K", "A",
+];
+
 export const scoreHand = (hand: Card[]): { score: number; name: HandName } => {
   const values: { [key: string]: number } = {};
   const suits: { [key: string]: number } = {};
 
-  hand.forEach(card => {
-    const value = card.charAt(0);
-    const suit = card.charAt(1);
-    values[value] = (values[value] || 0) + 1;
-    suits[suit] = (suits[suit] || 0) + 1;
-  });
-  console.log(values);
-  console.log(suits);
+  const valuesInHand = hand.map(card => valueOrder.indexOf(convertCard(card).value))
+  .sort((a, b) => a - b)
+
+  const isStraight = valuesInHand.every((val, i, arr) => i === 0 || val === arr[i - 1] + 1);
 
   const valueCounts = Object.values(values).sort((a, b) => b - a);
 
+  if (isStraight && Object.keys(suits).length === 1 && valuesInHand[0] === 8) return { score: 10, name: "Royal Flush" };
+  if (isStraight && Object.keys(suits).length === 1) return { score: 9, name: "Straight Flush" };
   if (valueCounts[0] === 4) return { score: 8, name: "Four of a Kind" };
   if (valueCounts[0] === 3 && valueCounts[1] === 2) return { score: 7, name: "Full House" };
+  if (Object.keys(suits).length === 1) return { score: 6, name: "Flush" };
+  if (isStraight) return { score: 5, name: "Straight" };
   if (valueCounts[0] === 3) return { score: 4, name: "Three of a Kind" };
   if (valueCounts[0] === 2 && valueCounts[1] === 2) return { score: 3, name: "Two Pair" };
   if (valueCounts[0] === 2) return { score: 2, name: "One Pair" };
   return { score: 1, name: "High Card" };
 };
+
+const convertCard = (card: Card) => {
+  const value = card.charAt(0);
+  const suit = card.charAt(1);
+
+  return { value, suit }
+}
 
 
 export type HandName =
