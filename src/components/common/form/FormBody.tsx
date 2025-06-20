@@ -1,9 +1,9 @@
-import ErrorMessage from "../ErrorMessage";
-import { LoadingWrapper } from "../LoadingWrapper";
-import Title from "../Title";
-import InputList from "./InputList";
-import { InputConfig } from "../../types";
-import FormSubmitBody from "./FormSubmitBody";
+import ErrorMessage from "src/components/common/ErrorMessage";
+import { LoadingWrapper } from "src/components/common/LoadingWrapper";
+import Title from "src/components/common/Title";
+import InputList from "src/components/common/form/InputList";
+import { InputConfig } from "src/components/types";
+import FormSubmitBody from "src/components/common/form/FormSubmitBody";
 
 interface FormBodyProps {
   error: string | null;
