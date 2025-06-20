@@ -42,3 +42,19 @@ function getDbForUser(uid: string) {
 function getDbUnauthenticated() {
   return testEnvironment.unauthenticatedContext().firestore();
 }
+
+describe("Firestore security rules - players", () => {
+  test("Authenticated user can read their own player doc", async () => {
+    const db = getDbForUser(playerUid);
+    const playerRef = doc(db, `games/${gameId}/players/${playerUid}`);
+    await setDoc(playerRef, { gameCreatorId: creatorUid });
+
+    await assertSucceeds(getDoc(playerRef));
+  });
+
+  test("Authenticated user cannot read another player's doc", async () => {
+    const db = getDbForUser(otherUid);
+    const playerRef = doc(db, `games/${gameId}/players/${playerUid}`);
+    await assertFails(getDoc(playerRef));
+  });
+});

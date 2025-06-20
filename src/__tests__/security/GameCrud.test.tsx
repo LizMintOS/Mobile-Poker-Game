@@ -77,7 +77,6 @@ describe("Firestore security rules", () => {
 
   test("Unauthenticated user cannot read game", async () => {
     const db = getDbUnauthenticated();
-    console.log("Unauthenticated Firestore DB:", db);
     await assertFails(getDoc(doc(db, `games/${gameId}`)));
   });
 
