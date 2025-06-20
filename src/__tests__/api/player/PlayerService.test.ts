@@ -89,5 +89,24 @@ describe("PlayerService", () => {
       );
       expect(result).toEqual({ id: mockPlayerId, hand: mockHand });
     });
+
+    it("returns 'Player not found' if document doesn't exist", async () => {
+      fs.getDoc.mockResolvedValue({ exists: () => false } as any);
+
+      const result = await PlayerService.getPlayerData(
+        mockPlayerId,
+        mockGame.id
+      );
+
+      expect(result).toBe("Player not found");
+    });
+
+    it("throws if getDoc fails", async () => {
+      fs.getDoc.mockRejectedValue(new Error("Fetch error"));
+
+      await expect(
+        PlayerService.getPlayerData(mockPlayerId, mockGame.id)
+      ).rejects.toThrow("Fetch error");
+    });
   });
 });
