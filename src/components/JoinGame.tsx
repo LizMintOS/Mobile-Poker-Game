@@ -8,7 +8,6 @@ import { useError } from "../contexts/ErrorProvider";
 
 import { useGameForm } from "../hooks/useSubmitForm";
 import { ROUTES } from "../routes/routes";
-import { useState } from "react";
 
 type FormValues = {
   gameId: string;
@@ -19,7 +18,6 @@ const JoinGameComponent = () => {
   const { setGameId, clearGame } = useGame();
   const { error, clearError } = useError();
   const { handleSubmitForm } = useGameForm();
-  const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
   const {
@@ -52,10 +50,7 @@ const JoinGameComponent = () => {
   };
 
   const onSubmit: SubmitHandler<FormValues> = async (data) => {
-    setLoading(true);
-
     handleErrors();
-
     clearGame();
 
     await handleSubmitForm(data).then((id) => {
@@ -65,8 +60,6 @@ const JoinGameComponent = () => {
         navigate(ROUTES.GAME_LOBBY(id), { replace: true });
       }
     });
-
-    setLoading(false);
   };
 
   return (

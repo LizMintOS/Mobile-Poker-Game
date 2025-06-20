@@ -119,6 +119,13 @@ const Game = () => {
     setLoading(false);
   };
 
+  const getWinners = (scores: number[]) => {
+    const maxScore = Math.max(...scores);
+    return scores
+      .map((score, idx) => (score === maxScore ? idx : -1))
+      .filter((idx) => idx !== -1);
+  };
+
   return (
     <>
       <div className="flex justify-center items-center">
@@ -205,6 +212,16 @@ const Game = () => {
                     {game.scores.map((score, idx) => (
                       <li key={idx}>
                         Player {idx + 1}: {score}
+                      </li>
+                    ))}
+                  </ul>
+                  <h2 className="mt-6">
+                    Winner{getWinners(game.scores).length > 1 ? "s" : ""}:
+                  </h2>
+                  <ul>
+                    {getWinners(game.scores).map((winnerIdx) => (
+                      <li key={winnerIdx}>
+                        Player {winnerIdx + 1} ({game.scores[winnerIdx]})
                       </li>
                     ))}
                   </ul>
