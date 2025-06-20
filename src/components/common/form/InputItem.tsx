@@ -22,7 +22,7 @@ const InputItem = ({
         type={type}
         id={label.toLowerCase().replace(" ", "")}
         placeholder={`Enter your ${label.toLowerCase()}`}
-        onChange={onChange}
+        // onChange={onChange}
         className={`px-4 py-2 rounded-xl border w-full ${
           error ? "border-red-500 mb-2" : "border-gray-300"
         } focus:outline-none focus:ring-2 focus:ring-blue-400`}

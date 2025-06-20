@@ -8,16 +8,15 @@ import { ReadableStream, ReadableStreamDefaultReader } from "web-streams-polyfil
 (global as any).ReadableStreamDefaultReader = ReadableStreamDefaultReader;
 import "@testing-library/jest-dom";
 import { TextEncoder, TextDecoder } from "util";
-import fetch, { Headers, Request, Response } from "node-fetch";
+// import fetch, { Headers, Request, Response } from "node-fetch";
 Object.assign(global, {
   TextDecoder,
-  fetch,
-  Headers,
-  Request,
-  Response,
+  // fetch,
+  // Headers,
+  // Request,
+  // Response,
   TextEncoder,
 });
-
 
 // global mocks
 jest.mock("src/services/firebase");
