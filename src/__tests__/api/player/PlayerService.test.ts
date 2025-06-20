@@ -1,7 +1,7 @@
 import { PlayerService } from "src/api/services/PlayerService";
 import { db } from "src/services/firebase";
-import { Card } from "src/utils/cards";
 import * as firestore from "firebase/firestore";
+import { Card } from "src/utils/cards";
 import { Game } from "src/api/types";
 
 const fs = firestore as jest.Mocked<typeof firestore>;
@@ -64,6 +64,30 @@ describe("PlayerService", () => {
       await expect(
         PlayerService.addPlayerToGame(mockGame, mockPlayerId, mockHand)
       ).rejects.toThrow("Get failed");
+    });
+  });
+
+  describe("getPlayerData", () => {
+    it("returns player data if document exists", async () => {
+      const mockHand = ["cardX", "cardY"];
+      fs.getDoc.mockResolvedValue({
+        exists: () => true,
+        data: () => ({ hand: mockHand }),
+      } as any);
+
+      const result = await PlayerService.getPlayerData(
+        mockPlayerId,
+        mockGame.id
+      );
+
+      expect(fs.doc).toHaveBeenCalledWith(
+        db,
+        "games",
+        mockGame.id,
+        "players",
+        mockPlayerId
+      );
+      expect(result).toEqual({ id: mockPlayerId, hand: mockHand });
     });
   });
 });
