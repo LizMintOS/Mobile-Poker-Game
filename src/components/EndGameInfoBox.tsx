@@ -31,14 +31,14 @@ const EndGameInfoBox = ({ game }: EndGameInfoBoxProps) => {
           ))}
         </ul>
 
-        <div className="space-y-2 mb-6 pl-4">
+        <div className="space-y-2 mt-8">
           <div className="text-left text-xl font-semibold flex flex-row">
             <p className="underline underline-offset-4 pr-4 mb-1">
               Winner{getWinners(game.scores).length > 1 ? "s" : ""}:{" "}
             </p>
             <div className="items-center flex">
               {getWinners(game.scores).map((winnerIdx) => (
-                <span className="text-lg pr-2 ">
+                <span key={winnerIdx} className="text-lg pr-2 ">
                   Player {winnerIdx + 1}
                   {game.scores.length > 1 &&
                   winnerIdx !== game.scores.length - 1
