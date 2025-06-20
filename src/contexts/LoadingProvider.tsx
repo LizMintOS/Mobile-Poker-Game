@@ -1,4 +1,4 @@
-import { useState, useContext, createContext, ReactNode } from "react";
+import { useState, useContext, createContext, ReactNode, useEffect } from "react";
 import { LoadingWrapper } from "../components/common/LoadingWrapper";
 
 interface LoadingContextType {
@@ -18,7 +18,7 @@ export const useLoading = (): LoadingContextType => {
 
 export const LoadingProvider = ({ children }: { children: ReactNode }) => {
   const [loading, setLoading] = useState<boolean>(false);
-
+  
   return (
     <LoadingContext.Provider value={{ loading, setLoading }}>
       <LoadingWrapper

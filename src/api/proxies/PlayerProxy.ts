@@ -1,7 +1,7 @@
 import { useHandleApiFunction } from "../../hooks/useHandleApiFunction";
 import { useGameProxy } from "./GameProxy";
 import { PlayerService } from "../services/PlayerService";
-import { Game } from "../types/game";
+import { Game } from "../types";
 import { Player } from "../types";
 import { User } from "firebase/auth";
 import { addCardsToHand, removeCardsFromDeck } from "../../utils/cards";

@@ -13,6 +13,7 @@ export type Game = {
   deck: Card[];
   turn: number;
   turnOrder: string[];
+  scores: number[];
 };
 
 export type Player = {

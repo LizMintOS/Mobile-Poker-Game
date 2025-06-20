@@ -22,7 +22,7 @@ export const showErrorToast = (message: string) => {
   toast(<ErrorMessage message={message} />, {
     position: "top-center",
     autoClose: 5000,
-    hideProgressBar: false,
+    hideProgressBar: true,
     closeOnClick: true,
     pauseOnHover: true,
     draggable: true,

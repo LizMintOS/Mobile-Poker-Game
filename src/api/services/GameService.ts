@@ -36,6 +36,7 @@ export const GameService = {
       deck,
       turn: 0,
       turnOrder: [user.uid],
+      scores: []
     };
 
     const gameRef = await addDoc(collection(db, "games"), gameData);

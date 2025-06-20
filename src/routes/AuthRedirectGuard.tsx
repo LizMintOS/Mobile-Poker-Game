@@ -2,7 +2,7 @@ import { useEffect } from "react";
 import { Outlet, useNavigate, useLocation } from "react-router-dom";
 import { ROUTES } from "./routes";
 import { useAuth } from "../contexts/AuthProvider";
-import { Toast } from "../components/common/Toast";
+import { Toast } from "src/components/common/Toast";
 
 const AuthRedirectGuard = () => {
   const { currentUser } = useAuth();
@@ -11,12 +11,12 @@ const AuthRedirectGuard = () => {
 
   useEffect(() => {
     if (!currentUser) {
-      console.log("Navigating to auth page")
+      console.log("Navigating to auth page");
       navigate(ROUTES.AUTH, { replace: true });
     } else {
       console.log(currentUser.uid);
       if (pathname === ROUTES.AUTH) {
-        console.log("Navigating to home: ", currentUser.uid)
+        console.log("Navigating to home: ", currentUser.uid);
         navigate(ROUTES.HOME, { replace: true });
       }
     }

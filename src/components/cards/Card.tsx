@@ -14,7 +14,7 @@ const PlayingCard = ({
   isSelected,
   selectCard,
 }: PlayingCardProps) => {
-  const img = `/public/cards/${cardName}.png`;
+  const img = `/cards/${cardName}.png`;
 
   const handleClick = () => {
     selectCard(cardName as CardType, !isSelected);
