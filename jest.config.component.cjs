@@ -11,6 +11,6 @@ module.exports = {
     "^src/(.*)$": "<rootDir>/src/$1",
   },
   moduleFileExtensions: ["js", "jsx", "ts", "tsx"],
-  testPathIgnorePatterns: ["/node_modules/", "/dist/", "/__tests__/api/"],
+  testPathIgnorePatterns: ["/node_modules/", "/dist/", "/__tests__/api/", "/__tests__/security/"],
   transformIgnorePatterns: ["node_modules/(?!.*@vite|react)/"],
 };

@@ -1,52 +1,28 @@
 poker-game-2025.web.app
 
-# React + TypeScript + Vite
+# Instructions
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+    "test:components": "jest --config=jest.config.component.cjs",
 
-Currently, two official plugins are available:
+    "test:api": "jest --config=jest.config.api.cjs",
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+    "test:sec": "jest --config=jest.config.security.cjs",
 
-## Expanding the ESLint configuration
+When running tests you need to run the specific command depending on what you want to test as above
 
-If you are developing a production application, we recommend updating the configuration to enable type aware lint rules:
+To run api or component tests, you need to comment out the last 2 lines of the /src/services/firebase.ts file.
 
-- Configure the top-level `parserOptions` property like this:
-
+Then, run the following:
 ```js
-export default tseslint.config({
-  languageOptions: {
-    // other options...
-    parserOptions: {
-      project: ['./tsconfig.node.json', './tsconfig.app.json'],
-      tsconfigRootDir: import.meta.dirname,
-    },
-  },
-})
+npm run test:api
+// or
+npm run test:components
 ```
 
-- Replace `tseslint.configs.recommended` to `tseslint.configs.recommendedTypeChecked` or `tseslint.configs.strictTypeChecked`
-- Optionally add `...tseslint.configs.stylisticTypeChecked`
-- Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and update the config:
+To run security tests you need to make sure the last 2 lines of the /src/services/firebase.ts file are uncommented. This is the code relating to running the emulator.
 
-```js
-// eslint.config.js
-import react from 'eslint-plugin-react'
+Then, run the following script:
 
-export default tseslint.config({
-  // Set the react version
-  settings: { react: { version: '18.3' } },
-  plugins: {
-    // Add the react plugin
-    react,
-  },
-  rules: {
-    // other rules...
-    // Enable its recommended rules
-    ...react.configs.recommended.rules,
-    ...react.configs['jsx-runtime'].rules,
-  },
-})
+````js
+npm run dev && emu && test:sec
 ```

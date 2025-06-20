@@ -15,6 +15,7 @@ describe("PlayerService", () => {
     deck: [],
     turn: 0,
     turnOrder: [],
+    scores: [],
   };
 
   const mockPlayerId = "player456";

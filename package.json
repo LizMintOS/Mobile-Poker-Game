@@ -10,6 +10,7 @@
     "preview": "vite preview",
     "test:components": "jest --config=jest.config.component.cjs",
     "test:api": "jest --config=jest.config.api.cjs",
+    "test:sec": "jest --config=jest.config.security.cjs",
     "emu": "firebase emulators:start",
     "deploy": "npm run build && firebase login --n && firebase deploy",
     "seeOffline": "npm run build && npm run preview"
@@ -40,6 +41,7 @@
     "@babel/preset-react": "^7.27.1",
     "@babel/preset-typescript": "^7.27.1",
     "@eslint/js": "^9.18.0",
+    "@firebase/rules-unit-testing": "^4.0.1",
     "@jest/globals": "^30.0.0",
     "@testing-library/dom": "^10.4.0",
     "@testing-library/react": "^16.3.0",
