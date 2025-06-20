@@ -109,4 +109,31 @@ describe("PlayerService", () => {
       ).rejects.toThrow("Fetch error");
     });
   });
+
+  describe("updatePlayerDataInTransaction", () => {
+    it("runs transaction to update player", async () => {
+      const updateFn = jest.fn();
+      const mockTransaction = { update: updateFn };
+
+      fs.runTransaction.mockImplementation(async (_db, callback) => {
+        await callback(mockTransaction as any);
+      });
+
+      const data = { hand: ["cardUpdated"] };
+      await PlayerService.updatePlayerDataInTransaction(
+        data,
+        mockGame.id,
+        mockPlayerId
+      );
+
+      expect(fs.doc).toHaveBeenCalledWith(
+        db,
+        "games",
+        mockGame.id,
+        "players",
+        mockPlayerId
+      );
+      expect(updateFn).toHaveBeenCalledWith(mockDocRef, data);
+    });
+  });
 });
