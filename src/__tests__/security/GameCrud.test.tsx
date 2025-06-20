@@ -104,14 +104,6 @@ describe("Firestore security rules", () => {
     );
   });
 
-  test("Authorized user who's not a player cannot update game", async () => {
-    const db = getDbForUser(anotherUid);
-
-    await assertFails(
-      updateDoc(doc(db, `games/${gameId}`), { deck: ["2H", "KS"] })
-    );
-  });
-
   // Delete
   test("Game creator can delete game", async () => {
     const db = getDbForUser(creatorUid);

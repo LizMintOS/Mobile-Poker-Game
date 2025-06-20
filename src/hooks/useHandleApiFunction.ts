@@ -25,10 +25,13 @@ export const useHandleApiFunction = () => {
               ? mappedError
               : JSON.stringify(mappedError)
           );
-          
+
           throw error;
         } finally {
           setLoading(false);
+          setTimeout(() => {
+            setError(null);
+          }, 5000);
         }
       };
     },

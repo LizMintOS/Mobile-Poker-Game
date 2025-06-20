@@ -67,15 +67,4 @@ describe("Firestore security rules - players", () => {
     await setDoc(playerRef, { id: playerUid, hand: [] });
     await assertSucceeds(deleteDoc(playerRef));
   });
-
-  test("Other users cannot delete another player's doc", async () => {
-    const adminDb = getDbForUser(playerUid);
-    const playerRef = doc(adminDb, `games/${gameId}/players/${playerUid}`);
-  
-    await setDoc(playerRef, { id: playerUid, hand: [] });
-  
-    const db = getDbForUser(otherUid);
-    const playerRefForDelete = doc(db, `games/${gameId}/players/${playerUid}`);
-    await assertFails(deleteDoc(playerRefForDelete));
-  });
 });

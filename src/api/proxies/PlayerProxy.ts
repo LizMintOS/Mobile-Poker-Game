@@ -74,10 +74,9 @@ export const usePlayerProxy = (user: User | null) => {
       ): Promise<void> => {
         handlePermissionError(playerId);
         if (userId) {
-          await PlayerService.deletePlayerFromGame(playerId, gameId);
           await updateGameTransaction(gameId, {
             playerCount: increment(-1),
-          }).then(clearGame);
+          }).then(async () => await PlayerService.deletePlayerFromGame(playerId, gameId).then(clearGame));
         }
       }
     ),
