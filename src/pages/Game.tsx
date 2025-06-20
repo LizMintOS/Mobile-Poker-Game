@@ -55,9 +55,7 @@ const Game = () => {
   useEffect(() => {
     const fetchPlayer = async () => {
       if (game) {
-        if (isEndOfGame) {
-          console.log("end of game: ", game.turn);
-        } else if (isTurn) {
+        if (isEndOfGame || isTurn) {
           const playerData: Player = await getPlayer(game.id);
           console.log("Got your data: ", playerData);
           setPlayer(playerData);
@@ -184,8 +182,8 @@ const Game = () => {
               {game && player && (
                 <>
                   <EndGameInfoBox game={game} />
-                  <div className="bg-white shadow-md shadow-zinc-500 rounded-xl ml-4 p-6 w-[300px]">
-                    <h2 className="text-xl font-bold mb-4">Your Final Hand</h2>
+                  <div className="bg-white shadow-md shadow-zinc-500 rounded-xl w-full ml-4 p-2 pt-8 items-center gap-6 flex flex-col">
+                    <p className="text-3xl font-bold mb-10 underline underline-offset-4">Your Final Hand</p>
                     <PlayingCardList cardNames={hand} />
                   </div>
                 </>
