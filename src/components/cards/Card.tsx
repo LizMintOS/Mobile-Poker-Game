@@ -24,6 +24,7 @@ const PlayingCard = ({
 
   return (
     <div
+      data-testid={`playing-card-${cardName}`}
       onClick={handleClick}
       className={`transition-transform transform ${
         selectCard ? "cursor-pointer hover:scale-105" : ""
