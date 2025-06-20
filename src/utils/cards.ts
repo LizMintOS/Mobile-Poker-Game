@@ -7,6 +7,19 @@ const deck: Card[] = [
   "2S", "3S", "4S", "5S", "6S", "7S", "8S", "9S", "10S", "JS", "QS", "KS", "AS"
 ];
 
+export const HandRankings = {
+  "Royal Flush": 10,
+  "Straight Flush": 9,
+  "Four of a Kind": 8,
+  "Full House": 7,
+  "Flush": 6,
+  "Straight": 5,
+  "Three of a Kind": 4,
+  "Two Pair": 3,
+  "One Pair": 2,
+  "High Card": 1,
+}
+
 export const shuffleCards = (): Card[] => {
   for (let i = deck.length - 1; i > 0; i--) {
     const j = Math.floor(Math.random() * (i + 1));
@@ -29,3 +42,14 @@ export const addCardsToHand = (deck: Card[], totalNewCards: number): Card[] => {
   const newHand: Card[] = deck.slice(0, totalNewCards);
   return newHand;
 }
+
+const cardOrder = [
+  "2", "3", "4", "5", "6", "7", "8", "9", "10",
+  "J", "Q", "K", "A",
+];
+
+export const scoreHand = (hand: Card[]): number => {
+  
+};
+
+
