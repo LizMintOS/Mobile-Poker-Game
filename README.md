@@ -21,6 +21,8 @@ npm run test:components
 
 To **run security tests** you need to make sure the last 2 lines of the `/src/services/firebase.ts` file are **uncommented**. This is the code relating to running the emulator.
 
+Also uncomment the relevant imports 
+
 Then, run the following script:
 
 ```bash
