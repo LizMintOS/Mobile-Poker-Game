@@ -8,3 +8,4 @@ export const auth = {
   signInAnonymously: jest.fn(),
   onAuthStateChanged: jest.fn(),
 };
+

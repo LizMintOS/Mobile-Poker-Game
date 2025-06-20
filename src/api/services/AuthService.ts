@@ -3,8 +3,10 @@ import {
   signInWithEmailAndPassword,
   signOut,
   signInAnonymously,
+  getAuth,
 } from "firebase/auth";
-import { auth } from "src/services/firebase";
+
+const auth = getAuth();
 
 export const AuthService = {
   register: (email: string, password: string) =>
