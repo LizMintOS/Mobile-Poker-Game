@@ -13,6 +13,12 @@ import { Game } from "src/api/types";
 
 let testEnvironment: RulesTestEnvironment;
 
+const gameId = "game1";
+const creatorUid = "user123";
+const otherUid = "otherUser";
+const anotherUid = "anotherUser";
+const playerId = "player123";
+
 beforeAll(async () => {
   testEnvironment = await initializeTestEnvironment({
     projectId: "poker-game-2025",
@@ -31,12 +37,6 @@ afterAll(async () => {
 });
 
 describe("Firestore security rules", () => {
-  const gameId = "game1";
-  const creatorUid = "user123";
-  const otherUid = "otherUser";
-  const anotherUid = "anotherUser";
-  const playerId = "player123";
-
   const mockGame: Game = {
     id: gameId,
     creatorId: creatorUid,
@@ -60,13 +60,13 @@ describe("Firestore security rules", () => {
   test("Auth user can create game", async () => {
     const db = getDbForUser(creatorUid);
 
-    await assertSucceeds(setDoc(doc(db, `games/${gameId}/`), mockGame));
+    await assertSucceeds(setDoc(doc(db, `games/${gameId}`), mockGame));
   });
 
   test("Unauthorized user cannot create game", async () => {
     const db = getDbUnauthenticated();
 
-    await assertFails(setDoc(doc(db, `games/${gameId}/`), mockGame));
+    await assertFails(setDoc(doc(db, `games/${gameId}`), mockGame));
   });
 
   // Read
@@ -83,6 +83,9 @@ describe("Firestore security rules", () => {
   //Update
   test("Game creator can update game", async () => {
     const db = getDbForUser(creatorUid);
+
+    await assertSucceeds(setDoc(doc(db, `games/${gameId}/players/${creatorUid}`), { id: creatorUid, hand: ["AS", "KD"] }));
+
     await assertSucceeds(
       updateDoc(doc(db, `games/${gameId}`), { hasStarted: true })
     );

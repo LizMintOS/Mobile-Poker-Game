@@ -44,10 +44,11 @@ function getDbUnauthenticated() {
 }
 
 describe("Firestore security rules - players", () => {
+  //Read
   test("Authenticated user can read their own player doc", async () => {
     const db = getDbForUser(playerUid);
     const playerRef = doc(db, `games/${gameId}/players/${playerUid}`);
-    await setDoc(playerRef, { gameCreatorId: creatorUid });
+    await setDoc(playerRef, { id: playerUid, hand: [] });
 
     await assertSucceeds(getDoc(playerRef));
   });
@@ -56,5 +57,25 @@ describe("Firestore security rules - players", () => {
     const db = getDbForUser(otherUid);
     const playerRef = doc(db, `games/${gameId}/players/${playerUid}`);
     await assertFails(getDoc(playerRef));
+  });
+
+  //Delete
+  test("Player can delete their own player doc", async () => {
+    const db = getDbForUser(playerUid);
+    const playerRef = doc(db, `games/${gameId}/players/${playerUid}`);
+
+    await setDoc(playerRef, { id: playerUid, hand: [] });
+    await assertSucceeds(deleteDoc(playerRef));
+  });
+
+  test("Other users cannot delete another player's doc", async () => {
+    const adminDb = getDbForUser(playerUid);
+    const playerRef = doc(adminDb, `games/${gameId}/players/${playerUid}`);
+  
+    await setDoc(playerRef, { id: playerUid, hand: [] });
+  
+    const db = getDbForUser(otherUid);
+    const playerRefForDelete = doc(db, `games/${gameId}/players/${playerUid}`);
+    await assertFails(deleteDoc(playerRefForDelete));
   });
 });
