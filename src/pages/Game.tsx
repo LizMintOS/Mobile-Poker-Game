@@ -184,15 +184,9 @@ const Game = () => {
               {game && player && (
                 <>
                   <EndGameInfoBox game={game} />
-                  <div className="bg-white shadow-lg rounded-xl p-6 w-[300px]">
-                    <h2 className="text-xl font-bold mb-4">Your Hand</h2>
-                    <ul className="space-y-2">
-                      {player.hand.map((card, idx) => (
-                        <li key={idx} className="text-base font-medium">
-                          {card.charAt(0)} of {card.charAt(1)};
-                        </li>
-                      ))}
-                    </ul>
+                  <div className="bg-white shadow-md shadow-zinc-500 rounded-xl ml-4 p-6 w-[300px]">
+                    <h2 className="text-xl font-bold mb-4">Your Final Hand</h2>
+                    <PlayingCardList cardNames={hand} />
                   </div>
                 </>
               )}

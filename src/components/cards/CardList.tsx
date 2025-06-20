@@ -3,8 +3,8 @@ import PlayingCard from "./Card";
 
 interface PlayingCardListProps {
   cardNames: string[];
-  selectedCards: Card[];
-  selectCard: (card: Card, isSelected: boolean) => void;
+  selectedCards?: Card[];
+  selectCard?: (card: Card, isSelected: boolean) => void;
 }
 
 const PlayingCardList = ({
@@ -17,7 +17,7 @@ const PlayingCardList = ({
       <PlayingCard
         cardName={card}
         key={`${card}-${index}`}
-        isSelected={selectedCards.includes(card as Card)}
+        isSelected={selectedCards?.includes(card as Card)}
         selectCard={selectCard}
       />
     ))}
