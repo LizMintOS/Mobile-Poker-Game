@@ -10,6 +10,7 @@ export const collection = jest.fn();
 export const Transaction = jest.fn();
 
 export const CACHE_SIZE_UNLIMITED = 104857600;
+
 export const initializeFirestore = jest.fn(() => ({}));
 
 export const persistentLocalCache = jest.fn(() => ({}));

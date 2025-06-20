@@ -1,4 +1,6 @@
-import { auth } from "src/services/firebase";
+export const auth = {
+  currentUser: null,
+};
 
 export const getAuth = jest.fn(() => auth);
 

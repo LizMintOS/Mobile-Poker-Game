@@ -5,10 +5,10 @@ import {
   signInWithEmailAndPassword,
   signOut,
   signInAnonymously,
+  getAuth,
 } from "firebase/auth";
-import { auth } from "src/services/firebase";
 
-jest.mock("firebase/auth");
+const auth = getAuth();
 
 describe("AuthService", () => {
   beforeEach(() => {
