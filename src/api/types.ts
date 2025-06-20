@@ -1,4 +1,4 @@
-import { Card } from "../utils/cards";
+import { Card, HandName } from "../utils/cards";
 
 export type CreateGameInput = {
   name: string;
@@ -13,10 +13,15 @@ export type Game = {
   deck: Card[];
   turn: number;
   turnOrder: string[];
-  scores: number[];
+  scores: PlayerScore[];
 };
 
 export type Player = {
   id: string;
   hand: Card[],
+}
+
+export type PlayerScore = {
+  score: number;
+  name: HandName
 }

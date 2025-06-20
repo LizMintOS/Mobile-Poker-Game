@@ -5,7 +5,7 @@ import { LoadingWrapper } from "../components/common/LoadingWrapper";
 import { useGame } from "../contexts/GameProvider";
 import { usePlayerProxy } from "src/api/proxies/PlayerProxy";
 
-import { Player } from "../api/types";
+import { Player, PlayerScore } from "../api/types";
 
 import PlayingCardList from "../components/cards/CardList";
 import PressButton from "../components/common/buttons/PressButton";
@@ -96,14 +96,14 @@ const Game = () => {
     setLoading(true);
     console.log("Ending turn with hand: ", hand);
 
-    const score = scoreHand(hand);
+    const { score, name } = scoreHand(hand);
     console.log("Score for this hand: ", score);
 
     await updatePlayerTransaction({ hand: hand }, game!.id, userId);
 
     const turnIncrement = game!.turn + 1;
 
-    const scores = [...game!.scores, score];
+    const scores = [...game!.scores, { score, name }];
     // const playerIndex = game!.turnOrder.indexOf(userId);
     // scores[playerIndex] = score;
 
@@ -119,10 +119,10 @@ const Game = () => {
     setLoading(false);
   };
 
-  const getWinners = (scores: number[]) => {
-    const maxScore = Math.max(...scores);
+  const getWinners = (scores: PlayerScore[]) => {
+    const maxScore = Math.max(...scores.map(score => score.score));
     return scores
-      .map((score, idx) => (score === maxScore ? idx : -1))
+      .map((score, idx) => (score.score === maxScore ? idx : -1))
       .filter((idx) => idx !== -1);
   };
 
@@ -207,21 +207,21 @@ const Game = () => {
               {game && (
                 <>
                   <h1>End of game</h1>
-                  <h2>Final Scores:</h2>
+                  <p className="mt-6">Final Scores:</p>
                   <ul>
-                    {game.scores.map((score, idx) => (
+                    {game.scores.map((hand, idx) => (
                       <li key={idx}>
-                        Player {idx + 1}: {score}
+                        Player {idx + 1}: {hand.name} {hand.score}
                       </li>
                     ))}
                   </ul>
-                  <h2 className="mt-6">
+                  <p className="mt-6">
                     Winner{getWinners(game.scores).length > 1 ? "s" : ""}:
-                  </h2>
+                  </p>
                   <ul>
                     {getWinners(game.scores).map((winnerIdx) => (
                       <li key={winnerIdx}>
-                        Player {winnerIdx + 1} ({game.scores[winnerIdx]})
+                        Player {winnerIdx + 1} ({game.scores[winnerIdx].score})
                       </li>
                     ))}
                   </ul>

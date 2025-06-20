@@ -7,7 +7,7 @@ const deck: Card[] = [
   "2S", "3S", "4S", "5S", "6S", "7S", "8S", "9S", "10S", "JS", "QS", "KS", "AS"
 ];
 
-export const HandRankings = {
+export type HandRanking = {
   "Royal Flush": 10,
   "Straight Flush": 9,
   "Four of a Kind": 8,
@@ -43,7 +43,7 @@ export const addCardsToHand = (deck: Card[], totalNewCards: number): Card[] => {
   return newHand;
 }
 
-export const scoreHand = (hand: Card[]): number => {
+export const scoreHand = (hand: Card[]): { score: number; name: HandName } => {
   const values: { [key: string]: number } = {};
   const suits: { [key: string]: number } = {};
 
@@ -58,12 +58,23 @@ export const scoreHand = (hand: Card[]): number => {
 
   const valueCounts = Object.values(values).sort((a, b) => b - a);
 
-  if (valueCounts[0] === 4) return HandRankings["Four of a Kind"];
-  if (valueCounts[0] === 3 && valueCounts[1] === 2) return HandRankings["Full House"];
-  if (valueCounts[0] === 3) return HandRankings["Three of a Kind"];
-  if (valueCounts[0] === 2 && valueCounts[1] === 2) return HandRankings["Two Pair"];
-  if (valueCounts[0] === 2) return HandRankings["One Pair"];
-  return HandRankings["High Card"];
+  if (valueCounts[0] === 4) return { score: 8, name: "Four of a Kind" };
+  if (valueCounts[0] === 3 && valueCounts[1] === 2) return { score: 7, name: "Full House" };
+  if (valueCounts[0] === 3) return { score: 4, name: "Three of a Kind" };
+  if (valueCounts[0] === 2 && valueCounts[1] === 2) return { score: 3, name: "Two Pair" };
+  if (valueCounts[0] === 2) return { score: 2, name: "One Pair" };
+  return { score: 1, name: "High Card" };
 };
 
 
+export type HandName =
+  | "Royal Flush"
+  | "Straight Flush"
+  | "Four of a Kind"
+  | "Full House"
+  | "Flush"
+  | "Straight"
+  | "Three of a Kind"
+  | "Two Pair"
+  | "One Pair"
+  | "High Card";
