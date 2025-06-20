@@ -11,10 +11,9 @@ Object.assign(globalThis, {
   TransformStream,
 });
 
-// Mocks for Firebase services if needed in API tests
-jest.mock("src/services/firebase");
-jest.mock("firebase/firestore");
-jest.mock("firebase/auth");
+jest.unmock("firebase/firestore");
+jest.unmock("src/services/firebase");
+jest.unmock("firebase/app");
 
 // Reset mocks before each test
 beforeEach(() => {

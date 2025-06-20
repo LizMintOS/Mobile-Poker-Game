@@ -7,11 +7,16 @@ import {
   initializeTestEnvironment,
   RulesTestEnvironment,
 } from "@firebase/rules-unit-testing";
-import { db } from "src/services/firebase";
-import * as firestore from "firebase/firestore";
-import { Game } from "src/api/types";
+import {
+  getDoc,
+  doc,
+  setDoc,
+  updateDoc,
+  deleteDoc,
+} from "firebase/firestore";
 
-const fs = firestore as jest.Mocked<typeof firestore>;
+
+import { Game } from "src/api/types";
 
 let testEnvironment: RulesTestEnvironment;
 
@@ -60,11 +65,52 @@ describe("Firestore security rules", () => {
   test("Auth user can create game", async () => {
     const db = getDbForUser(creatorUid);
 
-    await assertSucceeds(fs.setDoc(fs.doc(db, `games/${gameId}/`), mockGame));
+    await assertSucceeds(setDoc(doc(db, `games/${gameId}/`), mockGame));
   });
 
   test("Auth user can read a game", async () => {
     const db = getDbForUser(otherUid);
-    await assertSucceeds(fs.getDoc(fs.doc(db, `games/${gameId}`)));
+    await assertSucceeds(getDoc(doc(db, `games/${gameId}`)));
   });
+
+  test("Unauthenticated user cannot read game", async () => {
+    const db = getDbUnauthenticated();
+    console.log("Unauthenticated Firestore DB:", db); 
+    await assertFails(getDoc(doc(db, `games/${gameId}`)));
+  });
+
+  test("Game creator can update game", async () => {
+    const db = getDbForUser(creatorUid);
+    await assertSucceeds(
+      updateDoc(doc(db, `games/${gameId}`), { hasStarted: true })
+    );
+  });
+
+  test("Non-creator can update game", async () => {
+    const db = getDbForUser(otherUid);
+
+    await setDoc(doc(db, `games/${gameId}/players/${otherUid}`), {
+      id: otherUid,
+      hand: ["5D"],
+    });
+
+    await assertSucceeds(
+      updateDoc(doc(db, `games/${gameId}`), { deck: ["2H", "KS"] })
+    );
+  });
+  
+  test("Non-creator can update game", async () => {
+    const db = getDbForUser(otherUid);
+
+    await setDoc(doc(db, `games/${gameId}/players/${otherUid}`), {
+      id: otherUid,
+      hand: ["5D"],
+    });
+
+    await assertSucceeds(
+      updateDoc(doc(db, `games/${gameId}`), { deck: ["2H", "KS"] })
+    );
+  });
+
+
 });
