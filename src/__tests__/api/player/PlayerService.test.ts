@@ -135,5 +135,42 @@ describe("PlayerService", () => {
       );
       expect(updateFn).toHaveBeenCalledWith(mockDocRef, data);
     });
+
+    it("throws if transaction fails", async () => {
+      fs.runTransaction.mockRejectedValue(new Error("Transaction failed"));
+
+      await expect(
+        PlayerService.updatePlayerDataInTransaction(
+          { dhahsdas: "asdasdasd" },
+          mockGame.id,
+          mockPlayerId
+        )
+      ).rejects.toThrow("Transaction failed");
+    });
+  });
+
+  describe("deletePlayerFromGame", () => {
+    it("successfully deletes player document", async () => {
+      fs.deleteDoc.mockResolvedValue(undefined);
+
+      await PlayerService.deletePlayerFromGame(mockPlayerId, mockGame.id);
+
+      expect(fs.doc).toHaveBeenCalledWith(
+        db,
+        "games",
+        mockGame.id,
+        "players",
+        mockPlayerId
+      );
+      expect(fs.deleteDoc).toHaveBeenCalledWith(mockDocRef);
+    });
+
+    it("throws if delete fails", async () => {
+      fs.deleteDoc.mockRejectedValue(new Error("Delete failed"));
+
+      await expect(
+        PlayerService.deletePlayerFromGame(mockPlayerId, mockGame.id)
+      ).rejects.toThrow("Delete failed");
+    });
   });
 });
