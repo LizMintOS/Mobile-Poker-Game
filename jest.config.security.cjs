@@ -1,5 +1,5 @@
 module.exports = {
-    setupFilesAfterEnv: ["<rootDir>/setupApiTests.ts"],
+    setupFilesAfterEnv: ["<rootDir>/setupSecurityTests.ts"],
     testEnvironment: "jsdom",
     transform: {
       "^.+\\.jsx?$": "babel-jest",
@@ -10,6 +10,6 @@ module.exports = {
     },
     moduleFileExtensions: ['js', 'jsx', 'ts', 'tsx'],
     testPathIgnorePatterns: ["/node_modules/", "/dist/", "/__tests__/components/", "/__tests__/api/"],
-    transformIgnorePatterns: ["node_modules/(?!.*@vite|react|fetch-blob|node-fetch|whatwg-stream|web-streams-polyfill)/"],
+    transformIgnorePatterns: ["node_modules/(?!(@firebase|cross-fetch|fetch-blob|web-streams-polyfill)/)"],
   };
   
