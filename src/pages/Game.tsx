@@ -9,14 +9,19 @@ import { Player } from "../api/types";
 
 import PlayingCardList from "../components/cards/CardList";
 import PressButton from "../components/common/buttons/PressButton";
-import { Card, addCardsToHand, removeCardsFromDeck } from "../utils/cards";
+import {
+  Card,
+  addCardsToHand,
+  removeCardsFromDeck,
+  scoreHand,
+} from "../utils/cards";
 
 const Game = () => {
   const { currentUser } = useAuth();
   const { game } = useGame();
   const { getPlayer, updatePlayerTransaction } = usePlayerProxy(currentUser);
   const { updateGameTransaction } = useGameProxy(currentUser);
-  
+
   const userId = currentUser!.uid;
 
   const [selectedCards, setSelectedCards] = useState<Card[]>([]);
@@ -91,13 +96,23 @@ const Game = () => {
     setLoading(true);
     console.log("Ending turn with hand: ", hand);
 
+    const score = scoreHand(hand);
+    console.log("Score for this hand: ", score);
+
     await updatePlayerTransaction({ hand: hand }, game!.id, userId);
 
     const turnIncrement = game!.turn + 1;
 
-    console.log("Updating game...");
+    const scores = [...game!.scores, score];
+    // const playerIndex = game!.turnOrder.indexOf(userId);
+    // scores[playerIndex] = score;
 
-    await updateGameTransaction(game!.id, { deck: deck, turn: turnIncrement });
+    console.log("Updating game with scores: ", scores);
+    await updateGameTransaction(game!.id, {
+      deck: deck,
+      turn: turnIncrement,
+      scores: scores,
+    });
 
     console.log("Turn ended");
 
@@ -181,7 +196,21 @@ const Game = () => {
               )}
             </>
           ) : (
-            <h1>End of game</h1>
+            <div>
+              {game && (
+                <>
+                  <h1>End of game</h1>
+                  <h2>Final Scores:</h2>
+                  <ul>
+                    {game.scores.map((score, idx) => (
+                      <li key={idx}>
+                        Player {idx + 1}: {score}
+                      </li>
+                    ))}
+                  </ul>
+                </>
+              )}
+            </div>
           )}
         </div>
       </div>

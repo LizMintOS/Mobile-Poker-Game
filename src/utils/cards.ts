@@ -43,13 +43,27 @@ export const addCardsToHand = (deck: Card[], totalNewCards: number): Card[] => {
   return newHand;
 }
 
-const cardOrder = [
-  "2", "3", "4", "5", "6", "7", "8", "9", "10",
-  "J", "Q", "K", "A",
-];
-
 export const scoreHand = (hand: Card[]): number => {
-  
+  const values: { [key: string]: number } = {};
+  const suits: { [key: string]: number } = {};
+
+  hand.forEach(card => {
+    const value = card.charAt(0);
+    const suit = card.charAt(1);
+    values[value] = (values[value] || 0) + 1;
+    suits[suit] = (suits[suit] || 0) + 1;
+  });
+  console.log(values);
+  console.log(suits);
+
+  const valueCounts = Object.values(values).sort((a, b) => b - a);
+
+  if (valueCounts[0] === 4) return HandRankings["Four of a Kind"];
+  if (valueCounts[0] === 3 && valueCounts[1] === 2) return HandRankings["Full House"];
+  if (valueCounts[0] === 3) return HandRankings["Three of a Kind"];
+  if (valueCounts[0] === 2 && valueCounts[1] === 2) return HandRankings["Two Pair"];
+  if (valueCounts[0] === 2) return HandRankings["One Pair"];
+  return HandRankings["High Card"];
 };
 
 

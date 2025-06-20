@@ -77,7 +77,7 @@ const JoinGameComponent = () => {
       >
         <FormBody
           error={error}
-          isLoading={loading}
+          isLoading={isSubmitting}
           title="Play Now!"
           inputConfigs={inputConfig}
           disabled={isSubmitting || isLoading || !!error}
