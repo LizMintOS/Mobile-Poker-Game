@@ -22,16 +22,15 @@ describe("PlayingCardList", () => {
         selectedCards={selectedCards as any}
       />
     );
-  
+
     const firstCardWrapper = screen.getByTestId("playing-card-10H");
     const secondCardWrapper = screen.getByTestId("playing-card-4S");
     const thirdCardWrapper = screen.getByTestId("playing-card-KD");
-  
+
     expect(firstCardWrapper.className).toContain("shadow-green-500");
     expect(secondCardWrapper.className).not.toContain("shadow-green-500");
     expect(thirdCardWrapper.className).toContain("shadow-green-500");
   });
-  
 
   it("calls selectCard when a PlayingCard is clicked", () => {
     const mockSelectCard = jest.fn();

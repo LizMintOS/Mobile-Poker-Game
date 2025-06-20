@@ -1,7 +1,7 @@
 import GreenButton from "../buttons/GreenButton";
 
 interface FormSubmitBodyProps {
-  children: React.ReactNode;
+  children?: React.ReactNode;
   disabled: boolean;
   label: string;
 }
