@@ -7,14 +7,7 @@ import {
   initializeTestEnvironment,
   RulesTestEnvironment,
 } from "@firebase/rules-unit-testing";
-import {
-  getDoc,
-  doc,
-  setDoc,
-  updateDoc,
-  deleteDoc,
-} from "firebase/firestore";
-
+import { getDoc, doc, setDoc, updateDoc, deleteDoc } from "firebase/firestore";
 
 import { Game } from "src/api/types";
 
@@ -41,6 +34,7 @@ describe("Firestore security rules", () => {
   const gameId = "game1";
   const creatorUid = "user123";
   const otherUid = "otherUser";
+  const anotherUid = "anotherUser";
   const playerId = "player123";
 
   const mockGame: Game = {
@@ -62,12 +56,20 @@ describe("Firestore security rules", () => {
     return testEnvironment.unauthenticatedContext().firestore();
   }
 
+  // Create
   test("Auth user can create game", async () => {
     const db = getDbForUser(creatorUid);
 
     await assertSucceeds(setDoc(doc(db, `games/${gameId}/`), mockGame));
   });
 
+  test("Unauthorized user cannot create game", async () => {
+    const db = getDbUnauthenticated();
+
+    await assertFails(setDoc(doc(db, `games/${gameId}/`), mockGame));
+  });
+
+  // Read
   test("Auth user can read a game", async () => {
     const db = getDbForUser(otherUid);
     await assertSucceeds(getDoc(doc(db, `games/${gameId}`)));
@@ -75,10 +77,11 @@ describe("Firestore security rules", () => {
 
   test("Unauthenticated user cannot read game", async () => {
     const db = getDbUnauthenticated();
-    console.log("Unauthenticated Firestore DB:", db); 
+    console.log("Unauthenticated Firestore DB:", db);
     await assertFails(getDoc(doc(db, `games/${gameId}`)));
   });
 
+  //Update
   test("Game creator can update game", async () => {
     const db = getDbForUser(creatorUid);
     await assertSucceeds(
@@ -98,19 +101,23 @@ describe("Firestore security rules", () => {
       updateDoc(doc(db, `games/${gameId}`), { deck: ["2H", "KS"] })
     );
   });
-  
-  test("Non-creator can update game", async () => {
-    const db = getDbForUser(otherUid);
 
-    await setDoc(doc(db, `games/${gameId}/players/${otherUid}`), {
-      id: otherUid,
-      hand: ["5D"],
-    });
+  test("Authorized user who's not a player cannot update game", async () => {
+    const db = getDbForUser(anotherUid);
 
-    await assertSucceeds(
+    await assertFails(
       updateDoc(doc(db, `games/${gameId}`), { deck: ["2H", "KS"] })
     );
   });
 
+  // Delete
+  test("Game creator can delete game", async () => {
+    const db = getDbForUser(creatorUid);
+    await assertSucceeds(deleteDoc(doc(db, `games/${gameId}`)));
+  });
 
+  test("Non-creator cannot delete game", async () => {
+    const db = getDbForUser(otherUid);
+    await assertFails(deleteDoc(doc(db, `games/${gameId}`)));
+  });
 });
